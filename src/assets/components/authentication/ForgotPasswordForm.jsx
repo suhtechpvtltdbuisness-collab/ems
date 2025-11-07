@@ -15,7 +15,7 @@ export const ForgotPasswordForm = ({ onGetLink, onBack }) => {
   return (
     <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
       <div className="flex justify-center mb-6">
-        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
+        <div className="w-20 h-20 rounded-full bg-gradient-to from-purple-600 to-pink-500 flex items-center justify-center">
           <div className="w-10 h-10 rounded-full bg-white"></div>
         </div>
       </div>

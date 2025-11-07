@@ -1,20 +1,26 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
-import Login from './assets/pages/login'
-import AuthPage from './assets/pages/AuthPage'
+import { AuthProvider} from './context/AuthContext'
+import MainLayout from './assets/components/layout/MainLayout'
+import DashboardContent from './assets/components/dashboard/DashboardContent'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        {/* <Login /> */}
-        <AuthPage />
-      </div>
-    </>
+    // <>
+    //   <div>
+    //     {/* <Login /> */}
+    //     {/* <AuthPage /> */}
+    //     <DashboardContent />
+    //   </div>
+    // </>
+    <AuthProvider>
+      <MainLayout>
+        <DashboardContent />
+      </MainLayout>
+    </AuthProvider>
   )
 }
 

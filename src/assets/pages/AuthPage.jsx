@@ -105,9 +105,9 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-200 via-purple-200 to-purple-300 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to from-blue-200 via-purple-200 to-purple-300 flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute top-20 right-20 w-96 h-96 bg-purple-300 rounded-full opacity-50 blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-br from-pink-400 to-purple-600 opacity-80 rounded-tr-full"></div>
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to from-pink-400 to-purple-600 opacity-80 rounded-tr-full"></div>
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-600 opacity-60 rounded-tl-full"></div>
       
       <div className="relative z-10">
