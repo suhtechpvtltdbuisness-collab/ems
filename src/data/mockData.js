@@ -34,4 +34,10 @@ export const dashboardData = {
     { id: 2, text: "John Smith completed onboarding", time: '3 hrs ago' },
     { id: 3, text: "New task assigned to Dev Team", time: '5 hrs ago' },
   ],
+  tools: [
+    { id: 1, name: 'tool', icon: null },
+    { id: 2, name: 'tool', icon: null },
+    { id: 3, name: 'tool', icon: null },
+    { id: 4, name: 'tool', icon: null }
+  ],
 };

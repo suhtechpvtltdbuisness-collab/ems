@@ -4,12 +4,18 @@ import OnboardingTasks from './OnboardingTasks';
 import TimeTrackerChart from './TimeTrackerChart';
 import AttendanceChart from './AttendanceChart';
 import RecentActivity from './RecentActivity';
+import Mytools from "./Mytools";
 import { dashboardData } from '../../../data/mockData';
 import { transformAttendanceData, validateAttendanceData } from '../../../utils/attendanceUtils';
-import { Users, CheckSquare, FileText } from 'lucide-react';
+import totalemployee_icon from '../../../assets/icons/totalemployee_icon.svg';
+import presentToday_icon from '../../../assets/icons/presentToday_icon.svg';
+import absentToday_icon from '../../../assets/icons/absentToday_icon.svg';
+import activeTask_icon from '../../../assets/icons/activeTask_icon.svg';
+import pendingLeave_icon from '../../../assets/icons/pendingLeave_icon.svg';
+
 
 export default function DashboardContent() {
-  const { stats, onboardingTasks, timeTracker, attendance, recentActivity } = dashboardData;
+  const { stats, onboardingTasks, timeTracker, attendance, recentActivity, tools } = dashboardData;
   const [selectedCard, setSelectedCard] = useState('presentToday');
 
   // Process and validate attendance data
@@ -26,11 +32,11 @@ export default function DashboardContent() {
   }
 
   const statsCards = [
-    { id: 'totalEmployees', icon: Users, title: 'Total Employees', value: '534', subtitle: '10% decrease from last month' },
-    { id: 'presentToday', icon: Users, title: 'Present Today', value: `${stats.presentToday.current}/${stats.presentToday.total}`, subtitle: '10% decrease from last month' },
-    { id: 'absentToday', icon: Users, title: 'Absent Today', value: `${stats.absentToday.current}/${stats.absentToday.total}`, subtitle: '10% decrease from last month' },
-    { id: 'activeTasks', icon: CheckSquare, title: 'Active Tasks', value: `${stats.activeTasks.current}/${stats.activeTasks.total}` },
-    { id: 'pendingLeave', icon: FileText, title: 'Pending leave requests', value: stats.pendingLeave }
+    { id: 'totalEmployees', icon: totalemployee_icon, title: 'Total Employees', value: '534', subtitle: '10% decrease from last month' },
+    { id: 'presentToday', icon: presentToday_icon, title: 'Present Today', value: `${stats.presentToday.current}/${stats.presentToday.total}`, subtitle: '10% decrease from last month' },
+    { id: 'absentToday', icon: absentToday_icon, title: 'Absent Today', value: `${stats.absentToday.current}/${stats.absentToday.total}`, subtitle: '10% decrease from last month' },
+    { id: 'activeTasks', icon: activeTask_icon, title: 'Active Tasks', value: `${stats.activeTasks.current}/${stats.activeTasks.total}` },
+    { id: 'pendingLeave', icon: pendingLeave_icon, title: 'Pending leave requests', value: stats.pendingLeave }
   ];
 
   return (
@@ -63,7 +69,20 @@ export default function DashboardContent() {
         />
       </div>
 
-      <RecentActivity activities={recentActivity} />
+{/* Bottom Section: Recent Activity (left) + MyTools (right, compact) */}
+<div className="grid grid-cols-1 lg:grid-cols-12 gap-5 ">
+  {/* Recent Activity: Takes ~70% width (8/12 columns) */}
+  <div className="lg:col-span-6">
+    <RecentActivity activities={recentActivity} />
+  </div>
+
+  {/* MyTools: Takes ~30% width (4/12 columns), compact */}
+  <div className="lg:col-span-3">
+    <div className="h-full">
+      <Mytools tools={tools} />
+    </div>
+  </div>
+</div>
     </>
   );
 }

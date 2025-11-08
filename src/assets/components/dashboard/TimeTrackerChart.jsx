@@ -3,7 +3,7 @@ export default function TimeTrackerChart({ data }) {
   const barHeights = ['60%', '80%', '50%', '90%', '70%', '30%', '20%']; // Mon, Tue, Wed, Thu, Fri, Sat, Sun
   
   return (
-    <div className="bg-white rounded-3xl p-6 shadow-sm h-fit" style={{ border: '1px solid #D9D9D9' }}>
+    <div className="bg-white rounded-3xl p-6 shadow-sm h-full " style={{ border: '1px solid #D9D9D9' }}>
       <h3 className="text-2xl font-light mb-6">Time Tracker</h3>
       <div className="flex gap-4">
         {/* Y-axis labels on the left */}

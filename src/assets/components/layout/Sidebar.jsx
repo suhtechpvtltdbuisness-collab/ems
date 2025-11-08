@@ -11,8 +11,10 @@ import my_profile_icon from '../../icons/myprofile_icon.svg';
 import settings_icon from '../../icons/settings_icon.svg';
 import support_icon from '../../icons/support_icon.svg';
 import announcements_icon from '../../icons/Announcements_icon.svg';
+import message_icon from '../../icons/message_icon.svg';
 
-import logo from '../../../assets/images/home_logo.svg';
+import logo from '../../../assets/images/mainhome_logo.svg';
+
 
 const menuItems = [
   { icon: dashboard_icon, label: 'Dashboard', color: 'text-purple-600 bg-purple-50' },
@@ -22,6 +24,7 @@ const menuItems = [
   { icon: leavemanagement_icon, label: 'Leave Management' },
   { icon: reports_icon, label: 'Reports' },
   { icon: announcements_icon, label: 'Announcements' },
+  { icon: message_icon, label: 'Messages' },
   { icon: my_profile_icon, label: 'My Profile' },
   { icon: settings_icon, label: 'Settings' },
   { icon: support_icon, label: 'Support' },
@@ -34,9 +37,8 @@ export default function Sidebar({ collapsed, setCollapsed }) {
     <div className={`${collapsed ? 'w-20' : 'w-64'} bg-white h-screen border-r border-gray-200 flex flex-col transition-all duration-300 fixed left-0 top-0 z-50`}>
       <div className="p-5 flex items-center justify-between border-b border-gray-100">
         {!collapsed && (
-          <div className="flex items-center gap-2">
-            <img src={logo} alt="Logo" className="w-8 h-8" />
-            <span className="font-bold text-lg">EMS</span>
+          <div className="flex items-center">
+            <img src={logo} alt="Logo" className="w-32 h-8" />
           </div>
         )}
         <button onClick={() => setCollapsed(!collapsed)} className="p-1 hover:bg-gray-100 rounded-lg">

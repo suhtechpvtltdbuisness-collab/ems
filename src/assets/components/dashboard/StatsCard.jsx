@@ -1,5 +1,10 @@
-export default function StatsCard({ icon: Icon, title, value, subtitle, highlighted, onClick, gradient }) {
+import React from 'react';
+
+export default function StatsCard({ icon, title, value, subtitle, highlighted, onClick, gradient }) {
   const customShadow = '0px 4px 12.1px 0px #0000000D';
+  
+  // Check if icon is a string (SVG path) or React component
+  const isIconString = typeof icon === 'string';
   
   return (
     <div 
@@ -16,7 +21,18 @@ export default function StatsCard({ icon: Icon, title, value, subtitle, highligh
     >
       <div className="flex items-center gap-3 mb-3">
         <div className={`${highlighted ? 'bg-white/20' : 'bg-gray-100'} p-2 rounded-full transition-colors duration-300`}>
-          <Icon size={18} className={highlighted ? 'text-white' : 'text-gray-600'} />
+          {isIconString ? (
+            <img 
+              src={icon} 
+              alt={title} 
+              className={`w-[18px] h-[18px] ${highlighted ? 'filter brightness-0 invert' : ''}`}
+            />
+          ) : (
+            React.createElement(icon, { 
+              size: 18, 
+              className: highlighted ? 'text-white' : 'text-gray-600' 
+            })
+          )}
         </div>
         <span className={`text-xs md:text-sm ${highlighted ? 'text-white/90' : 'text-gray-600'} transition-colors duration-300`}>
           {title}

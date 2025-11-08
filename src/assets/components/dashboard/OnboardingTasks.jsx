@@ -32,7 +32,7 @@ export default function OnboardingTasks({ tasks }) {
               key={task.id} 
               className={`flex items-center justify-between py-3 border-b border-gray-100 last:border-0 cursor-pointer rounded-lg px-2 transition-all duration-300 ${
                 isCompleted 
-                  ? 'bg--50 border-purple-200' 
+                  ? 'bg-purple-50 border-purple-200' 
                   : 'hover:bg-gray-50'
               }`}
               onClick={() => handleTaskToggle(task.id)}

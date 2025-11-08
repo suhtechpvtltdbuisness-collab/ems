@@ -32,7 +32,7 @@ export default function AttendanceChart({
 
   if (error) {
     return (
-      <div className="bg-white rounded-3xl p-6 shadow-sm h-fit" style={{ border: '1px solid #D9D9D9' }}>
+      <div className="bg-white rounded-3xl p-6 shadow-sm h-full " style={{ border: '1px solid #D9D9D9' }}>
         <div className="flex flex-col items-center justify-center h-64 text-center">
           <div className="text-red-500 mb-2">
             <svg className="w-8 h-8 mx-auto" fill="currentColor" viewBox="0 0 20 20">
