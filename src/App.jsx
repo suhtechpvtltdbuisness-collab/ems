@@ -1,21 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Login from './assets/pages/login'
-import AuthPage from './assets/pages/AuthPage'
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import EmployeeInformation from "./assets/pages/Employees/EmployeeInformation";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        {/* <Login /> */}
-        <AuthPage />
-      </div>
-    </>
-  )
+    <Routes>
+      {/* Redirect to personalinfo by default */}
+      <Route
+        path="/employees"
+        element={<Navigate to="/employees/personalinfo" replace />}
+      />
+
+      {/* Employee Info with tabs */}
+      <Route
+        path="/employees/:tab"
+        element={<EmployeeInformation />}
+      />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
