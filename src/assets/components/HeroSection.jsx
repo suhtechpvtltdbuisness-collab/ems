@@ -5,18 +5,18 @@ export default function HeroSection() {
   const navigate = useNavigate();
 
   const handleCTA = () => {
-    navigate("/auth?mode=login"); // redirects to login page
+    navigate("/auth?mode=login"); 
   };
 
   return (
     <section id="HeroSection" className="flex flex-col items-center text-center pt-20 relative px-4">
 
       {/* Background Shape */}
-      <div className="">
+      <div className="absolute -top-20 left-1/2 -translate-x-1/2 -z-10 w-full max-w-4xl">
         <img
-          src="/Ellipse 492 (1).svg"
+          src="/Ellipse_btn _492.svg"
           alt="bg-shape"
-          className="absolute top-[165px] left-[200px] rotate-90 -z-9"
+          className="w-full h-auto opacity-90"
         />
       </div>
 
@@ -32,7 +32,8 @@ export default function HeroSection() {
 
       {/* Subtext */}
       <p className="text-gray-500 mt-4 max-w-xl">
-        Lorem ipsum dolor sit amet consectetur. kshi uenmamet consectetur. kshi uenmamet.
+        All in One Powerful EMS Platform
+        From employee management to attendance tracking, task assignment, time monitoring, project planning, performance analysis, payroll, and more—ORGA helps your team work smarter, faster, and more efficiently  
       </p>
 
       {/* CTA Button */}

@@ -1,19 +1,22 @@
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 
 export default function SupportHero() {
+  const navigate = useNavigate();
+
+  const handleCTA = () => {
+    navigate("/auth?mode=login"); // redirects to login page
+  };
   return (
     <section className="flex flex-col items-center text-center pt-20">
-      <img
-        src="/Ellipse 492 (1).svg"
-        alt="bg-shape"
-        className="
-           absolute
-           top-[165px]
-            left-[200px]
-          rotate-90
-          -z-9"
-      />
+      <div className="absolute -top-20 left-1/2 -translate-x-1/2 -z-10 w-full max-w-4xl">
+        <img
+          src="/Ellipse_btn _492.svg"
+          alt="bg-shape"
+          className="w-full h-auto opacity-90"
+        />
+      </div>
 
       {/* Headline */}
       <h1 className="text-5xl md:text-5xl font-poppins font-semibold text-gray-900 leading-14">
@@ -30,9 +33,8 @@ export default function SupportHero() {
       </p>
 
       {/* CTA Button */}
-      <button className="relative mt-8 flex items-center gap-2 px-6 py-3 rounded-xl bg-[#756FCC] text-white shadow-md hover:opacity-90 transition font-poppins font-medium cursor-pointer
-  before:absolute before:inset-0 before:rounded-xl before:bg-[#96FFB2] before:blur-lg before:opacity-60 before:-z-10
-">
+      <button onClick={handleCTA}
+      className="relative mt-8 flex items-center gap-2 px-6 py-3 rounded-xl bg-[#756FCC] text-white shadow-md hover:opacity-90 transition font-poppins font-medium cursor-pointer">
         Try for free
         <ArrowRight size={18} />
       </button>

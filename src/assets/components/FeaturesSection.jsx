@@ -3,37 +3,37 @@ export default function FeaturesSection() {
     {
       iconUrl: "/list_alt.png",
       title: "Task Management",
-      description: "Lorem ipsum dolor sit amet consectetur.",
+      description: "Stay organized with smart task planning, real-time tracking, deadlines, priorities, and automated workflows — all in one intuitive dashboard.",
       bgColor: "bg-white",
     },
     {
       iconUrl: "/TeamC.svg",
       title: "Team Collaboration",
-      description: "Lorem ipsum dolor sit amet consectetur.",
+      description: "Enhance teamwork with seamless communication, shared workspaces, file sharing, and synchronized updates for faster decision-making.",
       bgColor: "bg-white",
     },
     {
       iconUrl: "/ProjectT.svg",
       title: "Project Timeline",
-      description: "Lorem ipsum dolor sit amet consectetur.",
+      description: "Visualize your entire project journey with dynamic timelines, milestones, and progress tracking to ensure on-time delivery every single time.",
       bgColor: "bg-white",
     },
     {
       iconUrl: "/HRMS.svg",
       title: "HRMS",
-      description: "Lorem ipsum dolor sit amet consectetur.",
+      description: "Manage employees effortlessly with automated attendance, leave tracking, document management, onboarding, and performance analytics.",
       bgColor: "bg-white",
     },
     {
       iconUrl: "/finance.svg",
       title: "Finance Management",
-      description: "Lorem ipsum dolor sit amet consectetur.",
+      description: "Track expenses, generate invoices, monitor budgets, and analyze financial performance with smart, accurate, and secure financial tools.",
       bgColor: "bg-white",
     },
     {
       iconUrl: "/support.svg",
       title: "Support",
-      description: "Lorem ipsum dolor sit amet consectetur.",
+      description: "Offer quick resolutions with a built-in support system for tickets, customer queries, and internal issue tracking — ensuring smooth operations.",
       bgColor: "bg-white",
     },
   ];
@@ -49,8 +49,8 @@ export default function FeaturesSection() {
             <span className="block">needs in <span className="text-green-500">one place</span></span>
           </h1>
           <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            <span className="block">Lorem ipsum dolor sit amet consectetur. kshi uemnamet</span>
-            <span className="block">consectetur. kshi uemnamet</span>
+            <span className="block">A complete, all-in-one Enterprise Management System designed to streamline your workflow, boost productivity, and centralize your entire business operations</span>
+            <span className="block">from tasks to timelines, HR to finance, all inside one powerful platform.</span>
           </p>
         </div>
 

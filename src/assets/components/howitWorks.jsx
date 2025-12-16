@@ -14,7 +14,7 @@ export default function HowitWorks() {
         <p className="text-[#7C7C7C] font-nunito text-sm xs:text-base sm:text-lg md:text-xl lg:text-[20px] 
           font-normal leading-[24px] xs:leading-[26px] sm:leading-[28px] md:leading-[30px] lg:leading-[32px] 
           tracking-[-0.4px] sm:tracking-[-0.48px] max-w-[600px] mx-auto">
-          Lorem ipsum dolor sit amet consectetur. kshi uemnamet consectetur. kshi uemnamet
+          ORGA brings all your business operations together into one seamless workflow. From onboarding your team to assigning tasks, tracking performance, and managing projects — everything works smoothly, intuitively, and in real time.
         </p>
       </div>
 

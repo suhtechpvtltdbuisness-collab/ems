@@ -17,7 +17,7 @@ export default function Finance() {
           </h1>
 
           <p className="text-[#7C7C7C] font-nunito text-sm xs:text-base sm:text-lg md:text-[24px] leading-relaxed max-w-[90%] sm:max-w-[95%] md:max-w-full">
-            Lorem ipsum dolor sit amet consectetur. kshi uemnamet consectetur. kshi uemnamet
+            Managing business finances doesn’t have to be complicated. ORGA gives you a powerful, automated finance management system that helps you track expenses, manage invoices, monitor cash flow, and make informed financial decisions — all from one smart dashboard.
           </p>
         </div>
 

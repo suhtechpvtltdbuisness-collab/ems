@@ -13,6 +13,7 @@ import PricingSection from "./assets/components/Price";
 import Profitablity from "./assets/components/Profitably";
 import FreeTrialSection from "./assets/components/FreeTrialSection";
 import TestimonialsSection from "./assets/components/TestimonialsSection";
+
 import ProjectHero from "./assets/projectmanagement/ProjectHero";
 import ProjectFeature from "./assets/projectmanagement/ProjectFeature";
 import ProjectHowitWorks from "./assets/projectmanagement/ProjecthowitWorks";
@@ -21,25 +22,47 @@ import ProjectAttendence from "./assets/projectmanagement/ProjectAttendence";
 import ProjectProfitable from "./assets/projectmanagement/ProjectProfitable";
 import ProjectBusiness from "./assets/projectmanagement/ProjectBusiness";
 import ProjectFreeTrialSection from "./assets/projectmanagement/ProjectFreeTrialSection";
+
 import FinanceHero from "./assets/financemgmt/FinanceHero";
 import HRMSHero from "./assets/hrms/HrmsHero";
 import SupportHero from "./assets/support/SupportHero";
+
 import Demo from "./assets/demos/Demo";
 import AuthPage from "./assets/pages/AuthPage";
 import SolutionsPage from "./assets/solutions/SolutionsPage";
+
 import ScrollToTop from "./assets/components/ScrollToTop";
 
+import ProjectOrganizerHero from "./assets/solutiondedipages/ProjectOrganizerHero";
+import ProjectOrganizerWorks from "./assets/solutiondedipages/ProjectOrganizerWorks";
+import ProjectOrganizerTeam from "./assets/solutiondedipages/ProjectOrganizerTeam";
+import ProjectOrganizerTeamEvent from "./assets/solutiondedipages/ProjectOrganizerTeamEvent";
+import ProjectOrganizerBacklog from "./assets/solutiondedipages/ProjectOrganizerBacklog";
+import ProjectOrganizerTrial from "./assets/solutiondedipages/ProjectOrganizerTrial";
 
+// NEWLY ADDED IMPORT FOR EMPLOYEE DETAILS PAGE
+import EmpPersonalInfo from "./assets/hrms/hrmsviewdetails/EmpPersonalInfo";
+
+
+// ======================
+// PROTECTED ROUTE
+// ======================
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("isLoggedIn") === "true";
   return isAuthenticated ? children : <Navigate to="/" replace />;
 };
 
+
+// ======================
+// MAIN APP COMPONENT
+// ======================
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
+
+        {/* AUTH PAGE */}
         <Route
           path="/auth"
           element={
@@ -48,38 +71,49 @@ function App() {
             </div>
           }
         />
+
+        {/* SOLUTIONS PAGE */}
         <Route
           path="/solutions"
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
-
               <div className="pt-0">
+                <Navbar />
                 <SolutionsPage />
                 <Footer />
               </div>
-              
             </div>
           }
         />
 
-        {/* ===========================
-            HOME PAGE ROUTE
-        ============================ */}
+        {/* SOLUTION DEDICATED PAGES */}
+        <Route
+          path="/solutiondedipages"
+          element={
+            <div className="relative min-h-screen w-full overflow-x-hidden">
+              <div className="pt-20">
+                <Navbar />
+                <ProjectOrganizerHero />
+                <ProjectOrganizerWorks />
+                <ProjectOrganizerTeam />
+                <ProjectOrganizerTeamEvent />
+                <ProjectOrganizerBacklog />
+                <ProjectOrganizerTrial />
+                <Footer />
+              </div>
+            </div>
+          }
+        />
+
+        {/* HOME PAGE */}
         <Route
           path="/"
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
-
-              {/* Background */}
               <div className="fixed inset-0 -z-10">
-                <img
-                  src="/Grid_bg.svg"
-                  alt="grid background"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
 
-              {/* Content */}
               <div className="pt-20">
                 <Navbar />
                 <HeroSection />
@@ -95,29 +129,19 @@ function App() {
                 <TestimonialsSection />
                 <Footer />
               </div>
-
             </div>
           }
         />
 
-        {/* ===========================
-            PROJECT MANAGEMENT PAGE
-        ============================ */}
+        {/* PROJECT MANAGEMENT PAGE */}
         <Route
           path="/project-management"
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
-
-              {/* Background */}
               <div className="fixed inset-0 -z-10">
-                <img
-                  src="/Grid_bg.svg"
-                  alt="grid background"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
 
-              {/* Content */}
               <div className="pt-20">
                 <Navbar />
                 <ProjectHero />
@@ -130,28 +154,19 @@ function App() {
                 <ProjectFreeTrialSection />
                 <Footer />
               </div>
-
             </div>
           }
         />
-        {/* ===========================
-            FINANCE MANAGEMENT PAGE
-        ============================ */}
+
+        {/* FINANCE MANAGEMENT PAGE */}
         <Route
           path="/finance-mgmt"
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
-
-              {/* Background */}
               <div className="fixed inset-0 -z-10">
-                <img
-                  src="/Grid_bg.svg"
-                  alt="grid background"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
 
-              {/* Content */}
               <div className="pt-20">
                 <Navbar />
                 <FinanceHero />
@@ -164,29 +179,19 @@ function App() {
                 <ProjectFreeTrialSection />
                 <Footer />
               </div>
-
             </div>
           }
         />
 
-        {/* ===========================
-            Hrms PAGE
-        ============================ */}
+        {/* HRMS PAGE */}
         <Route
           path="/hrms"
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
-
-              {/* Background */}
               <div className="fixed inset-0 -z-10">
-                <img
-                  src="/Grid_bg.svg"
-                  alt="grid background"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
 
-              {/* Content */}
               <div className="pt-20">
                 <Navbar />
                 <HRMSHero />
@@ -199,28 +204,19 @@ function App() {
                 <ProjectFreeTrialSection />
                 <Footer />
               </div>
-
             </div>
           }
         />
-        {/* ===========================
-            Hrms PAGE
-        ============================ */}
+
+        {/* SUPPORT PAGE */}
         <Route
           path="/support"
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
-
-              {/* Background */}
               <div className="fixed inset-0 -z-10">
-                <img
-                  src="/Grid_bg.svg"
-                  alt="grid background"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
 
-              {/* Content */}
               <div className="pt-20">
                 <Navbar />
                 <SupportHero />
@@ -233,20 +229,17 @@ function App() {
                 <ProjectFreeTrialSection />
                 <Footer />
               </div>
-
             </div>
           }
         />
+
+        {/* DEMO PAGE */}
         <Route
           path="/demo"
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
               <div className="fixed inset-0 -z-10">
-                <img
-                  src="/Grid_bg.svg"
-                  alt="grid background"
-                  className="w-full h-full object-cover"
-                />
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
 
               <div className="pt-20">
@@ -255,6 +248,24 @@ function App() {
                 <Footer />
               </div>
             </div>
+          }
+        />
+
+        {/* =============================
+            EMPLOYEE PERSONAL INFO PAGE
+        ============================= */}
+        <Route
+          path="/employee-details"
+          element={
+            <ProtectedRoute>
+              <div className="relative min-h-screen w-full overflow-x-hidden">
+                <div className="pt-20">
+                  <Navbar />
+                  <EmpPersonalInfo />
+                 
+                </div>
+              </div>
+            </ProtectedRoute>
           }
         />
 

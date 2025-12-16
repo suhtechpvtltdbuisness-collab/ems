@@ -5,18 +5,19 @@ export default function ProjectHero() {
   const navigate = useNavigate();
 
   const handleCTA = () => {
-    navigate("/auth?mode=login");  // redirect to login
+    navigate("/auth?mode=login");  
   };
 
   return (
     <section className="flex flex-col items-center text-center pt-20 relative px-4">
 
-      {/* Background Shape */}
-      <img
-        src="/Ellipse 492 (1).svg"
-        alt="bg-shape"
-        className="absolute top-[170px] left-[200px] rotate-90 -z-9"
-      />
+       <div className="absolute -top-20 left-1/2 -translate-x-1/2 -z-10 w-full max-w-4xl">
+        <img
+          src="/Ellipse_btn _492.svg"
+          alt="bg-shape"
+          className="w-full h-auto opacity-90"
+        />
+      </div>
 
       {/* Headline */}
       <h1 className="text-5xl md:text-5xl font-poppins font-semibold text-gray-900 leading-14">
