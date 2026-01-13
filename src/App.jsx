@@ -251,6 +251,24 @@ function App() {
           }
         />
 
+        {/* PRICING PAGE */}
+        <Route
+          path="/pricing"
+          element={
+            <div className="relative min-h-screen w-full overflow-x-hidden">
+              <div className="fixed inset-0 -z-10">
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
+              </div>
+
+              <div className="pt-20">
+                <Navbar />
+                <PricingSection />
+                <Footer />
+              </div>
+            </div>
+          }
+        />
+
         {/* =============================
             EMPLOYEE PERSONAL INFO PAGE
         ============================= */}
@@ -262,7 +280,7 @@ function App() {
                 <div className="pt-20">
                   <Navbar />
                   <EmpPersonalInfo />
-                 
+
                 </div>
               </div>
             </ProtectedRoute>
