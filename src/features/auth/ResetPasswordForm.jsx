@@ -1,8 +1,8 @@
 // src/components/ResetPasswordForm.jsx
 import React, { useState } from "react";
 import { Lock } from "lucide-react";
-import { InputField } from "./InputField";
-import { Button } from "./Button";
+import { InputField } from "../../components/common/InputField";
+import { Button } from "../../components/common/Button";
 
 export const ResetPasswordForm = ({ onSubmit, onBack }) => {
   const [password, setPassword] = useState("");

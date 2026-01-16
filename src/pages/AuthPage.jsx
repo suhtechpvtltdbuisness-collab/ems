@@ -1,13 +1,13 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { LoginForm } from "../components/LoginForm"; 
-import { RegisterForm } from "../components/RegisterForm"; 
-import { ForgotPasswordForm } from "../components/ForgotPasswordForm"; 
-import { ResetPasswordForm } from "../components/ResetPasswordForm"; 
+import { LoginForm } from "../features/auth/LoginForm";
+import { RegisterForm } from "../features/auth/RegisterForm";
+import { ForgotPasswordForm } from "../features/auth/ForgotPasswordForm";
+import { ResetPasswordForm } from "../features/auth/ResetPasswordForm";
 
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
-  const mode = searchParams.get("mode") || "login"; 
+  const mode = searchParams.get("mode") || "login";
   const [verifiedEmail, setVerifiedEmail] = useState(""); // store email for reset
 
   // login handler
@@ -74,7 +74,7 @@ export default function AuthPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6 overflow-hidden bg-gradient-to-br from-[#a8c0ff] via-[#e0c3fc] to-[#f9f9ff]">
-      
+
       {/* Background Artwork */}
       <img src="/bg.svg" className="absolute inset-0 w-full h-full object-cover opacity-60" />
       <img src="/Arrow_Graphic elements.svg" className="absolute bottom-1 left-8 w-60 opacity-80" />

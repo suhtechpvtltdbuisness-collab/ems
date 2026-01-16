@@ -1,8 +1,8 @@
 // src/components/LoginForm.jsx
 import React, { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
-import { InputField } from './InputField';
-import { Button } from './Button';
+import { InputField } from '../../components/common/InputField';
+import { Button } from '../../components/common/Button';
 
 export const LoginForm = ({ onForgotPassword, onLogin, onRegister }) => {
   const [email, setEmail] = useState('');

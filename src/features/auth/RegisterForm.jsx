@@ -1,8 +1,8 @@
 // src/components/RegisterForm.jsx
 import React, { useState } from "react";
 import { Mail, Lock, User } from "lucide-react";
-import { InputField } from "./InputField";
-import { Button } from "./Button";
+import { InputField } from "../../components/common/InputField";
+import { Button } from "../../components/common/Button";
 
 export const RegisterForm = ({ onRegister, onLogin }) => {
   const [firstName, setFirstName] = useState("");

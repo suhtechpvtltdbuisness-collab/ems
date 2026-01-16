@@ -1,47 +1,59 @@
 import { Navigate, BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Attendnce from "./assets/components/Attendence";
-import Customers from "./assets/components/Customers";
-import FeaturesSection from "./assets/components/FeaturesSection";
-import Finance from "./assets/components/Finance";
-import Footer from "./assets/components/Footer";
-import HeroSection from "./assets/components/HeroSection";
-import HowitWorks from "./assets/components/howitWorks";
-import IntegrationSection from "./assets/components/IntegrationSection";
-import Navbar from "./assets/components/Navbar";
-import PricingSection from "./assets/components/Price";
-import Profitablity from "./assets/components/Profitably";
-import FreeTrialSection from "./assets/components/FreeTrialSection";
-import TestimonialsSection from "./assets/components/TestimonialsSection";
+// Layout Components
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
 
-import ProjectHero from "./assets/projectmanagement/ProjectHero";
-import ProjectFeature from "./assets/projectmanagement/ProjectFeature";
-import ProjectHowitWorks from "./assets/projectmanagement/ProjecthowitWorks";
-import ProjectFinance from "./assets/projectmanagement/ProjectFinance";
-import ProjectAttendence from "./assets/projectmanagement/ProjectAttendence";
-import ProjectProfitable from "./assets/projectmanagement/ProjectProfitable";
-import ProjectBusiness from "./assets/projectmanagement/ProjectBusiness";
-import ProjectFreeTrialSection from "./assets/projectmanagement/ProjectFreeTrialSection";
+// Common Components
+import ScrollToTop from "./components/common/ScrollToTop";
 
-import FinanceHero from "./assets/financemgmt/FinanceHero";
-import HRMSHero from "./assets/hrms/HrmsHero";
-import SupportHero from "./assets/support/SupportHero";
+// Home Page Sections
+import HeroSection from "./components/sections/home/HeroSection";
+import FeaturesSection from "./components/sections/home/FeaturesSection";
+import HowitWorks from "./components/sections/home/howitWorks";
+import Finance from "./components/sections/home/Finance";
+import Attendnce from "./components/sections/home/Attendence";
+import Profitablity from "./components/sections/home/Profitably";
+import Customers from "./components/sections/home/Customers";
+import IntegrationSection from "./components/sections/home/IntegrationSection";
+import FreeTrialSection from "./components/sections/home/FreeTrialSection";
+import TestimonialsSection from "./components/sections/home/TestimonialsSection";
 
-import Demo from "./assets/demos/Demo";
-import AuthPage from "./assets/pages/AuthPage";
-import SolutionsPage from "./assets/solutions/SolutionsPage";
+// Pricing Section
+import PricingSection from "./components/sections/pricing/Price";
 
-import ScrollToTop from "./assets/components/ScrollToTop";
+// Project Management Sections
+import ProjectHero from "./components/sections/project-management/ProjectHero";
+import ProjectFeature from "./components/sections/project-management/ProjectFeature";
+import ProjectHowitWorks from "./components/sections/project-management/ProjecthowitWorks";
+import ProjectFinance from "./components/sections/project-management/ProjectFinance";
+import ProjectAttendence from "./components/sections/project-management/ProjectAttendence";
+import ProjectProfitable from "./components/sections/project-management/ProjectProfitable";
+import ProjectBusiness from "./components/sections/project-management/ProjectBusiness";
+import ProjectFreeTrialSection from "./components/sections/project-management/ProjectFreeTrialSection";
 
-import ProjectOrganizerHero from "./assets/solutiondedipages/ProjectOrganizerHero";
-import ProjectOrganizerWorks from "./assets/solutiondedipages/ProjectOrganizerWorks";
-import ProjectOrganizerTeam from "./assets/solutiondedipages/ProjectOrganizerTeam";
-import ProjectOrganizerTeamEvent from "./assets/solutiondedipages/ProjectOrganizerTeamEvent";
-import ProjectOrganizerBacklog from "./assets/solutiondedipages/ProjectOrganizerBacklog";
-import ProjectOrganizerTrial from "./assets/solutiondedipages/ProjectOrganizerTrial";
+// Finance Management Sections
+import FinanceHero from "./components/sections/finance-management/FinanceHero";
 
-// NEWLY ADDED IMPORT FOR EMPLOYEE DETAILS PAGE
-import EmpPersonalInfo from "./assets/hrms/hrmsviewdetails/EmpPersonalInfo";
+// HRMS Sections
+import HRMSHero from "./components/sections/hrms/HrmsHero";
+
+// Support Sections
+import SupportHero from "./components/sections/support/SupportHero";
+
+// Project Organizer Sections
+import ProjectOrganizerHero from "./components/sections/project-organizer/ProjectOrganizerHero";
+import ProjectOrganizerWorks from "./components/sections/project-organizer/ProjectOrganizerWorks";
+import ProjectOrganizerTeam from "./components/sections/project-organizer/ProjectOrganizerTeam";
+import ProjectOrganizerTeamEvent from "./components/sections/project-organizer/ProjectOrganizerTeamEvent";
+import ProjectOrganizerBacklog from "./components/sections/project-organizer/ProjectOrganizerBacklog";
+import ProjectOrganizerTrial from "./components/sections/project-organizer/ProjectOrganizerTrial";
+
+// Pages
+import AuthPage from "./pages/AuthPage";
+import SolutionsPage from "./pages/SolutionsPage";
+import Demo from "./pages/DemoPage";
+import EmpPersonalInfo from "./pages/employee/EmpPersonalInfo";
 
 
 // ======================
