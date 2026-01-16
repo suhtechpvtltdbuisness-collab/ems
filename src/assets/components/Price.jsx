@@ -39,9 +39,9 @@ export default function PricingSection() {
 
   const plans = [
     {
-      title: "Basic Plan",
+      title: "Free Plan",
       bestFor: "Small organizations & early-stage teams",
-      price: "$29",
+      price: "$0",
       categories: [
         {
           name: "HR MODULE",
