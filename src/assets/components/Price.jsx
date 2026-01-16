@@ -1,4 +1,5 @@
 import { Check, Lock, Building, Rocket, ShoppingBag, CreditCard, ShieldCheck, Mail, Key, LogIn, ArrowDown } from "lucide-react";
+import { useState } from "react";
 
 const processSteps = [
   {
@@ -34,6 +35,8 @@ const processSteps = [
 ];
 
 export default function PricingSection() {
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
   const plans = [
     {
       title: "Basic Plan",
@@ -41,15 +44,15 @@ export default function PricingSection() {
       price: "$29",
       categories: [
         {
-          name: "HR",
+          name: "HR MODULE",
           features: ["Employee management", "Leave & attendance (basic)"]
         },
         {
-          name: "Finance",
-          features: ["Expense & income tracking", "Basic reports"]
+          name: "FINANCE MODULE",
+          features: ["Expense & income tracking", "Basic financial reports"]
         }
       ],
-      limitations: ["Limited users", "Basic support only"]
+      limitations: ["Limited number of users", "Basic support only"]
     },
     {
       title: "Standard Plan",
@@ -58,27 +61,19 @@ export default function PricingSection() {
       price: "$99",
       categories: [
         {
-          name: "HR",
-          features: ["Employee management", "Leave & attendance (basic)"]
+          name: "HR & FINANCE",
+          features: ["Employee management", "Leave & attendance", "Expense & income tracking", "Basic reports"]
         },
         {
-          name: "Finance",
-          features: ["Expense & income tracking", "Basic reports"]
+          name: "SUPPORT & CRM",
+          features: ["Ticket management system", "Customer communication", "Lead & customer management", "Follow-ups"]
         },
         {
-          name: "Support",
-          features: ["Ticket management", "Customer communication"]
-        },
-        {
-          name: "CRM",
-          features: ["Leads & customer management", "Follow-ups"]
-        },
-        {
-          name: "Project Management",
+          name: "PROJECT MANAGEMENT",
           features: ["Projects & tasks", "Assignments & timelines"]
         }
       ],
-      limitations: ["Limited integrations", "Standard workflows", "No inventory or order management"]
+      limitations: ["Limited integrations", "Standard workflows only", "No inventory or order management"]
     },
     {
       title: "Advanced Plan",
@@ -87,36 +82,16 @@ export default function PricingSection() {
       price: "$180",
       categories: [
         {
-          name: "HR",
-          features: ["Employee management", "Leave & attendance (basic)"]
+          name: "CORE MODULES",
+          features: ["HR management", "Finance tracking & reports", "CRM & customer management", "Support ticket system"]
         },
         {
-          name: "Finance",
-          features: ["Expense & income tracking", "Basic reports"]
+          name: "OPERATIONS",
+          features: ["Inventory & warehouse management", "Sales & purchase orders", "Order lifecycle tracking"]
         },
         {
-          name: "Support",
-          features: ["Ticket management", "Customer communication"]
-        },
-        {
-          name: "CRM",
-          features: ["Leads & customer management", "Follow-ups"]
-        },
-        {
-          name: "Project Management",
-          features: ["Projects & tasks", "Assignments & timelines"]
-        },
-        {
-          name: "Integrations",
-          features: ["API access", "Third-party tools"]
-        },
-        {
-          name: "Inventory",
-          features: ["Stock tracking", "Warehouses"]
-        },
-        {
-          name: "Order Management",
-          features: ["Sales & purchase orders", "Order lifecycle tracking"]
+          name: "INTEGRATIONS",
+          features: ["API access", "Third-party integrations"]
         }
       ],
       advancedFeatures: ["Advanced workflows", "Custom roles & permissions", "Priority / SLA support", "Higher user & data limits"]
@@ -147,20 +122,27 @@ export default function PricingSection() {
       </div>
 
       {/* Cards */}
-      <div className="relative z-10 px-4 md:px-10 lg:px-20 grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6 w-full max-w-7xl mx-auto items-start">
+      <div className="relative z-10 px-4 md:px-10 lg:px-20 grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6 w-full max-w-7xl mx-auto items-stretch">
         {plans.map((plan, index) => {
           const isStandard = plan.title === "Standard Plan";
+          const isSelected = selectedPlan === plan.title;
 
           return (
             <div
               key={plan.title}
+              onClick={() => setSelectedPlan(plan.title)}
               className={`
-                relative w-full p-10 flex flex-col gap-8
-                rounded-[32px] bg-white border border-[#F1F5F9]
+                relative w-full h-full p-10 flex flex-col gap-8
+                rounded-[32px] bg-white border cursor-pointer
                 shadow-[0_10px_40px_rgba(0,0,0,0.04)]
                 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(117,111,204,0.12)]
                 hover:-translate-y-1 overflow-hidden
-                ${isStandard ? "border-[#756FCC]/20 ring-1 ring-[#756FCC]/10" : ""}
+                ${isSelected
+                  ? "border-[#756FCC] ring-2 ring-[#756FCC]/30"
+                  : isStandard
+                    ? "border-[#756FCC]/20 ring-1 ring-[#756FCC]/10"
+                    : "border-[#F1F5F9]"
+                }
               `}
             >
               {/* Corner Shade for Middle Card */}
@@ -248,9 +230,13 @@ export default function PricingSection() {
               )}
 
               <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedPlan(plan.title);
+                }}
                 className={`
                   mt-auto w-full py-4 rounded-xl font-bold transition-all duration-300 cursor-pointer text-[15px]
-                  ${isStandard
+                  ${isSelected
                     ? "bg-[#756FCC] text-white hover:bg-[#645db7] shadow-[0_10px_20px_rgba(117,111,204,0.3)]"
                     : "border-2 border-[#756FCC]/20 text-[#756FCC] hover:border-[#756FCC] hover:bg-[#F8F9FD]"
                   }

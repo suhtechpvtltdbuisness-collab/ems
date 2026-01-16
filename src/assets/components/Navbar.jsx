@@ -33,7 +33,7 @@ export default function Navbar() {
       z-50 bg-white/20 backdrop-blur-lg border-b border-white/10">
 
       {/* Logo */}
-      <div className="flex items-center gap-2 z-20 cursor-pointer" onClick={scrollToHero}>
+      <div className="flex items-center gap-2 z-20 cursor-pointer" onClick={() => navigate("/")}>
         <img src="/Orga Logo (1).svg" alt="Logo" className="h-8" />
       </div>
 
@@ -83,7 +83,7 @@ export default function Navbar() {
 
         <Link
           to="/demo"
-          
+
           className="cursor-pointer hover:text-[#756FCC] transition"
         >
           Book a Demo
@@ -197,14 +197,14 @@ export default function Navbar() {
             Book a Demo
           </Link> */}
           <Link
-  to="/demo"
-  onClick={() => {
-    setIsMenuOpen(false);
-  }}
-  className="py-2 border-b border-gray-100 block hover:text-[#756FCC]"
->
-  Book a Demo
-</Link>
+            to="/demo"
+            onClick={() => {
+              setIsMenuOpen(false);
+            }}
+            className="py-2 border-b border-gray-100 block hover:text-[#756FCC]"
+          >
+            Book a Demo
+          </Link>
 
           {/* Mobile Buttons */}
           <div className="flex flex-col gap-3 pt-4">
