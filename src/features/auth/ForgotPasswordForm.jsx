@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Mail } from "lucide-react";
-import { InputField } from "../components/InputField";
-import { Button } from "../components/Button";
+import { InputField } from "../../components/common/InputField";
+import { Button } from "../../components/common/Button";
 
 export const ForgotPasswordForm = ({ onGetLink, onBack }) => {
   const [email, setEmail] = useState("");
@@ -35,10 +35,10 @@ export const ForgotPasswordForm = ({ onGetLink, onBack }) => {
           />
 
           <div className="mt-4">
-            <Button 
-              text="Get Link" 
-              onClick={handleGetLink} 
-              disabled={!email} 
+            <Button
+              text="Get Link"
+              onClick={handleGetLink}
+              disabled={!email}
             />
           </div>
 
