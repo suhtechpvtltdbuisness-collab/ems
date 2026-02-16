@@ -84,9 +84,9 @@ export default function AuthPage() {
       {/* Main UI */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-4xl">
         {renderContent()}
-        <p className="text-center text-gray-600 mt-6 text-sm">
+        {/* <p className="text-center text-gray-600 mt-6 text-sm">
           Secure login powered by encrypted authentication
-        </p>
+        </p> */}
       </div>
     </div>
   );

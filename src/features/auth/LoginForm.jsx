@@ -1,90 +1,100 @@
-// src/components/LoginForm.jsx
-import React, { useState } from 'react';
-import { Mail, Lock } from 'lucide-react';
-import { InputField } from '../../components/common/InputField';
-import { Button } from '../../components/common/Button';
+import React, { useState } from "react";
+import { Mail, Lock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { InputField } from "../../components/common/InputField";
+import { Button } from "../../components/common/Button";
+import { Toast } from "../../components/common/Toast";
+import { authService } from "../../service";
 
-export const LoginForm = ({ onForgotPassword, onLogin, onRegister }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export const LoginForm = ({ onLogin }) => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
 
-  const handleSubmit = () => {
-    if (email && password) {
-      onLogin(email, password);
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = async () => {
+    if (!form.email || !form.password) return;
+
+    setLoading(true);
+
+    const result = await authService.login(form);
+
+    if (result.success) {
+      setToast({
+        type: "success",
+        title: "Login Successful",
+        message: "Redirecting...",
+      });
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    } else {
+      setToast({
+        type: "error",
+        title: "Login Failed",
+        message: result.message,
+      });
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-10 flex flex-col lg:flex-row gap-10">
+    <>
+      <Toast toast={toast} onClose={() => setToast(null)} />
 
-      {/* LEFT SIDE — Centered Form */}
-      <div className="flex-1 flex flex-col justify-center">
-        <h1 className="text-3xl font-bold mb-1 text-center lg:text-left">
-          Login
-        </h1>
+      {!toast && (
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+          <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
 
-        <p className="text-gray-500 mb-6 text-center lg:text-left">
-          Please login to continue your account.
-        </p>
-
-        <div className="max-w-lg mx-auto lg:mx-0">
           <InputField
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon={Mail}
             label="Email"
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            icon={Mail}
           />
 
           <InputField
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            icon={Lock}
             label="Password"
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            icon={Lock}
           />
 
-          <div className="mt-4">
+          <div className="mt-6">
             <Button
               text="Login"
               onClick={handleSubmit}
-              disabled={!email || !password}
+              loading={loading}
+              disabled={!form.email || !form.password}
             />
           </div>
 
-          {/* Register Link */}
-          <button
-            onClick={onRegister}
-            className="w-full text-center mt-4 text-gray-400"
-          >
-            Don’t have an account?{" "}
-            <span className="text-purple-600 hover:text-purple-700">
+          <p className="text-sm text-gray-400 text-center mt-6">
+            Don't have an account?{" "}
+            <button
+              onClick={onLogin}
+              className="text-purple-600 font-medium hover:underline"
+            >
               Register
-            </span>
-          </button>
-
-          {/* Forgot Password */}
-          <button
-            onClick={onForgotPassword}
-            className="w-full text-center mt-2 "
-          >
-            <span className="text-purple-600 hover:text-purple-700">
-              Forgot password?
-            </span>
-          </button>
+            </button>
+          </p>
         </div>
-      </div>
-
-      {/* RIGHT SIDE — Illustration */}
-      <div className="hidden lg:flex flex-1 items-center justify-center">
-        <img
-          src="/AuthImg.svg"
-          alt="Login Illustration"
-          className="w-[90%] h-auto rounded-xl"
-        />
-      </div>
-    </div>
+      )}
+    </>
   );
 };

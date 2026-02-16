@@ -1,19 +1,30 @@
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X, User } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUseCasesOpen, setIsUseCasesOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
   const dropdownRef = useRef(null);
+  const profileRef = useRef(null);
+
   const navigate = useNavigate();
+
+  const isRegistered = localStorage.getItem("isRegistered");
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsUseCasesOpen(false);
       }
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setIsProfileOpen(false);
+      }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -21,215 +32,238 @@ export default function Navbar() {
   const goLogin = () => navigate("/auth?mode=login");
   const goRegister = () => navigate("/auth?mode=register");
 
-  const scrollToHero = () => {
-    const heroSection = document.getElementById("HeroSection");
-    if (heroSection) {
-      heroSection.scrollIntoView({ behavior: "smooth" });
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    navigate("/");
+    window.location.reload();
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-20 flex items-center justify-between px-8
-      z-50 bg-white/20 backdrop-blur-lg border-b border-white/10">
+    <nav className="fixed top-0 left-0 w-full h-20 flex items-center justify-between px-8 z-50 bg-white/20 backdrop-blur-lg border-b border-white/10">
 
       {/* Logo */}
-      <div className="flex items-center gap-2 z-20 cursor-pointer" onClick={() => navigate("/")}>
+      <div
+        className="flex items-center gap-2 z-20 cursor-pointer"
+        onClick={() => navigate("/")}
+      >
         <img src="/Orga Logo (1).svg" alt="Logo" className="h-8" />
       </div>
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center gap-8 text-[#292D34] font-medium">
 
-        {/* Use Cases Dropdown */}
-        <div className="relative group" ref={dropdownRef}>
+        {/* Use Cases */}
+        <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsUseCasesOpen(!isUseCasesOpen)}
-            className="flex items-center gap-1 cursor-pointer hover:text-[#756FCC] transition"
+            className="flex items-center gap-1 hover:text-[#756FCC]"
           >
             Use Cases
             <ChevronDown
               size={16}
-              className={`transition-transform duration-300 ${isUseCasesOpen ? "rotate-180" : ""}`}
+              className={`transition ${isUseCasesOpen ? "rotate-180" : ""}`}
             />
           </button>
 
           {isUseCasesOpen && (
-            <div className="absolute top-8 left-0 bg-white shadow-lg rounded-lg w-56 py-3 z-50 border border-gray-100">
-              <Link to="/project-management" className="block px-4 py-2 hover:text-[#756FCC] cursor-pointer">
+            <div className="absolute top-8 left-0 bg-white shadow-lg rounded-lg w-56 py-3 ">
+              <Link to="/project-management" className="block px-4 py-2 hover:text-[#756FCC]">
                 Project Management
               </Link>
-              <Link to="/hrms" className="block px-4 py-2 hover:text-[#756FCC] cursor-pointer">
+              <Link to="/hrms" className="block px-4 py-2 hover:text-[#756FCC]">
                 HRMS
               </Link>
-              <Link to="/support" className="block px-4 py-2 hover:text-[#756FCC] cursor-pointer">
+              <Link to="/support" className="block px-4 py-2 hover:text-[#756FCC]">
                 Support
               </Link>
-              <Link to="/finance-mgmt" className="block px-4 py-2 hover:text-[#756FCC] cursor-pointer">
+              <Link to="/finance-mgmt" className="block px-4 py-2 hover:text-[#756FCC]">
                 Finance Management
               </Link>
             </div>
           )}
         </div>
 
-        {/* Solutions */}
-        <Link to="/solutions" className="cursor-pointer hover:text-[#756FCC] transition">
+        <Link to="/solutions" className="hover:text-[#756FCC]">
           Solutions
         </Link>
 
-
-        <Link to="/pricing" className="cursor-pointer hover:text-[#756FCC] transition">
+        <Link to="/pricing" className="hover:text-[#756FCC]">
           Pricing
         </Link>
 
-        <Link
-          to="/demo"
-
-          className="cursor-pointer hover:text-[#756FCC] transition"
-        >
+        <Link to="/demo" className="hover:text-[#756FCC]">
           Book a Demo
         </Link>
       </div>
 
-      {/* Desktop Buttons */}
+      {/* Desktop Right Section */}
       <div className="hidden md:flex items-center gap-4">
-        <button
-          onClick={goLogin}
-          className="px-5 py-2 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition cursor-pointer"
-        >
-          Login
-        </button>
 
-        <button
-          onClick={goRegister}
-          className="px-5 py-2 rounded-lg border border-[#756FCC] text-[#756FCC] hover:bg-[#756FCC] hover:text-white transition cursor-pointer"
-        >
-          Get Started
-        </button>
+        {!isRegistered ? (
+          <>
+            {/* <button
+              onClick={goLogin}
+              className="px-5 py-2 rounded-lg bg-[#756FCC] text-white"
+            >
+              Login
+            </button> */}
+
+            <button
+              onClick={goRegister}
+              className="px-5 py-2 rounded-lg border border-[#756FCC] text-[#756FCC] hover:bg-[#756FCC] hover:text-white"
+            >
+              Get Started
+            </button>
+          </>
+        ) : (
+          <div className="relative" ref={profileRef}>
+            <button
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#756FCC] bg-white text-[#756FCC]"
+            >
+              <User size={18} />
+              Profile
+              <ChevronDown size={18} />
+            </button>
+
+            {isProfileOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border-[#756FCC] py-2">
+
+                {/* {!isLoggedIn && (
+                  <button
+                    onClick={() => navigate("/hrms/login")}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100  font-medium"
+                  >
+                    Login Dashboard
+                  </button>
+                )} */}
+
+                {isLoggedIn && (
+                  <button
+                    onClick={() => navigate("/hrms/dashboard")}
+                    className="block w-full text-left  px-4 py-2 hover:bg-gray-100 font-medium cursor-pointer"
+                  >
+                    Login Dashboard
+                  </button>
+                )}
+
+                <button
+                  onClick={() => navigate("/pricing")}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 font-medium cursor-pointer"
+                >
+                  Upgrade Plan
+                </button>
+
+                {/* {isLoggedIn && (
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+                  >
+                    Logout
+                  </button>
+                )} */}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Mobile Toggle */}
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-100 transition-all duration-300 z-20"
+        className="md:hidden"
       >
         {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Mobile Menu */}
-      <div
-        className={`fixed top-20 left-0 w-full bg-white shadow-lg md:hidden transition-all duration-300 ease-in-out 
-          ${isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0 overflow-hidden"}`}
-      >
-        <div className="flex flex-col px-8 py-6 space-y-4">
+      {isMenuOpen && (
+        <div className="fixed top-20 left-0 w-full bg-white shadow-lg md:hidden px-8 py-6 space-y-4">
 
-          {/* Mobile Use Cases */}
-          <details className="group border-b border-gray-100 pb-2">
-            <summary className="flex items-center justify-between cursor-pointer text-[#292D34] hover:text-[#756FCC] py-2">
-              Use Cases
-              <ChevronDown size={16} className="transition-transform duration-300 group-open:rotate-180" />
-            </summary>
-
-            <div className="mt-2 bg-white shadow-md rounded-lg border border-gray-100 py-2">
-              <Link
-                to="/project-management"
-                onClick={() => setIsMenuOpen(false)}
-                className="px-4 py-2 block hover:bg-gray-100 hover:text-[#756FCC]"
-              >
-                Project Management
-              </Link>
-
-              <Link
-                to="/hrms"
-                onClick={() => setIsMenuOpen(false)}
-                className="px-4 py-2 block hover:bg-gray-100 hover:text-[#756FCC]"
-              >
-                HRMS
-              </Link>
-
-              <Link
-                to="/support"
-                onClick={() => setIsMenuOpen(false)}
-                className="px-4 py-2 block hover:bg-gray-100 hover:text-[#756FCC]"
-              >
-                Support
-              </Link>
-
-              <Link
-                to="/finance-mgmt"
-                onClick={() => setIsMenuOpen(false)}
-                className="px-4 py-2 block hover:bg-gray-100 hover:text-[#756FCC]"
-              >
-                Finance Management
-              </Link>
-            </div>
-          </details>
-
-          {/* Solutions */}
-          {/* <details className="group border-b border-gray-100 pb-2">
-            <summary className="flex items-center justify-between cursor-pointer text-[#292D34] hover:text-[#756FCC] py-2">
-              Solutions
-              <ChevronDown size={16} className="transition-transform duration-300 group-open:rotate-180" />
-            </summary>
-          </details> */}
-          <Link
-            to="/solutions"
-            onClick={() => setIsMenuOpen(false)}
-            className="py-2 border-b border-gray-100 block hover:text-[#756FCC]"
-          >
+          <Link to="/solutions" onClick={() => setIsMenuOpen(false)}>
             Solutions
           </Link>
 
-          {/* Pricing */}
-          <Link
-            to="/pricing"
-            onClick={() => setIsMenuOpen(false)}
-            className="py-2 border-b border-gray-100 block hover:text-[#756FCC]"
-          >
+          <Link to="/pricing" onClick={() => setIsMenuOpen(false)}>
             Pricing
           </Link>
 
-          {/* Demo */}
-          {/* <Link
-            to="/demo"
-            onClick={() => setIsMenuOpen(false)}
-            className="py-2 border-b border-gray-100 block hover:text-[#756FCC]"
-          >
-            Book a Demo
-          </Link> */}
-          <Link
-            to="/demo"
-            onClick={() => {
-              setIsMenuOpen(false);
-            }}
-            className="py-2 border-b border-gray-100 block hover:text-[#756FCC]"
-          >
+          <Link to="/demo" onClick={() => setIsMenuOpen(false)}>
             Book a Demo
           </Link>
 
-          {/* Mobile Buttons */}
-          <div className="flex flex-col gap-3 pt-4">
-            <button
-              onClick={() => {
-                goLogin();
-                setIsMenuOpen(false);
-              }}
-              className="w-full px-5 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition"
-            >
-              Login
-            </button>
+          <hr />
 
-            <button
-              onClick={() => {
-                goRegister();
-                setIsMenuOpen(false);
-              }}
-              className="w-full px-5 py-3 rounded-lg border border-[#756FCC] text-[#756FCC] hover:bg-[#756FCC] hover:text-white transition"
-            >
-              Get Started
-            </button>
-          </div>
+          {!isRegistered ? (
+            <>
+              {/* <button
+                onClick={() => {
+                  goLogin();
+                  setIsMenuOpen(false);
+                }}
+                className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
+              >
+                Login
+              </button> */}
+
+              <button
+                onClick={() => {
+                  goRegister();
+                  setIsMenuOpen(false);
+                }}
+                className="w-full py-2 border border-[#756FCC] text-[#756FCC] rounded-lg"
+              >
+                Get Started
+              </button>
+            </>
+          ) : (
+            <>
+              {!isLoggedIn && (
+                <button
+                  onClick={() => {
+                    navigate("/hrms/login");
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
+                >
+                  Login Dashboard
+                </button>
+              )}
+
+              {isLoggedIn && (
+                <>
+                  <button
+                    onClick={() => {
+                      navigate("/hrms/dashboard");
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
+                  >
+                    Dashboard
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full py-2 border border-red-500 text-red-500 rounded-lg"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+
+              <button
+                onClick={() => {
+                  navigate("/pricing");
+                  setIsMenuOpen(false);
+                }}
+                className="w-full py-2 border border-[#756FCC] text-[#756FCC] rounded-lg"
+              >
+                Upgrade Plan
+              </button>
+            </>
+          )}
         </div>
-      </div>
+      )}
     </nav>
   );
 }

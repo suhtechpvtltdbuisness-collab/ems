@@ -5,7 +5,7 @@ export default function HeroSection() {
   const navigate = useNavigate();
 
   const handleCTA = () => {
-    navigate("/auth?mode=login"); 
+    navigate("/auth?mode=register"); 
   };
 
   return (
