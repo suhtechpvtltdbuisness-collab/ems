@@ -1,4 +1,4 @@
-import { Navigate, BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 
 // Layout Components
 import Navbar from "./components/layout/Navbar";
@@ -55,7 +55,6 @@ import SolutionsPage from "./pages/SolutionsPage";
 import Demo from "./pages/DemoPage";
 import EmpPersonalInfo from "./pages/employee/EmpPersonalInfo";
 
-
 // ======================
 // PROTECTED ROUTE
 // ======================
@@ -64,14 +63,14 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/" replace />;
 };
 
-
 // ======================
 // MAIN APP COMPONENT
 // ======================
 function App() {
   return (
-    <Router>
+    <>
       <ScrollToTop />
+
       <Routes>
 
         {/* AUTH PAGE */}
@@ -125,7 +124,6 @@ function App() {
               <div className="fixed inset-0 -z-10">
                 <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
-
               <div className="pt-20">
                 <Navbar />
                 <HeroSection />
@@ -153,7 +151,6 @@ function App() {
               <div className="fixed inset-0 -z-10">
                 <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
-
               <div className="pt-20">
                 <Navbar />
                 <ProjectHero />
@@ -178,7 +175,6 @@ function App() {
               <div className="fixed inset-0 -z-10">
                 <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
-
               <div className="pt-20">
                 <Navbar />
                 <FinanceHero />
@@ -203,7 +199,6 @@ function App() {
               <div className="fixed inset-0 -z-10">
                 <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
-
               <div className="pt-20">
                 <Navbar />
                 <HRMSHero />
@@ -228,7 +223,6 @@ function App() {
               <div className="fixed inset-0 -z-10">
                 <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
-
               <div className="pt-20">
                 <Navbar />
                 <SupportHero />
@@ -253,7 +247,6 @@ function App() {
               <div className="fixed inset-0 -z-10">
                 <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
-
               <div className="pt-20">
                 <Navbar />
                 <Demo />
@@ -271,7 +264,6 @@ function App() {
               <div className="fixed inset-0 -z-10">
                 <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
               </div>
-
               <div className="pt-20">
                 <Navbar />
                 <PricingSection />
@@ -281,9 +273,7 @@ function App() {
           }
         />
 
-        {/* =============================
-            EMPLOYEE PERSONAL INFO PAGE
-        ============================= */}
+        {/* EMPLOYEE PERSONAL INFO PAGE */}
         <Route
           path="/employee-details"
           element={
@@ -292,7 +282,6 @@ function App() {
                 <div className="pt-20">
                   <Navbar />
                   <EmpPersonalInfo />
-
                 </div>
               </div>
             </ProtectedRoute>
@@ -300,7 +289,7 @@ function App() {
         />
 
       </Routes>
-    </Router>
+    </>
   );
 }
 
