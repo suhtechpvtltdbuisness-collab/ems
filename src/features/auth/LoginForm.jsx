@@ -6,7 +6,7 @@ import { Button } from "../../components/common/Button";
 import { Toast } from "../../components/common/Toast";
 import { authService } from "../../service";
 
-export const LoginForm = ({ onLogin }) => {
+export const LoginForm = ({ onRegister }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
@@ -35,8 +35,11 @@ export const LoginForm = ({ onLogin }) => {
         message: "Redirecting...",
       });
 
-      setTimeout(() => {
-        navigate("/");
+      setTimeout(async () => {
+        const redirected = await authService.redirectToAdminIfSubscribed();
+        if (!redirected) {
+          navigate("/");
+        }
       }, 1500);
     } else {
       setToast({
@@ -87,7 +90,7 @@ export const LoginForm = ({ onLogin }) => {
           <p className="text-sm text-gray-400 text-center mt-6">
             Don't have an account?{" "}
             <button
-              onClick={onLogin}
+              onClick={onRegister}
               className="text-purple-600 font-medium hover:underline"
             >
               Register

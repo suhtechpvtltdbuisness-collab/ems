@@ -1,6 +1,7 @@
 import { ChevronDown, Menu, X, User } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { authService } from "../../service";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,10 +33,15 @@ export default function Navbar() {
   const goLogin = () => navigate("/auth?mode=login");
   const goRegister = () => navigate("/auth?mode=register");
 
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+  const handleLogout = async () => {
+    await authService.logout();
+    localStorage.removeItem("isRegistered");
     navigate("/");
     window.location.reload();
+  };
+
+  const goToAdmin = () => {
+    authService.redirectToAdmin();
   };
 
   return (
@@ -140,7 +146,7 @@ export default function Navbar() {
 
                 {isLoggedIn && (
                   <button
-                    onClick={() => navigate("/hrms/dashboard")}
+                    onClick={goToAdmin}
                     className="block w-full text-left  px-4 py-2 hover:bg-gray-100 font-medium cursor-pointer"
                   >
                     Login Dashboard
@@ -221,7 +227,7 @@ export default function Navbar() {
               {!isLoggedIn && (
                 <button
                   onClick={() => {
-                    navigate("/hrms/login");
+                    goLogin();
                     setIsMenuOpen(false);
                   }}
                   className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
@@ -234,7 +240,7 @@ export default function Navbar() {
                 <>
                   <button
                     onClick={() => {
-                      navigate("/hrms/dashboard");
+                      goToAdmin();
                       setIsMenuOpen(false);
                     }}
                     className="w-full py-2 bg-[#756FCC] text-white rounded-lg"

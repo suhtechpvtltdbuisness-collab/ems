@@ -1,4 +1,6 @@
 import { Navigate, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { authService } from "./service";
 
 // Layout Components
 import Navbar from "./components/layout/Navbar";
@@ -59,8 +61,27 @@ import EmpPersonalInfo from "./pages/employee/EmpPersonalInfo";
 // PROTECTED ROUTE
 // ======================
 const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("isLoggedIn") === "true";
-  return isAuthenticated ? children : <Navigate to="/" replace />;
+  const [authState, setAuthState] = useState("loading");
+
+  useEffect(() => {
+    const verifySession = async () => {
+      if (localStorage.getItem("isLoggedIn") === "true") {
+        setAuthState("authenticated");
+        return;
+      }
+
+      const profile = await authService.getProfile();
+      setAuthState(profile.success ? "authenticated" : "unauthenticated");
+    };
+
+    verifySession();
+  }, []);
+
+  if (authState === "loading") {
+    return null;
+  }
+
+  return authState === "authenticated" ? children : <Navigate to="/auth?mode=login" replace />;
 };
 
 // ======================

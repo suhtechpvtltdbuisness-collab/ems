@@ -45,17 +45,20 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
     const result = await authService.register(userData);
 
     if (result.success) {
-       localStorage.setItem("isRegistered", "true");
+      localStorage.setItem("isRegistered", "true");
       setToast({
         type: "success",
         title: "Account Created Successfully",
-        message: result.message || "Redirecting to home...",
+        message: result.message || "Redirecting...",
       });
 
       onRegister?.(result.data);
 
-      setTimeout(() => {
-        navigate("/");
+      setTimeout(async () => {
+        const redirected = await authService.redirectToAdminIfSubscribed();
+        if (!redirected) {
+          navigate("/");
+        }
       }, 1500);
     } else {
       setToast({
