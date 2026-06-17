@@ -12,7 +12,18 @@ export default function AuthPage() {
   const [verifiedEmail, setVerifiedEmail] = useState("");
 
   useEffect(() => {
-    authService.redirectToAdminIfSubscribed();
+    const checkSession = async () => {
+      if (!authService.hasSessionHint()) return;
+
+      const profile = await authService.getProfile();
+      if (
+        profile.success &&
+        authService.isSubscribed(profile.data?.subscription)
+      ) {
+        authService.redirectToAdmin();
+      }
+    };
+    checkSession();
   }, []);
 
   const handleSendResetLink = (email) => {

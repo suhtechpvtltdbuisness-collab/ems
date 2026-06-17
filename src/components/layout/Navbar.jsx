@@ -1,4 +1,4 @@
-import { ChevronDown, Menu, X, User } from "lucide-react";
+import { ChevronDown, Menu, X, User, LogOut } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../../service";
@@ -34,6 +34,8 @@ export default function Navbar() {
   const goRegister = () => navigate("/auth?mode=register");
 
   const handleLogout = async () => {
+    setIsProfileOpen(false);
+    setIsMenuOpen(false);
     await authService.logout();
     localStorage.removeItem("isRegistered");
     navigate("/");
@@ -107,12 +109,12 @@ export default function Navbar() {
 
         {!isRegistered ? (
           <>
-            {/* <button
+            <button
               onClick={goLogin}
-              className="px-5 py-2 rounded-lg bg-[#756FCC] text-white"
+              className="px-5 py-2 rounded-lg bg-[#756FCC] text-white hover:bg-[#645db7]"
             >
               Login
-            </button> */}
+            </button>
 
             <button
               onClick={goRegister}
@@ -154,20 +156,24 @@ export default function Navbar() {
                 )}
 
                 <button
-                  onClick={() => navigate("/pricing")}
+                  onClick={() => {
+                    navigate("/pricing");
+                    setIsProfileOpen(false);
+                  }}
                   className="block w-full text-left px-4 py-2 hover:bg-gray-100 font-medium cursor-pointer"
                 >
                   Upgrade Plan
                 </button>
 
-                {/* {isLoggedIn && (
+                {(isLoggedIn || isRegistered) && (
                   <button
                     onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+                    className="flex w-full items-center gap-2 px-4 py-2 hover:bg-gray-100 text-red-500 font-medium cursor-pointer border-t border-gray-100 mt-1"
                   >
+                    <LogOut size={16} />
                     Logout
                   </button>
-                )} */}
+                )}
               </div>
             )}
           </div>
@@ -202,7 +208,7 @@ export default function Navbar() {
 
           {!isRegistered ? (
             <>
-              {/* <button
+              <button
                 onClick={() => {
                   goLogin();
                   setIsMenuOpen(false);
@@ -210,7 +216,7 @@ export default function Navbar() {
                 className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
               >
                 Login
-              </button> */}
+              </button>
 
               <button
                 onClick={() => {
@@ -232,29 +238,30 @@ export default function Navbar() {
                   }}
                   className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
                 >
-                  Login Dashboard
+                  Login
                 </button>
               )}
 
               {isLoggedIn && (
-                <>
-                  <button
-                    onClick={() => {
-                      goToAdmin();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
-                  >
-                    Dashboard
-                  </button>
+                <button
+                  onClick={() => {
+                    goToAdmin();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
+                >
+                  Dashboard
+                </button>
+              )}
 
-                  <button
-                    onClick={handleLogout}
-                    className="w-full py-2 border border-red-500 text-red-500 rounded-lg"
-                  >
-                    Logout
-                  </button>
-                </>
+              {(isLoggedIn || isRegistered) && (
+                <button
+                  onClick={handleLogout}
+                  className="w-full py-2 border border-red-500 text-red-500 rounded-lg flex items-center justify-center gap-2"
+                >
+                  <LogOut size={16} />
+                  Logout
+                </button>
               )}
 
               <button

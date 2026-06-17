@@ -32,14 +32,13 @@ export const LoginForm = ({ onRegister }) => {
       setToast({
         type: "success",
         title: "Login Successful",
-        message: "Redirecting...",
+        message: authService.isSubscribed(result.data?.subscription)
+          ? "Redirecting to dashboard..."
+          : "Choose a plan to get started...",
       });
 
-      setTimeout(async () => {
-        const redirected = await authService.redirectToAdminIfSubscribed();
-        if (!redirected) {
-          navigate("/");
-        }
+      setTimeout(() => {
+        authService.handlePostAuthRedirect(result.data?.subscription, navigate);
       }, 1500);
     } else {
       setToast({

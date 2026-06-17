@@ -65,8 +65,8 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     const verifySession = async () => {
-      if (localStorage.getItem("isLoggedIn") === "true") {
-        setAuthState("authenticated");
+      if (!authService.hasSessionHint()) {
+        setAuthState("unauthenticated");
         return;
       }
 

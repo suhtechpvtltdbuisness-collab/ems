@@ -49,16 +49,15 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
       setToast({
         type: "success",
         title: "Account Created Successfully",
-        message: result.message || "Redirecting...",
+        message: authService.isSubscribed(result.data?.subscription)
+          ? "Redirecting to dashboard..."
+          : "Choose a plan to get started...",
       });
 
       onRegister?.(result.data);
 
-      setTimeout(async () => {
-        const redirected = await authService.redirectToAdminIfSubscribed();
-        if (!redirected) {
-          navigate("/");
-        }
+      setTimeout(() => {
+        authService.handlePostAuthRedirect(result.data?.subscription, navigate);
       }, 1500);
     } else {
       setToast({
