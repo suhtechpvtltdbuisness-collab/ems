@@ -1,3 +1,5 @@
+import { formatInr } from "./config/subscriptionPlans.js";
+
 const BASE_URL =
   import.meta.env.VITE_BACKEND_BASE_URL ||
   import.meta.env.VITE_BASE_URL ||
@@ -420,7 +422,7 @@ export const subscriptionService = {
         key: checkoutData.keyId,
         subscription_id: checkoutData.subscriptionId,
         name: "Suhtech ORGA",
-        description: `${checkoutData.trialDays}-day free trial, then ₹${checkoutData.autoPayAmount}/month`,
+        description: `${checkoutData.trialDays}-day free trial, then ${formatInr(checkoutData.autoPayAmount)}/month`,
         handler: async (response) => {
           const result = await subscriptionService.verifyTrial({
             razorpayPaymentId: response.razorpay_payment_id,

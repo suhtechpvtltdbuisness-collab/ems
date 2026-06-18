@@ -34,7 +34,7 @@ export const LoginForm = ({ onRegister }) => {
         title: "Login Successful",
         message: authService.isSubscribed(result.data?.subscription)
           ? "Redirecting to dashboard..."
-          : "Choose a plan to get started...",
+          : "Choose a plan from ₹2,999/month to get started...",
       });
 
       setTimeout(() => {

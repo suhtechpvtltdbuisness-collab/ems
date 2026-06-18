@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { TRIAL_NOTE } from "../../../config/subscriptionPlans";
 
 export default function ProjectOrganizerTrial() {
     const navigate = useNavigate();
@@ -44,14 +45,16 @@ export default function ProjectOrganizerTrial() {
                     </h1>
 
                     {/* Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                    <p className="text-[#64748B] text-sm md:text-base max-w-lg">
+                        {TRIAL_NOTE}
+                    </p>
 
-                        {/* Try for Free */}
+                    <div className="flex flex-col sm:flex-row gap-4 mt-6">
                         <button
-                            onClick={() => navigate("/auth?mode=login")}
+                            onClick={() => navigate("/pricing")}
                             className="px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center justify-center gap-2"
                         >
-                            <span>Try for Free</span>
+                            <span>View plans</span>
                             <ArrowRight size={18} />
                         </button>
 

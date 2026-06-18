@@ -1,7 +1,11 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { TRIAL_NOTE } from "../../../config/subscriptionPlans";
 
 export default function ProjectFreeTrialSection() {
+    const navigate = useNavigate();
+
     return (
         <div className="w-full flex flex-col items-center py-16 bg-white">
             <div className="w-full max-w-6xl bg-gradient-to-b from-[#AFF6B9] to-[#FFFFFF] rounded-[40px] py-14 relative overflow-hidden">
@@ -54,11 +58,17 @@ export default function ProjectFreeTrialSection() {
                     <h1 className="font-[Poppins] text-[42px] md:text-[48px] font-semibold text-center leading-snug mt-4">
                         Start your free trial today!
                     </h1>
+                    <p className="text-[#64748B] text-base max-w-xl text-center px-4">
+                        {TRIAL_NOTE}
+                    </p>
 
                     {/* Buttons */}
-                    <div className="flex gap-4 mt-6">
-                        <button className="w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 cursor-pointer">
-                            <span>Try for free</span>
+                    <div className="flex gap-4 mt-6 flex-wrap justify-center">
+                        <button
+                            onClick={() => navigate("/pricing")}
+                            className="w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 cursor-pointer"
+                        >
+                            <span>View plans</span>
                             <ArrowRight size={18} />
                         </button>
                         <button className="w-fit px-6 py-3 rounded-lg border border-[#756FCC] text-[#756FCC] shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 bg-transparent cursor-pointer">

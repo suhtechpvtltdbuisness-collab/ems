@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { PRICING_TAGLINE } from "../../../config/subscriptionPlans";
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -32,8 +33,9 @@ export default function HeroSection() {
 
       {/* Subtext */}
       <p className="text-gray-500 mt-4 max-w-xl">
-        All in One Powerful EMS Platform
-        From employee management to attendance tracking, task assignment, time monitoring, project planning, performance analysis, payroll, and more—ORGA helps your team work smarter, faster, and more efficiently  
+        All in One Powerful EMS Platform.
+        From employee management to attendance tracking, task assignment, time monitoring, project planning, performance analysis, payroll, and more—ORGA helps your team work smarter, faster, and more efficiently.
+        <span className="block mt-2 text-sm text-[#756FCC] font-medium">{PRICING_TAGLINE}</span>
       </p>
 
       {/* CTA Button */}

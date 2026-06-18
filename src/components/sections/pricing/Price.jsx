@@ -1,15 +1,19 @@
 import { Check, Lock, Rocket, Sparkles, Building } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  SUBSCRIPTION_PLANS,
+  formatInr,
+  PRICING_TAGLINE,
+  TRIAL_NOTE,
+} from "../../../config/subscriptionPlans";
 import { authService, subscriptionService } from "../../../service";
 
-const plans = [
-  {
-    planType: "free_trial",
+const PLAN_UI = {
+  free_trial: {
     title: "Free Trial",
     icon: <Sparkles size={24} className="text-[#50AA18]" />,
-    bestFor: "New users exploring HRMS",
-    price: "₹0",
+    bestFor: "New teams exploring ORGA HRMS",
     priceNote: "for 7 days",
     highlight: true,
     categories: [
@@ -18,25 +22,23 @@ const plans = [
         features: [
           "Employee management",
           "Leave & attendance (basic)",
-          "Up to 4 employees",
+          `Up to ${SUBSCRIPTION_PLANS.free_trial.maxEmployees} employees`,
         ],
       },
     ],
     limitations: [
       "Card required (no charge during trial)",
-      "Auto-renews at ₹999/month after 7 days",
-      "4 employee limit during trial",
+      `Auto-renews at ${formatInr(SUBSCRIPTION_PLANS.free_trial.autoRenewPriceInr)}/month after 7 days`,
+      `${SUBSCRIPTION_PLANS.free_trial.maxEmployees} employee limit during trial`,
     ],
     cta: "Start Free Trial",
     actionable: true,
   },
-  {
-    planType: "starter_pack",
-    title: "Starter Pack",
+  starter_pack: {
+    title: SUBSCRIPTION_PLANS.starter_pack.name,
     icon: <Rocket size={24} className="text-[#756FCC]" />,
     bestFor: "Growing businesses & SMEs",
-    price: "₹999",
-    priceNote: "per month",
+    priceNote: `per month · up to ${SUBSCRIPTION_PLANS.starter_pack.maxEmployees} employees`,
     highlight: true,
     categories: [
       {
@@ -44,8 +46,9 @@ const plans = [
         features: [
           "Full employee management",
           "Leave & attendance",
-          "Up to 25 employees",
+          `Up to ${SUBSCRIPTION_PLANS.starter_pack.maxEmployees} employees`,
           "Payroll basics",
+          `~${formatInr(SUBSCRIPTION_PLANS.starter_pack.pricePerEmployeeInr)}/employee at full capacity`,
         ],
       },
       {
@@ -57,30 +60,68 @@ const plans = [
     cta: "Subscribe Now",
     actionable: true,
   },
-  {
-    planType: "standard",
-    title: "Standard Plan",
-    icon: <Building size={24} className="text-gray-400" />,
-    bestFor: "Mid-size organizations",
-    price: "₹2,499",
-    priceNote: "per month",
+  premium: {
+    title: SUBSCRIPTION_PLANS.premium.name,
+    icon: <Building size={24} className="text-[#756FCC]" />,
+    bestFor: "Teams needing full ORGA HRMS",
+    priceNote: `per month · up to ${SUBSCRIPTION_PLANS.premium.maxEmployees} employees`,
+    highlight: true,
     categories: [
       {
         name: "ALL MODULES",
-        features: ["HR + Finance + CRM", "Project management", "Advanced reports"],
+        features: [
+          "Everything in Growth",
+          "Advanced HR workflows",
+          `Up to ${SUBSCRIPTION_PLANS.premium.maxEmployees} employees`,
+          "Priority support",
+        ],
       },
     ],
-    limitations: ["Coming soon"],
-    cta: "Coming Soon",
-    actionable: false,
+    limitations: [],
+    cta: "Subscribe Now",
+    actionable: true,
   },
-];
+};
+
+const buildPlans = (apiPlans = []) => {
+  const apiByType = Object.fromEntries(
+    (apiPlans || []).map((p) => [p.planType, p]),
+  );
+
+  return Object.keys(SUBSCRIPTION_PLANS).map((planType) => {
+    const config = SUBSCRIPTION_PLANS[planType];
+    const api = apiByType[planType];
+    const ui = PLAN_UI[planType];
+    const priceInr = api?.priceInr ?? config.priceInr;
+
+    return {
+      planType,
+      ...ui,
+      price: formatInr(priceInr),
+      priceInr,
+      maxEmployees: api?.maxEmployees ?? config.maxEmployees,
+      pricePerEmployeeInr:
+        api?.pricePerEmployeeInr ?? config.pricePerEmployeeInr,
+    };
+  });
+};
 
 export default function PricingSection() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState("free_trial");
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [message, setMessage] = useState(null);
+  const [apiPlans, setApiPlans] = useState([]);
+
+  useEffect(() => {
+    subscriptionService.getPlans().then((result) => {
+      if (result.success && Array.isArray(result.data)) {
+        setApiPlans(result.data);
+      }
+    });
+  }, []);
+
+  const plans = useMemo(() => buildPlans(apiPlans), [apiPlans]);
 
   const requireAuth = () => {
     if (!authService.hasSessionHint()) {
@@ -140,16 +181,16 @@ export default function PricingSection() {
     setLoadingPlan(null);
   };
 
-  const handleStarterPack = async () => {
+  const handlePaidPlan = async (planType) => {
     if (!requireAuth()) return;
 
-    setLoadingPlan("starter_pack");
+    setLoadingPlan(planType);
     setMessage(null);
 
     const profile = await authService.getProfile();
     const user = profile.data?.user || getUser();
 
-    const orderResult = await subscriptionService.createOrder("starter_pack");
+    const orderResult = await subscriptionService.createOrder(planType);
 
     if (!orderResult.success) {
       setMessage({ type: "error", text: orderResult.message });
@@ -163,7 +204,10 @@ export default function PricingSection() {
     );
 
     if (paymentResult.success) {
-      setMessage({ type: "success", text: "Payment successful! Redirecting to admin..." });
+      setMessage({
+        type: "success",
+        text: "Payment successful! Redirecting to admin...",
+      });
       setTimeout(() => authService.redirectToAdmin(), 1500);
     } else if (paymentResult.message !== "Payment cancelled") {
       setMessage({ type: "error", text: paymentResult.message });
@@ -180,8 +224,8 @@ export default function PricingSection() {
       return;
     }
 
-    if (plan.planType === "starter_pack") {
-      handleStarterPack();
+    if (plan.planType === "starter_pack" || plan.planType === "premium") {
+      handlePaidPlan(plan.planType);
     }
   };
 
@@ -203,8 +247,7 @@ export default function PricingSection() {
           </span>
         </h1>
         <p className="text-[#64748B] font-nunito text-[18px] max-w-2xl leading-relaxed">
-          Start with a 7-day free trial — add your card via Razorpay (no charge
-          today). Auto-pay begins after the trial unless you cancel.
+          {PRICING_TAGLINE}. {TRIAL_NOTE}
         </p>
         {message && (
           <p
@@ -288,7 +331,7 @@ export default function PricingSection() {
                 ))}
               </div>
 
-              {plan.limitations && (
+              {plan.limitations?.length > 0 && (
                 <div className="flex flex-col gap-3 mt-2 relative z-10">
                   <div className="flex items-center gap-2 text-gray-400 font-semibold text-[13px] uppercase tracking-wide">
                     <Lock size={14} />

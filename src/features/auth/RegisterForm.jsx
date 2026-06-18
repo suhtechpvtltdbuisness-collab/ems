@@ -51,7 +51,7 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
         title: "Account Created Successfully",
         message: authService.isSubscribed(result.data?.subscription)
           ? "Redirecting to dashboard..."
-          : "Choose a plan to get started...",
+          : "Choose a plan from ₹2,999/month to get started...",
       });
 
       onRegister?.(result.data);
@@ -98,7 +98,7 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
             Create Account
           </h1>
           <p className="text-gray-500 text-center text-sm mb-6">
-            Sign up to get started with our platform
+            7-day free trial · paid plans from ₹2,999/month (up to 50 employees)
           </p>
 
           <InputField
