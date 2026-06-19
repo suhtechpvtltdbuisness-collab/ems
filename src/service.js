@@ -5,6 +5,18 @@ const BASE_URL =
   import.meta.env.VITE_BASE_URL ||
   "https://hrms-orga-backend.vercel.app";
 
+export const GA_ID = import.meta.env.VITE_GA_ID;
+
+export const pageview = (url) => {
+  window.gtag("config", GA_ID, {
+    page_path: url,
+  });
+};
+
+export const event = (action, params = {}) => {
+  window.gtag("event", action, params);
+};
+
 const ADMIN_SITE_URL =
   import.meta.env.VITE_ADMIN_SITE_URL || "https://admin.suhtech.store";
 
