@@ -129,7 +129,7 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
             Create Account
           </h1>
           <p className="text-gray-500 text-center text-sm mb-6">
-            7-day free trial · paid plans from ₹2,999/month (up to 50 employees)
+            7-day free trial · paid plans from ₹2,999/month (up to 20 employees)
           </p>
 
           <InputField
