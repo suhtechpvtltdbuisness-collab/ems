@@ -181,6 +181,42 @@ export const authService = {
     }
   },
 
+  googleLogin: async (token) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/auth/google`, {
+        method: "POST",
+        body: JSON.stringify({ token }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          message: data.message || "Google Login failed",
+        };
+      }
+
+      persistUserSession(
+        data.data?.user,
+        data.data?.tokens,
+        data.data?.subscription,
+      );
+      localStorage.setItem("isRegistered", "true");
+
+      return {
+        success: true,
+        message: data.message,
+        data: data.data,
+      };
+    } catch {
+      return {
+        success: false,
+        message: "Something went wrong during Google Login",
+      };
+    }
+  },
+
   logout: async () => {
     try {
       await apiFetch(`${BASE_URL}/auth/logout`, { method: "POST" });

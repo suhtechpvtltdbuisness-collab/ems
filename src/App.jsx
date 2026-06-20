@@ -56,6 +56,8 @@ import AuthPage from "./pages/AuthPage";
 import SolutionsPage from "./pages/SolutionsPage";
 import Demo from "./pages/DemoPage";
 import EmpPersonalInfo from "./pages/employee/EmpPersonalInfo";
+import PrivacyPage from "./pages/PrivacyPage";
+import TermsPage from "./pages/TermsPage";
 
 // ======================
 // PROTECTED ROUTE
@@ -307,6 +309,48 @@ function App() {
               </div>
             </ProtectedRoute>
           }
+        />
+
+        {/* PRIVACY POLICY */}
+        <Route
+          path="/privacy"
+          element={
+            <div className="relative min-h-screen w-full overflow-x-hidden">
+              <div className="fixed inset-0 -z-10">
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
+              </div>
+              <div className="pt-20">
+                <Navbar />
+                <PrivacyPage />
+                <Footer />
+              </div>
+            </div>
+          }
+        />
+        <Route
+          path="/pages/privacy"
+          element={<Navigate to="/privacy" replace />}
+        />
+
+        {/* TERMS OF SERVICE */}
+        <Route
+          path="/terms"
+          element={
+            <div className="relative min-h-screen w-full overflow-x-hidden">
+              <div className="fixed inset-0 -z-10">
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
+              </div>
+              <div className="pt-20">
+                <Navbar />
+                <TermsPage />
+                <Footer />
+              </div>
+            </div>
+          }
+        />
+        <Route
+          path="/pages/terms"
+          element={<Navigate to="/terms" replace />}
         />
 
       </Routes>

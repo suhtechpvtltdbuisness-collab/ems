@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 import { InputField } from "../../components/common/InputField";
 import { Button } from "../../components/common/Button";
 import { Toast } from "../../components/common/Toast";
@@ -70,22 +71,52 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
     setLoading(false);
   };
 
-  const handleGoogleSignup = () => {
+  const handleGoogleSuccess = async (credentialResponse) => {
+    if (!credentialResponse.credential) {
+      setToast({
+        type: "error",
+        title: "Google Signup Failed",
+        message: "No credential received from Google",
+      });
+      return;
+    }
+
     setGoogleLoading(true);
 
-    setTimeout(() => {
-      setGoogleLoading(false);
+    const result = await authService.googleLogin(credentialResponse.credential);
 
+    if (result.success) {
+      localStorage.setItem("isRegistered", "true");
       setToast({
         type: "success",
-        title: "Signed in Successfully",
-        message: "Redirecting to home...",
+        title: "Account Created Successfully",
+        message: authService.isSubscribed(result.data?.subscription)
+          ? "Redirecting to dashboard..."
+          : "Choose a plan from ₹2,999/month to get started...",
       });
 
+      onRegister?.(result.data);
+
       setTimeout(() => {
-        navigate("/");
+        authService.handlePostAuthRedirect(result.data?.subscription, navigate);
       }, 1500);
-    }, 2000);
+    } else {
+      setToast({
+        type: "error",
+        title: "Signup Failed",
+        message: result.message,
+      });
+    }
+
+    setGoogleLoading(false);
+  };
+
+  const handleGoogleError = () => {
+    setToast({
+      type: "error",
+      title: "Google Signup Failed",
+      message: "An error occurred with Google Sign-In",
+    });
   };
 
   return (
@@ -171,41 +202,21 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
             <>
               <div className="flex items-center gap-3 my-5">
                 <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-xs text-gray-400">
-                  or continue with
+                <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">
+                  or
                 </span>
                 <div className="flex-1 h-px bg-gray-200" />
               </div>
 
-              <button
-                onClick={handleGoogleSignup}
-                disabled={googleLoading}
-                className={`w-full flex items-center justify-center gap-3 border border-purple-600 rounded-full py-2.5 transition ${
-                  googleLoading
-                    ? "bg-white cursor-not-allowed"
-                    : "hover:bg-gray-50"
-                }`}
-              >
-                {googleLoading ? (
-                  <>
-                    <img src="/loader.svg" alt="loading" className="w-5 h-5" />
-                    <span className="text-sm font-medium text-purple-600">
-                      Signing you in...
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <img
-                      src="https://www.svgrepo.com/show/475656/google-color.svg"
-                      alt="Google"
-                      className="w-5 h-5"
-                    />
-                    <span className="text-sm font-medium text-purple-600">
-                      Continue with Google
-                    </span>
-                  </>
-                )}
-              </button>
+              <div className="flex justify-center w-full">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  theme="outline"
+                  size="large"
+                  width="384px"
+                />
+              </div>
             </>
           )}
 

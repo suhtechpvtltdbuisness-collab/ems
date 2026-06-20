@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
 import { InputField } from "../../components/common/InputField";
 import { Button } from "../../components/common/Button";
 import { Toast } from "../../components/common/Toast";
@@ -51,6 +52,51 @@ export const LoginForm = ({ onRegister }) => {
     setLoading(false);
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    if (!credentialResponse.credential) {
+      setToast({
+        type: "error",
+        title: "Google Login Failed",
+        message: "No credential received from Google",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    const result = await authService.googleLogin(credentialResponse.credential);
+
+    if (result.success) {
+      setToast({
+        type: "success",
+        title: "Login Successful",
+        message: authService.isSubscribed(result.data?.subscription)
+          ? "Redirecting to dashboard..."
+          : "Choose a plan from ₹2,999/month to get started...",
+      });
+
+      setTimeout(() => {
+        authService.handlePostAuthRedirect(result.data?.subscription, navigate);
+      }, 1500);
+    } else {
+      setToast({
+        type: "error",
+        title: "Login Failed",
+        message: result.message,
+      });
+    }
+
+    setLoading(false);
+  };
+
+  const handleGoogleError = () => {
+    setToast({
+      type: "error",
+      title: "Google Login Failed",
+      message: "An error occurred with Google Sign-In",
+    });
+  };
+
   return (
     <>
       <Toast toast={toast} onClose={() => setToast(null)} />
@@ -83,6 +129,22 @@ export const LoginForm = ({ onRegister }) => {
               onClick={handleSubmit}
               loading={loading}
               disabled={!form.email || !form.password}
+            />
+          </div>
+
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-gray-200"></div>
+            <span className="flex-shrink mx-4 text-gray-400 text-xs uppercase tracking-wider">or</span>
+            <div className="flex-grow border-t border-gray-200"></div>
+          </div>
+
+          <div className="flex justify-center w-full">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="outline"
+              size="large"
+              width="384px"
             />
           </div>
 
