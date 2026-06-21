@@ -1,6 +1,6 @@
 import { Navigate, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { authService } from "./service";
+import { authService, onboardingService } from "./service";
 
 // Layout Components
 import Navbar from "./components/layout/Navbar";
@@ -58,12 +58,14 @@ import Demo from "./pages/DemoPage";
 import EmpPersonalInfo from "./pages/employee/EmpPersonalInfo";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
+import Onboarding from "./pages/onboarding/index";
 
 // ======================
 // PROTECTED ROUTE
 // ======================
 const ProtectedRoute = ({ children }) => {
   const [authState, setAuthState] = useState("loading");
+  const [isOnboarded, setIsOnboarded] = useState(false);
 
   useEffect(() => {
     const verifySession = async () => {
@@ -73,17 +75,86 @@ const ProtectedRoute = ({ children }) => {
       }
 
       const profile = await authService.getProfile();
-      setAuthState(profile.success ? "authenticated" : "unauthenticated");
+      if (profile.success) {
+        // Now call the onboarding status endpoint
+        const onboarding = await onboardingService.getStatus();
+        if (onboarding.success) {
+          setIsOnboarded(onboarding.data.onboardingCompleted);
+          setAuthState(onboarding.data.onboardingCompleted ? "authenticated" : "needs_onboarding");
+        } else {
+          // If status call fails, fallback to profile data if available
+          const completed = profile.data?.user?.onboardingCompleted || false;
+          setIsOnboarded(completed);
+          setAuthState(completed ? "authenticated" : "needs_onboarding");
+        }
+      } else {
+        setAuthState("unauthenticated");
+      }
     };
 
     verifySession();
   }, []);
 
   if (authState === "loading") {
-    return null;
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (authState === "needs_onboarding") {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return authState === "authenticated" ? children : <Navigate to="/auth?mode=login" replace />;
+};
+
+// ======================
+// ONBOARDING ROUTE
+// ======================
+const OnboardingRoute = ({ children }) => {
+  const [authState, setAuthState] = useState("loading");
+  const [subscription, setSubscription] = useState(null);
+
+  useEffect(() => {
+    const verifySession = async () => {
+      if (!authService.hasSessionHint()) {
+        setAuthState("unauthenticated");
+        return;
+      }
+
+      const profile = await authService.getProfile();
+      if (profile.success) {
+        setSubscription(profile.data?.subscription);
+        const onboarding = await onboardingService.getStatus();
+        if (onboarding.success) {
+          setAuthState(onboarding.data.onboardingCompleted ? "onboarded" : "needs_onboarding");
+        } else {
+          const completed = profile.data?.user?.onboardingCompleted || false;
+          setAuthState(completed ? "onboarded" : "needs_onboarding");
+        }
+      } else {
+        setAuthState("unauthenticated");
+      }
+    };
+
+    verifySession();
+  }, []);
+
+  if (authState === "loading") {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (authState === "onboarded") {
+    return <Navigate to={authService.isSubscribed(subscription) ? authService.buildAdminSsoUrl() : "/pricing"} replace />;
+  }
+
+  return authState === "needs_onboarding" ? children : <Navigate to="/auth?mode=login" replace />;
 };
 
 // ======================
@@ -308,6 +379,18 @@ function App() {
                 </div>
               </div>
             </ProtectedRoute>
+          }
+        />
+
+        {/* ONBOARDING FLOW */}
+        <Route
+          path="/onboarding"
+          element={
+            <OnboardingRoute>
+              <div className="relative min-h-screen w-full overflow-x-hidden">
+                <Onboarding />
+              </div>
+            </OnboardingRoute>
           }
         />
 

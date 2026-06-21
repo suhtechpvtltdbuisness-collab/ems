@@ -283,6 +283,23 @@ export const authService = {
   },
 
   handlePostAuthRedirect: (subscription, navigate) => {
+    const userDataStr = localStorage.getItem("userData");
+    let user = null;
+    if (userDataStr) {
+      try {
+        user = JSON.parse(userDataStr);
+      } catch (e) {}
+    }
+
+    if (user && !user.onboardingCompleted) {
+      if (navigate) {
+        navigate("/onboarding");
+      } else {
+        window.location.href = "/onboarding";
+      }
+      return false;
+    }
+
     if (authService.isSubscribed(subscription)) {
       authService.redirectToAdmin();
       return true;
@@ -530,3 +547,37 @@ export const subscriptionService = {
     });
   },
 };
+
+export const onboardingService = {
+  getStatus: async () => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/api/onboarding/status`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return { success: false, message: data.message || "Failed to fetch onboarding status" };
+      }
+      return { success: true, data: data.data };
+    } catch {
+      return { success: false, message: "Something went wrong" };
+    }
+  },
+
+  onboardOrganization: async (orgData) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/api/onboarding/organization`, {
+        method: "POST",
+        body: JSON.stringify(orgData),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return { success: false, message: data.message || "Failed to onboard organization", errors: data.errors };
+      }
+      return { success: true, message: data.message, data: data.data };
+    } catch {
+      return { success: false, message: "Something went wrong" };
+    }
+  },
+};
+
