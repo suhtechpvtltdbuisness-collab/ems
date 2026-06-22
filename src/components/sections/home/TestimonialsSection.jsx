@@ -1,6 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
+
+const testimonials = [
+  {
+    id: 1,
+    quote: "ORGA completely transformed how we manage our team and projects. Everything is now centralized and so much easier to track.",
+    name: "Arefin Shuvo",
+    role: "CEO, Urbancompany",
+    avatar: "/Avatar (1).png"
+  },
+  {
+    id: 2,
+    quote: "We've seen a massive increase in productivity since moving to ORGA. The automated payroll and attendance tracking is a lifesaver.",
+    name: "Sarah Jenkins",
+    role: "HR Director, TechFlow",
+    avatar: "https://i.pravatar.cc/150?img=47"
+  },
+  {
+    id: 3,
+    quote: "The best enterprise management tool we've used. Managing global teams, budgets, and timelines has never been so seamless.",
+    name: "Michael Chen",
+    role: "Operations Manager, Globex",
+    avatar: "https://i.pravatar.cc/150?img=11"
+  },
+  {
+    id: 4,
+    quote: "Incredible software that easily integrates with our daily operations. Our HR team loves the new onboarding flow.",
+    name: "Emily Watson",
+    role: "People Ops, Innovate Inc.",
+    avatar: "https://i.pravatar.cc/150?img=5"
+  },
+  {
+    id: 5,
+    quote: "The analytics and reporting feature gives us exactly the insights we need. Highly recommend ORGA for fast-growing companies.",
+    name: "David Lee",
+    role: "COO, NextGen",
+    avatar: "https://i.pravatar.cc/150?img=68"
+  }
+];
 
 export default function TestimonialsSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));
+  };
+
+  const handleNext = () => {
+    // Show 3 testimonials at a time, so stop moving when the last 3 are visible
+    setCurrentIndex((prev) => (prev < testimonials.length - 3 ? prev + 1 : prev));
+  };
+
   return (
     <section className="w-full py-20 px-6 md:px-16 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -29,43 +78,50 @@ export default function TestimonialsSection() {
 
         {/* ------------ ARROWS ------------ */}
         <div className="flex justify-end gap-3 mt-10">
-          <button>
-            <img src="/LeftArrow.png" alt="Left Arrow" className="cursor-pointer" />
+          <button 
+            onClick={handlePrev}
+            disabled={currentIndex === 0}
+            className={`transition-opacity ${currentIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:opacity-80"}`}
+          >
+            <img src="/LeftArrow.png" alt="Left Arrow" className={currentIndex === 0 ? "" : "cursor-pointer"} />
           </button>
 
-          <button>
-            <img src="/RightArrow.png" alt="Right Arrow" className="cursor-pointer" />
+          <button 
+            onClick={handleNext}
+            disabled={currentIndex >= testimonials.length - 3}
+            className={`transition-opacity ${currentIndex >= testimonials.length - 3 ? "opacity-50 cursor-not-allowed" : "hover:opacity-80"}`}
+          >
+            <img src="/RightArrow.png" alt="Right Arrow" className={currentIndex >= testimonials.length - 3 ? "" : "cursor-pointer"} />
           </button>
         </div>
 
         {/* ------------ TESTIMONIAL CARDS ------------ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-12">
-          {[1, 2, 3].map((item) => (
+          {testimonials.slice(currentIndex, currentIndex + 3).map((testimonial, index) => (
             <div
-              key={item}
+              key={testimonial.id}
               className={`
         rounded-2xl p-6 bg-white border border-gray-100
-        shadow-[0px_8px_25px_0px_#756FCC40]
-        ${item === 1 ? "min-h-[280px] mt-0 sm:mt-[-20px] md:mt-[-40px]" : ""}
-        ${item === 2 ? "min-h-[250px] mt-0 sm:mt-[-4px] md:mt-[-8px]" : ""}
-        ${item === 3 ? "min-h-[230px] mt-0 sm:mt-[2px] md:mt-[4px]" : ""}
+        shadow-[0px_8px_25px_0px_#756FCC40] transition-all duration-300
+        ${index === 0 ? "min-h-[280px] mt-0 sm:mt-[-20px] md:mt-[-40px]" : ""}
+        ${index === 1 ? "min-h-[250px] mt-0 sm:mt-[-4px] md:mt-[-8px]" : ""}
+        ${index === 2 ? "min-h-[230px] mt-0 sm:mt-[2px] md:mt-[4px]" : ""}
       `}
             >
               <div className="space-y-6">
                 <img src="/quote.png" alt="Quote" className="w-8" />
                 <p className="text-gray-700 leading-relaxed">
-                  Lorem ipsum dolor sit amet consectetur. Hendrerit quisque nibh
-                  neque ultricies nulla lectus. Risus.
+                  {testimonial.quote}
                 </p>
                 <div className="flex items-center gap-3">
                   <img
-                    src="/Avatar (1).png"
+                    src={testimonial.avatar}
                     alt="Avatar"
                     className="w-10 h-10 rounded-full object-cover cursor-pointer"
                   />
                   <div>
-                    <p className="font-semibold text-gray-900 cursor-pointer">Arefin Shuvo</p>
-                    <p className="text-sm text-gray-500 cursor-pointer">CEO, Urbancompany</p>
+                    <p className="font-semibold text-gray-900 cursor-pointer">{testimonial.name}</p>
+                    <p className="text-sm text-gray-500 cursor-pointer">{testimonial.role}</p>
                   </div>
                 </div>
               </div>
