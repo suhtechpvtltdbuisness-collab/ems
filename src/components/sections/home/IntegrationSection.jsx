@@ -9,7 +9,7 @@ export default function IntegrationSection() {
         Connect with the Tools{" "}< span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent inline">
           You
         </span>
-        
+
         <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent block">
           Already Use.
         </span>
@@ -17,8 +17,7 @@ export default function IntegrationSection() {
 
       {/* Subtitle */}
       <p className="text-[#7C7C7C] font-nunito text-sm sm:text-base md:text-lg text-center mt-4 max-w-2xl leading-relaxed">
-        Lorem ipsum dolor sit amet consectetur. kshi uemnamet consectetur. kshi uemnamet consectetur. kshi uemnamet
-      </p>
+        Seamlessly integrate with your favorite applications and streamline your workflow without changing the way your team works.      </p>
 
       {/* Icons Container */}
       <div className="mt-12 p-6 sm:p-10 md:p-14 rounded-3xl border-4 border-[#AAEBB3] w-full max-w-6xl bg-[linear-gradient(270deg,#FFFFFF_0%,#EAFFDD_100%)]">
