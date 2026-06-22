@@ -19,24 +19,25 @@ export default function Customers() {
         {/* Heading + Paragraph */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2 sm:gap-3">
           <h1 className="text-[#292D34] font-poppins text-2xl xs:text-3xl sm:text-4xl md:text-[48px] font-semibold leading-snug sm:leading-snug md:leading-tight max-w-[636px]">
-            Keep Your Customers
+            Build Stronger
             <span className="block bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent">
-              Happy & Heard.
+              Customer Relationships
+
             </span>
           </h1>
 
           <p className="text-[#7C7C7C] font-nunito text-sm xs:text-base sm:text-lg md:text-[24px] leading-relaxed max-w-[90%] sm:max-w-[95%] md:max-w-full">
-            Lorem ipsum dolor sit amet consectetur. kshi uemnamet consectetur. kshi uemnamet
+            Keep every customer interaction organized, personalized, and actionable. Deliver exceptional experiences that drive loyalty and long-term growth.
           </p>
         </div>
 
         {/* Feature List */}
         <div className="flex flex-col gap-2 sm:gap-3 mt-2 w-full">
           {[
-            "Real-time expense tracking & approvals",
+            "Centralized customer profiles",
             "Automated invoicing & billing",
-            "Multi-currency and tax compliance",
-            "Real-time budgeting & forecasting"
+            "Customer communication tracking",
+            "Satisfaction & feedback insight"
           ].map((item, index) => (
             <div key={index} className="flex items-start gap-2 sm:gap-3 w-full">
               <CheckCircle2 size={24} className="text-white fill-[#756FCC]" />
