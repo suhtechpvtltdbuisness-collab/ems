@@ -59,6 +59,7 @@ import EmpPersonalInfo from "./pages/employee/EmpPersonalInfo";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import Onboarding from "./pages/onboarding/index";
+import ContactPage from "./pages/ContactPage";
 
 // ======================
 // PROTECTED ROUTE
@@ -344,6 +345,23 @@ function App() {
               <div className="pt-20">
                 <Navbar />
                 <Demo />
+                <Footer />
+              </div>
+            </div>
+          }
+        />
+
+        {/* CONTACT PAGE */}
+        <Route
+          path="/contact"
+          element={
+            <div className="relative min-h-screen w-full overflow-x-hidden">
+              <div className="fixed inset-0 -z-10">
+                <img src="/Grid_bg.svg" alt="grid background" className="w-full h-full object-cover" />
+              </div>
+              <div className="pt-20">
+                <Navbar />
+                <ContactPage />
                 <Footer />
               </div>
             </div>

@@ -41,15 +41,14 @@ export default function ProjectFeature() {
             needs in <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent ">one place</span>
           </h1>
           <p className="text-gray-500 max-w-2xl mx-auto">
-            Lorem ipsum dolor sit amet consectetur. kshi uemnamet <br />
-            consectetur. kshi uemnamet
+            Manage tasks, teams, timelines, and profitability—all in one place. Streamline workflows and empower your team to achieve more with ORGA.
           </p>
         </div>
 
         {/* Features Section */}
         <div className="flex flex-col items-center">
 
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full cursor-pointer">
             {features.slice(0, 3).map((feature, index) => (
               <div
@@ -83,7 +82,7 @@ export default function ProjectFeature() {
             ))}
           </div>
 
-          
+
           <div className="mt-6 w-full flex justify-center">
             <div
               className="
@@ -94,7 +93,7 @@ export default function ProjectFeature() {
                 max-w-[380px] w-full bg-white
               "
             >
-          
+
               <img
                 src="/Ellipse 487.svg"
                 alt="hello"

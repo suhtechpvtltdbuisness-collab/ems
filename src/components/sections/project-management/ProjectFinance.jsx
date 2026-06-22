@@ -12,7 +12,7 @@ export default function ProjectFinance() {
           <h1 className="text-[#292D34] font-poppins text-[32px] md:text-[48px] font-semibold leading-tight">
             Everything You Need to Plan
             <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent block">
-              Projects Perfectly
+              Projects Successfully
             </span>
           </h1>
 
@@ -24,10 +24,10 @@ export default function ProjectFinance() {
         {/* Features */}
         <div className="flex flex-col gap-4 mt-2 w-full">
           {[
-            "Real–time expense tracking & approvals",
-            "Automated invoicing & billing",
-            "Multi–currency and tax compliance",
-            "Multi–currency and tax compliance"
+            "Create and manage project milestones",
+            "Assign tasks and responsibilities",
+            "Track progress in real time",
+            "Collaborate with teams seamlessly"
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-3 w-full">
               <CheckCircle2 size={28} className="text-white fill-[#756FCC]" />

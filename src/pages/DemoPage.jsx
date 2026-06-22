@@ -5,12 +5,12 @@ export default function Demo() {
     return (
         <div className="relative bg-white p-6 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
 
-    
+
             <img
                 src="/Ellipse 492 (1).svg"
                 alt="bg-shape"
                 className="absolute left-0 top-0 w-56 md:w-96 pointer-events-none z-10"
-                
+
             />
 
             {/* Left Section */}
@@ -26,17 +26,18 @@ export default function Demo() {
                     </h1>
 
                     <p className="text-[#7C7C7C] font-[Nunito] text-[18px] md:text-[24px] leading-relaxed max-w-[90%] md:max-w-full">
-                        Lorem ipsum dolor sit amet consectetur. Eu sit platea vivamus quis.
+                        See how ORGA can streamline your workflows and empower your team to achieve more.
+
                     </p>
                 </div>
 
                 {/* Features */}
                 <div className="flex flex-col gap-4 mt-2 w-full">
                     {[
-                        "Pick a time slot that works for you and schedule",
-                        "Discover how to maximize your team's productivity with Orga",
-                        "Multi-currency and tax compliance",
-                        "Get answers to your specific questions and challenges"
+                        "Pick a time slot that works for you and schedule a personalized demo.",
+                        "Discover how ORGA maximizes productivity and simplifies operations.",
+                        "Manage global teams with multi-currency and tax compliance support.",
+                        " Get answers tailored to your business needs and unique challenges."
                     ].map((item, i) => (
                         <div key={i} className="flex items-start gap-3 w-full">
                             <CheckCircle2 size={28} className="text-white fill-[#756FCC]" />
@@ -114,7 +115,7 @@ export default function Demo() {
                                     <option>Spanish</option>
                                 </select>
                                 <svg className="absolute right-4 top-[46px] pointer-events-none text-gray-500" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
 
@@ -129,7 +130,7 @@ export default function Demo() {
                                     <option>50+</option>
                                 </select>
                                 <svg className="absolute right-4 top-[46px] pointer-events-none text-gray-500" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
                         </div>

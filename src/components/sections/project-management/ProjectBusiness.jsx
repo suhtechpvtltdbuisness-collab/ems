@@ -33,34 +33,34 @@ export default function ProjectBusiness() {
         {/* Heading Section */}
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-5xl font-semibold font-poppins text-gray-900 mb-4">
-            Why Businesses <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent">Love It</span>
+            Why Businesses <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent">Choose ORGA
+            </span>
           </h1>
           <p className="text-gray-500 max-w-2xl mx-auto">
-            Lorem ipsum dolor sit amet consectetur. kshi uemnamet <br />
-            consectetur. kshi uemnamet
+            Simplify HR, payroll, attendance, tasks, and project management with one powerful platform designed to help your team work smarter and grow faster.
           </p>
         </div>
 
-       
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
 
-         
+
           <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 cursor-pointer">
 
-            
+
             <Card feature={features[0]} />
 
-           
+
             <Card feature={features[1]} />
 
-           
+
             <div className="md:col-span-2">
               <Card feature={features[2]} />
             </div>
 
           </div>
 
-       
+
           <div className="row-span-2 cursor-pointer">
             <Card feature={features[3]} isLarge />
           </div>
@@ -99,7 +99,7 @@ function Card({ feature, isLarge }) {
         {feature.description}
       </p>
 
-      
+
       {isLarge && (
         <button className="mt-6 w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 cursor-pointer">
           Try for free →

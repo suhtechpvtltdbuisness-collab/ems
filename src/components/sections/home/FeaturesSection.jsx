@@ -44,13 +44,12 @@ export default function FeaturesSection() {
 
         {/* Section Header */}
         <div className="text-center mb-12 px-4">
-        <h1 className="text-5xl md:text-5xl font-semibold font- poppins text-gray-900 mb-4 leading-tight">
+          <h1 className="text-5xl md:text-5xl font-semibold font- poppins text-gray-900 mb-4 leading-tight">
             <span className="block">Everything your team</span>
             <span className="block">needs in <span className="text-green-500">one place</span></span>
           </h1>
           <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            <span className="block">A complete, all-in-one Enterprise Management System designed to streamline your workflow, boost productivity, and centralize your entire business operations</span>
-            <span className="block">from tasks to timelines, HR to finance, all inside one powerful platform.</span>
+            <span className="block">A complete, all-in-one Enterprise Management System designed to streamline workflows, boost productivity, and centralize business operations. From tasks and timelines to HR and finance, everything you need is available in one powerful platform.</span>
           </p>
         </div>
 

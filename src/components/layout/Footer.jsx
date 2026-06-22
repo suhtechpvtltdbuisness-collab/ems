@@ -11,7 +11,7 @@ export default function Footer() {
     >
       <div className="w-full flex flex-wrap justify-between items-start gap-y-4">
         {/* Left Logo Column */}
-        <div className="flex flex-col gap-4 min-w-[220px]">
+        <div className="flex flex-col gap-4 min-w-[220px] max-w-[350px]">
           <img
             src="/Orga Logo (1).svg"
             alt="logo"
@@ -19,7 +19,7 @@ export default function Footer() {
           />
 
           <p className="text-[#1B223C] font-nunito text-[18px]">
-            Lorem ipsum dolor sit amet consectetur.
+            Empowering teams with efficiency and innovation. Delivering smart solutions that simplify work and accelerate growth.
           </p>
         </div>
 

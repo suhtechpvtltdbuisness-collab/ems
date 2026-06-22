@@ -19,7 +19,7 @@ export default function Customers() {
         {/* Heading + Paragraph */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2 sm:gap-3">
           <h1 className="text-[#292D34] font-poppins text-2xl xs:text-3xl sm:text-4xl md:text-[48px] font-semibold leading-snug sm:leading-snug md:leading-tight max-w-[636px]">
-            Build Stronger
+            Build Stronger me
             <span className="block bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent">
               Customer Relationships
 

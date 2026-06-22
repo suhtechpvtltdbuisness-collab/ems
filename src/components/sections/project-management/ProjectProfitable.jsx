@@ -17,17 +17,17 @@ export default function ProjectProfitable() {
           </h1>
 
           <p className="text-[#7C7C7C] font-nunito text-[18px] md:text-[24px] leading-relaxed max-w-[90%] md:max-w-full">
-            Track cost, time spent, billable hours, and revenue to understand true project profitability.
+            Track project costs, billable hours, resource utilization, and revenue in real time to gain complete visibility into project profitability and business performance.
           </p>
         </div>
 
         {/* Features */}
         <div className="flex flex-col gap-4 mt-2 w-full">
           {[
-            "Employee onboarding & profiles",
-            "Leave & attendance tracking",
-            "Payroll automation",
-            "Document & policy management"
+            " Cost & Budget Tracking",
+            "Billable Hours Monitoring",
+            " Revenue & Profitability Analysis",
+            "Resource Utilization Insights"
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-3 w-full">
               <CheckCircle2 size={28} className="text-white fill-[#756FCC]" />

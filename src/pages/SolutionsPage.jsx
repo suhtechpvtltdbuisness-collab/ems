@@ -35,7 +35,7 @@ export default function SolutionsPage() {
                     <div className="relative z-10 max-w-xl">
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Solutions –</h1>
                         <p className="text-lg md:text-xl leading-relaxed">
-                            Lorem ipsum dolor sit amet consectetur. Eu sit platea vivamus quis.
+                            Explore powerful solutions designed to simplify operations, enhance collaboration, and drive business growth.
                         </p>
                     </div>
 
@@ -50,17 +50,17 @@ export default function SolutionsPage() {
             </div>
 
             {/* GRID SECTION */}
-          <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 py-16 relative z-10">
-    {cards.map((title, index) => (
-        <div
-            key={index}
-            onClick={() => handleClick(title)}
-            className="border rounded-xl p-6 text-lg font-medium shadow-sm hover:shadow-md transition cursor-pointer bg-white relative z-20"
-        >
-            {title}
-        </div>
-    ))}
-</div>
+            <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 py-16 relative z-10">
+                {cards.map((title, index) => (
+                    <div
+                        key={index}
+                        onClick={() => handleClick(title)}
+                        className="border rounded-xl p-6 text-lg font-medium shadow-sm hover:shadow-md transition cursor-pointer bg-white relative z-20"
+                    >
+                        {title}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

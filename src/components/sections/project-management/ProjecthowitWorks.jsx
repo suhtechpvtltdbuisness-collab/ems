@@ -9,8 +9,7 @@ export default function ProjectHowitWorks() {
         </h1>
 
         <p className="text-[#7C7C7C] font-nunito text-[16px] md:text-[20px] lg:text-[24px] font-normal leading-[26px] md:leading-[30px] lg:leading-[31px] tracking-[-0.48px] max-w-[600px] mx-auto">
-          Lorem ipsum dolor sit amet consectetur. kshi uemnamet consectetur. kshi uemnamet
-        </p>
+          Get started in minutes. Set up your workspace, collaborate with your team, and streamline your operations with ORGA        </p>
       </div>
 
       {/* Image Section */}

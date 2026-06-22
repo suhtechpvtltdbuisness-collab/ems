@@ -26,18 +26,17 @@ export default function ProjectAttendence() {
           </h1>
 
           <p className="text-[#7C7C7C] font-nunito text-[18px] md:text-[24px] leading-relaxed max-w-[90%] md:max-w-full">
-            View project health, task completion, deadlines, and team
-            performance with beautifully designed dashboards.
+            Monitor project health, task completion rates, upcoming deadlines, and team performance through interactive dashboards designed to keep your projects on track.
           </p>
         </div>
 
         {/* Feature List */}
         <div className="flex flex-col gap-4 mt-2 w-full">
           {[
-            "Employee onboarding & profiles",
-            "Leave & attendance tracking",
-            "Payroll automation",
-            "Document & policy management"
+            "Employee Onboarding & Profile Management",
+            " Leave & Attendance Tracking",
+            "Payroll Processing & Automation",
+            " Document & Policy Management"
           ].map((item, index) => (
             <div key={index} className="flex items-start gap-3">
               <CheckCircle2 size={28} className="text-white fill-[#756FCC]" />
