@@ -7,6 +7,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUseCasesOpen, setIsUseCasesOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
 
   const dropdownRef = useRef(null);
   const profileRef = useRef(null);
@@ -27,6 +28,14 @@ export default function Navbar() {
     }
 
     document.addEventListener("mousedown", handleClickOutside);
+
+    const userDataStr = localStorage.getItem("userData");
+    if (userDataStr) {
+      try {
+        setUserProfile(JSON.parse(userDataStr));
+      } catch (e) {}
+    }
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
@@ -137,22 +146,19 @@ export default function Navbar() {
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border-[#756FCC] py-2">
 
-                {/* {!isLoggedIn && (
-                  <button
-                    onClick={() => navigate("/hrms/login")}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100  font-medium"
-                  >
-                    Login Dashboard
-                  </button>
-                )} */}
 
-                {isLoggedIn && (
-                  <button
-                    onClick={goToAdmin}
-                    className="block w-full text-left  px-4 py-2 hover:bg-gray-100 font-medium cursor-pointer"
-                  >
-                    Login Dashboard
-                  </button>
+
+
+
+                {userProfile && (
+                  <div className="px-4 py-3 border-b border-gray-100 mb-1">
+                    <p className="text-sm font-semibold text-gray-900 truncate">
+                      {userProfile.name || `${userProfile.firstName || ''} ${userProfile.lastName || ''}`.trim() || 'User'}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {userProfile.email}
+                    </p>
+                  </div>
                 )}
 
                 <button
@@ -230,6 +236,16 @@ export default function Navbar() {
             </>
           ) : (
             <>
+              {userProfile && (
+                <div className="px-2 py-3 mb-2 bg-gray-50 rounded-lg border border-gray-100">
+                  <p className="text-sm font-semibold text-gray-900 truncate">
+                    {userProfile.name || `${userProfile.firstName || ''} ${userProfile.lastName || ''}`.trim() || 'User'}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {userProfile.email}
+                  </p>
+                </div>
+              )}
               {!isLoggedIn && (
                 <button
                   onClick={() => {
