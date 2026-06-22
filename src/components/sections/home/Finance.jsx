@@ -10,14 +10,15 @@ export default function Finance() {
         {/* Title + Description */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2 sm:gap-3">
           <h1 className="text-[#292D34] font-poppins text-2xl xs:text-3xl sm:text-4xl md:text-[48px] font-semibold leading-snug sm:leading-snug md:leading-tight">
-            Stay on Top of Your
+            Smarter Financial Management for
             <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent block">
-              Finances
+              Growing Businesses
+
             </span>
           </h1>
 
           <p className="text-[#7C7C7C] font-nunito text-sm xs:text-base sm:text-lg md:text-[24px] leading-relaxed max-w-[90%] sm:max-w-[95%] md:max-w-full">
-            Managing business finances doesn’t have to be complicated. ORGA gives you a powerful, automated finance management system that helps you track expenses, manage invoices, monitor cash flow, and make informed financial decisions — all from one smart dashboard.
+            Take control of your finances with ORGA's intelligent finance management platform. Automate invoicing, track expenses in real time, monitor cash flow, and gain actionable insights—all from one centralized dashboard.
           </p>
         </div>
 
@@ -25,9 +26,9 @@ export default function Finance() {
         <div className="flex flex-col gap-3 sm:gap-4 mt-2 w-full">
           {[
             "Real-time expense tracking & approvals",
-            "Automated invoicing & billing",
-            "Multi-currency and tax compliance",
-            "Real-time budgeting & forecasting"
+            "Automated invoicing and payment management",
+            "Tax compliance and multi-currency support",
+            "Advanced budgeting and financial forecasting"
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-2 sm:gap-3 w-full">
               <CheckCircle2 size={24} className="text-white fill-[#756FCC]" />
@@ -40,7 +41,7 @@ export default function Finance() {
 
         {/* Button */}
         <button className="w-fit px-5 sm:px-6 py-2 sm:py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 sm:mt-3 cursor-pointer">
-          <span>Try for free</span>
+          <span>Start Managing Smarter</span>
           <ArrowRight size={18} />
         </button>
       </div>
