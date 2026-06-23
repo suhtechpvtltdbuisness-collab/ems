@@ -59,6 +59,7 @@ import EmpPersonalInfo from "./pages/employee/EmpPersonalInfo";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import Onboarding from "./pages/onboarding/index";
+import VerifyEmail from "./pages/VerifyEmail";
 import ContactPage from "./pages/ContactPage";
 
 // ======================
@@ -174,6 +175,16 @@ function App() {
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
               <AuthPage />
+            </div>
+          }
+        />
+
+        {/* EMAIL VERIFICATION PAGE */}
+        <Route
+          path="/verify-email"
+          element={
+            <div className="relative min-h-screen w-full overflow-x-hidden">
+              <VerifyEmail />
             </div>
           }
         />

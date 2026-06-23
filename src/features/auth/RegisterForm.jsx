@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Mail, Lock } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Mail, Lock, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { InputField } from "../../components/common/InputField";
@@ -13,6 +13,15 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [toast, setToast] = useState(null);
+  
+  // OTP-specific states
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otpError, setOtpError] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const [resendLoading, setResendLoading] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -20,6 +29,16 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
     password: "",
     agree: false,
   });
+
+  useEffect(() => {
+    let timer;
+    if (cooldown > 0) {
+      timer = setInterval(() => {
+        setCooldown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [cooldown]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -46,20 +65,13 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
     const result = await authService.register(userData);
 
     if (result.success) {
-      localStorage.setItem("isRegistered", "true");
+      setRegisteredEmail(form.email);
+      setIsSuccess(true);
       setToast({
         type: "success",
         title: "Account Created Successfully",
-        message: authService.isSubscribed(result.data?.subscription)
-          ? "Redirecting to dashboard..."
-          : "Choose a plan from ₹2,999/month to get started...",
+        message: "Verification OTP has been sent.",
       });
-
-      onRegister?.(result.data);
-
-      setTimeout(() => {
-        authService.handlePostAuthRedirect(result.data?.subscription, navigate);
-      }, 1500);
     } else {
       setToast({
         type: "error",
@@ -69,6 +81,89 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
     }
 
     setLoading(false);
+  };
+
+  const handleOtpChange = (val, index) => {
+    if (val && isNaN(val)) return;
+    const newOtp = [...otp];
+    newOtp[index] = val;
+    setOtp(newOtp);
+
+    // Move focus to next input
+    if (val && index < 5) {
+      const nextInput = document.getElementById(`otp-${index + 1}`);
+      nextInput?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === "Backspace") {
+      if (!otp[index] && index > 0) {
+        const prevInput = document.getElementById(`otp-${index - 1}`);
+        prevInput?.focus();
+      }
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e?.preventDefault();
+    const otpCode = otp.join("");
+    if (otpCode.length < 6) {
+      setOtpError("Please enter all 6 digits.");
+      return;
+    }
+
+    setVerifying(true);
+    setOtpError("");
+
+    const result = await authService.verifyOtp({ email: registeredEmail, otp: otpCode });
+
+    if (result.success) {
+      setToast({
+        type: "success",
+        title: "Verification Successful",
+        message: authService.isSubscribed(result.data?.subscription)
+          ? "Redirecting to dashboard..."
+          : "Redirecting...",
+      });
+
+      onRegister?.(result.data);
+
+      setTimeout(() => {
+        authService.handlePostAuthRedirect(result.data?.subscription, navigate);
+      }, 1500);
+    } else {
+      setOtpError(result.message || "Failed to verify OTP.");
+      setToast({
+        type: "error",
+        title: "Verification Failed",
+        message: result.message,
+      });
+    }
+    setVerifying(false);
+  };
+
+  const handleResend = async () => {
+    if (cooldown > 0 || resendLoading) return;
+
+    setResendLoading(true);
+    const result = await authService.resendOtp(registeredEmail);
+
+    if (result.success) {
+      setToast({
+        type: "success",
+        title: "Success",
+        message: "Verification OTP resent successfully!",
+      });
+      setCooldown(60);
+    } else {
+      setToast({
+        type: "error",
+        title: "Error",
+        message: result.message || "Failed to resend verification OTP.",
+      });
+    }
+    setResendLoading(false);
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
@@ -118,6 +213,77 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
       message: "An error occurred with Google Sign-In",
     });
   };
+
+  if (isSuccess) {
+    return (
+      <>
+        <Toast toast={toast} onClose={() => setToast(null)} />
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center">
+          <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+            <Mail className="w-8 h-8 text-purple-600 animate-pulse" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Enter Verification Code</h1>
+          <p className="text-gray-500 text-sm text-center mb-6">
+            We've sent a 6-digit verification code to <strong className="text-gray-800">{registeredEmail}</strong>.
+          </p>
+
+          <form onSubmit={handleVerifyOtp} className="w-full space-y-6">
+            <div className="flex justify-between gap-2 max-w-[280px] mx-auto">
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  id={`otp-${index}`}
+                  type="text"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(e.target.value, index)}
+                  onKeyDown={(e) => handleOtpKeyDown(e, index)}
+                  className="w-11 h-12 border border-gray-300 rounded-lg text-center text-lg font-bold text-gray-800 focus:border-purple-500 focus:ring-2 focus:ring-purple-100 outline-none bg-gray-50/50"
+                  required
+                />
+              ))}
+            </div>
+
+            {otpError && (
+              <p className="text-xs text-red-500 text-center font-medium">
+                {otpError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={verifying || otp.join("").length < 6}
+              className="w-full h-11 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2 text-sm shadow-md disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {verifying ? "Verifying..." : "Verify Code"}
+            </button>
+          </form>
+
+          <div className="w-full space-y-4 mt-6 pt-5 border-t border-gray-100 text-center">
+            <p className="text-xs text-gray-500">
+              Didn't receive the code?{" "}
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={cooldown > 0 || resendLoading}
+                className="text-purple-600 font-semibold hover:underline cursor-pointer bg-transparent border-none disabled:opacity-60 disabled:no-underline"
+              >
+                {cooldown > 0 ? `Resend Code (${cooldown}s)` : "Resend Code"}
+              </button>
+            </p>
+
+            <button
+              type="button"
+              onClick={onLogin}
+              className="text-xs text-gray-500 hover:text-gray-700 font-medium hover:underline cursor-pointer bg-transparent border-none"
+            >
+              Back to Login
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -224,7 +390,7 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
             Already have an account?{" "}
             <button
               onClick={onLogin}
-              className="text-purple-600 font-medium hover:underline"
+              className="text-purple-600 font-medium hover:underline cursor-pointer bg-transparent border-none"
             >
               Login
             </button>

@@ -125,6 +125,84 @@ export const authService = {
         };
       }
 
+      localStorage.setItem("isRegistered", "true");
+
+      return {
+        success: true,
+        message: data.message,
+        data: data.data,
+      };
+    } catch {
+      return {
+        success: false,
+        message: "Something went wrong",
+      };
+    }
+  },
+
+  verifyEmail: async (token) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/auth/verify-email?token=${token}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return {
+          success: false,
+          message: data.message || "Email verification failed",
+        };
+      }
+      return {
+        success: true,
+        message: data.message,
+      };
+    } catch {
+      return {
+        success: false,
+        message: "Something went wrong. Please try again later.",
+      };
+    }
+  },
+
+  resendVerification: async (email) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/auth/resend-verification`, {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return {
+          success: false,
+          message: data.message || "Failed to resend verification email",
+        };
+      }
+      return {
+        success: true,
+        message: data.message,
+      };
+    } catch {
+      return {
+        success: false,
+        message: "Something went wrong. Please try again later.",
+      };
+    }
+  },
+
+  verifyOtp: async (payload) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/auth/verify-otp`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return {
+          success: false,
+          message: data.message || "OTP verification failed",
+        };
+      }
+
       persistUserSession(
         data.data?.user,
         data.data?.tokens,
@@ -140,7 +218,32 @@ export const authService = {
     } catch {
       return {
         success: false,
-        message: "Something went wrong",
+        message: "Something went wrong. Please try again later.",
+      };
+    }
+  },
+
+  resendOtp: async (email) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/auth/resend-otp`, {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return {
+          success: false,
+          message: data.message || "Failed to resend verification OTP",
+        };
+      }
+      return {
+        success: true,
+        message: data.message,
+      };
+    } catch {
+      return {
+        success: false,
+        message: "Something went wrong. Please try again later.",
       };
     }
   },
