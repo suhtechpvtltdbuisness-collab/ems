@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { TRIAL_NOTE } from "../../../config/subscriptionPlans";
+import { trackBookDemo } from "../../../utils/analytics";
 
 export default function ProjectOrganizerTrial() {
     const navigate = useNavigate();
@@ -61,6 +62,7 @@ export default function ProjectOrganizerTrial() {
                         {/* Book a Demo */}
                         <button
                             onClick={() => {
+                                trackBookDemo("hero");
                                 navigate("/demo");
                                 window.scrollTo(0, 0);
                             }}

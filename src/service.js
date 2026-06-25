@@ -1,21 +1,10 @@
 import { formatInr } from "./config/subscriptionPlans.js";
+import { trackEvent } from "./utils/analytics.js";
 
 const BASE_URL =
   import.meta.env.VITE_BACKEND_BASE_URL ||
   import.meta.env.VITE_BASE_URL ||
   "https://hrms-orga-backend.vercel.app";
-
-export const GA_ID = import.meta.env.VITE_GA_ID;
-
-export const pageview = (url) => {
-  window.gtag("config", GA_ID, {
-    page_path: url,
-  });
-};
-
-export const event = (action, params = {}) => {
-  window.gtag("event", action, params);
-};
 
 const ADMIN_SITE_URL =
   import.meta.env.VITE_ADMIN_SITE_URL || "https://admin.suhtech.store";
@@ -126,6 +115,7 @@ export const authService = {
       }
 
       localStorage.setItem("isRegistered", "true");
+      trackEvent("sign_up", { method: "email" });
 
       return {
         success: true,
@@ -270,6 +260,7 @@ export const authService = {
         data.data?.subscription,
       );
       localStorage.setItem("isRegistered", "true");
+      trackEvent("login", { method: "email" });
 
       return {
         success: true,
@@ -306,6 +297,7 @@ export const authService = {
         data.data?.subscription,
       );
       localStorage.setItem("isRegistered", "true");
+      trackEvent("google_login", { method: "google" });
 
       return {
         success: true,
@@ -391,7 +383,9 @@ export const authService = {
     if (userDataStr) {
       try {
         user = JSON.parse(userDataStr);
-      } catch (e) {}
+      } catch {
+        // Ignore malformed cached user data.
+      }
     }
 
     if (user && !user.onboardingCompleted) {
@@ -583,71 +577,170 @@ export const subscriptionService = {
   },
 
   openSubscriptionCheckout: async (checkoutData, user) => {
-    await loadRazorpayScript();
+    const planName = checkoutData.planName || "Free Trial";
+    const amount = Number(checkoutData.amountInr ?? 0);
 
-    return new Promise((resolve) => {
-      const options = {
-        key: checkoutData.keyId,
-        subscription_id: checkoutData.subscriptionId,
-        name: "Suhtech ORGA",
-        description: `${checkoutData.trialDays}-day free trial, then ${formatInr(checkoutData.autoPayAmount)}/month`,
-        handler: async (response) => {
-          const result = await subscriptionService.verifyTrial({
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpaySubscriptionId: response.razorpay_subscription_id,
-            razorpaySignature: response.razorpay_signature,
-          });
+    try {
+      await loadRazorpayScript();
+
+      return await new Promise((resolve) => {
+        let settled = false;
+        const finish = (result) => {
+          if (settled) return;
+          settled = true;
           resolve(result);
-        },
-        prefill: {
-          name: user?.name || "",
-          email: user?.email || "",
-        },
-        theme: { color: "#756FCC" },
-        modal: {
-          ondismiss: () =>
-            resolve({ success: false, message: "Payment cancelled" }),
-        },
-      };
+        };
+        const fail = (reason) => {
+          if (settled) return;
+          trackEvent("subscription_failed", { plan_name: planName, reason });
+          finish({ success: false, message: reason });
+        };
+        const options = {
+          key: checkoutData.keyId,
+          subscription_id: checkoutData.subscriptionId,
+          name: "Suhtech ORGA",
+          description: `${checkoutData.trialDays}-day free trial, then ${formatInr(checkoutData.autoPayAmount)}/month`,
+          handler: async (response) => {
+            const result = await subscriptionService.verifyTrial({
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySubscriptionId: response.razorpay_subscription_id,
+              razorpaySignature: response.razorpay_signature,
+            });
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    });
+            if (result.success) {
+              trackEvent("free_trial_started", {
+                trial_days: Number(checkoutData.trialDays || 7),
+              });
+              finish(result);
+              return;
+            }
+
+            fail(result.message || "Trial verification failed");
+          },
+          prefill: {
+            name: user?.name || "",
+            email: user?.email || "",
+          },
+          theme: { color: "#756FCC" },
+          modal: {
+            ondismiss: () =>
+              finish({ success: false, message: "Payment cancelled" }),
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on?.("payment.failed", (response) => {
+          fail(
+            response?.error?.description ||
+              response?.error?.reason ||
+              "Razorpay payment failed",
+          );
+        });
+
+        trackEvent("plan_selected", {
+          plan_name: planName,
+          organization_type: checkoutData.organizationType || "unknown",
+          amount,
+        });
+        trackEvent("subscription_started", {
+          plan_name: planName,
+          amount,
+          currency: "INR",
+        });
+        rzp.open();
+      });
+    } catch (error) {
+      const reason = error?.message || "Failed to open Razorpay checkout";
+      trackEvent("subscription_failed", { plan_name: planName, reason });
+      return { success: false, message: reason };
+    }
   },
 
-  openCheckout: async (orderData, user) => {
-    await loadRazorpayScript();
+  openCheckout: async (orderData, user, analyticsData = {}) => {
+    const planName =
+      analyticsData.planName || orderData.planName || orderData.planType;
+    const amount = Number(analyticsData.amount ?? 0);
 
-    return new Promise((resolve) => {
-      const options = {
-        key: orderData.keyId,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: "Suhtech ORGA",
-        description: orderData.planName,
-        order_id: orderData.orderId,
-        handler: async (response) => {
-          const result = await subscriptionService.verifyPayment({
-            planType: orderData.planType,
-            razorpayOrderId: response.razorpay_order_id,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpaySignature: response.razorpay_signature,
-          });
+    try {
+      await loadRazorpayScript();
+
+      return await new Promise((resolve) => {
+        let settled = false;
+        const finish = (result) => {
+          if (settled) return;
+          settled = true;
           resolve(result);
-        },
-        prefill: {
-          name: user?.name || "",
-          email: user?.email || "",
-        },
-        theme: { color: "#756FCC" },
-        modal: {
-          ondismiss: () => resolve({ success: false, message: "Payment cancelled" }),
-        },
-      };
+        };
+        const fail = (reason) => {
+          if (settled) return;
+          trackEvent("subscription_failed", { plan_name: planName, reason });
+          finish({ success: false, message: reason });
+        };
+        const options = {
+          key: orderData.keyId,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          name: "Suhtech ORGA",
+          description: orderData.planName,
+          order_id: orderData.orderId,
+          handler: async (response) => {
+            const result = await subscriptionService.verifyPayment({
+              planType: orderData.planType,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            });
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    });
+            if (result.success) {
+              trackEvent("purchase", {
+                transaction_id: response.razorpay_payment_id,
+                value: amount,
+                currency: "INR",
+                plan_name: planName,
+              });
+              finish(result);
+              return;
+            }
+
+            fail(result.message || "Payment verification failed");
+          },
+          prefill: {
+            name: user?.name || "",
+            email: user?.email || "",
+          },
+          theme: { color: "#756FCC" },
+          modal: {
+            ondismiss: () =>
+              finish({ success: false, message: "Payment cancelled" }),
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on?.("payment.failed", (response) => {
+          fail(
+            response?.error?.description ||
+              response?.error?.reason ||
+              "Razorpay payment failed",
+          );
+        });
+
+        trackEvent("plan_selected", {
+          plan_name: planName,
+          organization_type: analyticsData.organizationType || "unknown",
+          amount,
+        });
+        trackEvent("subscription_started", {
+          plan_name: planName,
+          amount,
+          currency: "INR",
+        });
+        rzp.open();
+      });
+    } catch (error) {
+      const reason = error?.message || "Failed to open Razorpay checkout";
+      trackEvent("subscription_failed", { plan_name: planName, reason });
+      return { success: false, message: reason };
+    }
   },
 };
 
@@ -683,4 +776,3 @@ export const onboardingService = {
     }
   },
 };
-

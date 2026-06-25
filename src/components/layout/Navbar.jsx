@@ -2,6 +2,7 @@ import { ChevronDown, Menu, X, User, LogOut } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../../service";
+import { trackBookDemo } from "../../utils/analytics";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,7 +34,9 @@ export default function Navbar() {
     if (userDataStr) {
       try {
         setUserProfile(JSON.parse(userDataStr));
-      } catch (e) {}
+      } catch {
+        // Ignore malformed cached profile data.
+      }
     }
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -108,7 +111,11 @@ export default function Navbar() {
           Pricing
         </Link>
 
-        <Link to="/demo" className="hover:text-[#756FCC]">
+        <Link
+          to="/demo"
+          onClick={() => trackBookDemo("navbar")}
+          className="hover:text-[#756FCC]"
+        >
           Book a Demo
         </Link>
       </div>
@@ -206,7 +213,13 @@ export default function Navbar() {
             Pricing
           </Link>
 
-          <Link to="/demo" onClick={() => setIsMenuOpen(false)}>
+          <Link
+            to="/demo"
+            onClick={() => {
+              trackBookDemo("navbar");
+              setIsMenuOpen(false);
+            }}
+          >
             Book a Demo
           </Link>
 

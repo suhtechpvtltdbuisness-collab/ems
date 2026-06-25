@@ -1,6 +1,6 @@
 import { Check, Lock, Rocket, Sparkles, Building } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   SUBSCRIPTION_PLANS,
   formatInr,
@@ -8,6 +8,7 @@ import {
   TRIAL_NOTE,
 } from "../../../config/subscriptionPlans";
 import { authService, subscriptionService } from "../../../service";
+import { trackEvent, trackPageView } from "../../../utils/analytics";
 
 const PLAN_UI = {
   free_trial: {
@@ -108,10 +109,19 @@ const buildPlans = (apiPlans = []) => {
 
 export default function PricingSection() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const pricingViewTracked = useRef(false);
   const [selectedPlan, setSelectedPlan] = useState("free_trial");
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [message, setMessage] = useState(null);
   const [apiPlans, setApiPlans] = useState([]);
+
+  useEffect(() => {
+    if (location.pathname === "/pricing" && !pricingViewTracked.current) {
+      pricingViewTracked.current = true;
+      trackPageView("pricing");
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     subscriptionService.getPlans().then((result) => {
@@ -139,6 +149,13 @@ export default function PricingSection() {
     }
   };
 
+  const getOrganizationType = (user) =>
+    user?.organizationType ||
+    user?.organization_type ||
+    user?.organization?.organizationType ||
+    user?.organization?.type ||
+    "unknown";
+
   const handleFreeTrial = async () => {
     if (!requireAuth()) return;
 
@@ -158,15 +175,21 @@ export default function PricingSection() {
         authService.redirectToAdmin();
         return;
       }
+      trackEvent("subscription_failed", {
+        plan_name: PLAN_UI.free_trial.title,
+        reason: trialResult.message,
+      });
       setMessage({ type: "error", text: trialResult.message });
       setLoadingPlan(null);
       return;
     }
 
-    const paymentResult = await subscriptionService.openSubscriptionCheckout(
-      trialResult.data,
-      user,
-    );
+    const paymentResult = await subscriptionService.openSubscriptionCheckout({
+      ...trialResult.data,
+      planName: PLAN_UI.free_trial.title,
+      amountInr: SUBSCRIPTION_PLANS.free_trial.priceInr,
+      organizationType: getOrganizationType(user),
+    }, user);
 
     if (paymentResult.success) {
       setMessage({
@@ -181,18 +204,22 @@ export default function PricingSection() {
     setLoadingPlan(null);
   };
 
-  const handlePaidPlan = async (planType) => {
+  const handlePaidPlan = async (plan) => {
     if (!requireAuth()) return;
 
-    setLoadingPlan(planType);
+    setLoadingPlan(plan.planType);
     setMessage(null);
 
     const profile = await authService.getProfile();
     const user = profile.data?.user || getUser();
 
-    const orderResult = await subscriptionService.createOrder(planType);
+    const orderResult = await subscriptionService.createOrder(plan.planType);
 
     if (!orderResult.success) {
+      trackEvent("subscription_failed", {
+        plan_name: plan.title,
+        reason: orderResult.message,
+      });
       setMessage({ type: "error", text: orderResult.message });
       setLoadingPlan(null);
       return;
@@ -201,6 +228,11 @@ export default function PricingSection() {
     const paymentResult = await subscriptionService.openCheckout(
       orderResult.data,
       user,
+      {
+        planName: plan.title,
+        organizationType: getOrganizationType(user),
+        amount: plan.priceInr,
+      },
     );
 
     if (paymentResult.success) {
@@ -225,7 +257,7 @@ export default function PricingSection() {
     }
 
     if (plan.planType === "starter_pack" || plan.planType === "premium") {
-      handlePaidPlan(plan.planType);
+      handlePaidPlan(plan);
     }
   };
 

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { trackBookDemo } from "../../utils/analytics";
 
 export default function Footer() {
   return (
@@ -34,7 +35,10 @@ export default function Footer() {
             <li>
               <Link
                 to="/demo"
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                onClick={() => {
+                  trackBookDemo("footer");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
                 className="hover:text-[#756FCC]"
               >
                 Book a Demo

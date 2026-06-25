@@ -122,6 +122,7 @@ export default function Onboarding() {
           const u = JSON.parse(userDataStr);
           u.onboardingCompleted = true;
           u.organizationId = res.data.id;
+          u.organizationType = data.organizationType;
           localStorage.setItem("userData", JSON.stringify(u));
         } catch (e) {
           console.error(e);

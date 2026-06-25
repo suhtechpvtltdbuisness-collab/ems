@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { CheckCircle2, Mail, Phone, MapPin } from "lucide-react";
+import { trackPageView } from "../utils/analytics";
 
 export default function ContactPage() {
+    const contactViewTracked = useRef(false);
+
+    useEffect(() => {
+        if (contactViewTracked.current) return;
+        contactViewTracked.current = true;
+        trackPageView("contact");
+    }, []);
+
     const handleContactSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);

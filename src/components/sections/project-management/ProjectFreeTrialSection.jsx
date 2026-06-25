@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { TRIAL_NOTE } from "../../../config/subscriptionPlans";
+import { trackBookDemo } from "../../../utils/analytics";
 
 export default function ProjectFreeTrialSection() {
     const navigate = useNavigate();
@@ -71,7 +72,10 @@ export default function ProjectFreeTrialSection() {
                             <span>View plans</span>
                             <ArrowRight size={18} />
                         </button>
-                        <button className="w-fit px-6 py-3 rounded-lg border border-[#756FCC] text-[#756FCC] shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 bg-transparent cursor-pointer">
+                        <button
+                            onClick={() => trackBookDemo("hero")}
+                            className="w-fit px-6 py-3 rounded-lg border border-[#756FCC] text-[#756FCC] shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 bg-transparent cursor-pointer"
+                        >
                             <span>Book a Demo</span>
                             <ArrowRight size={18} className="text-[#756FCC]" />
                         </button>
