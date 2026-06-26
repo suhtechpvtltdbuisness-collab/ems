@@ -1,8 +1,9 @@
-import { Check, Lock, Rocket, Sparkles, Building } from "lucide-react";
+import { Check, Lock, Rocket, Sparkles, Building, Wrench } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   SUBSCRIPTION_PLANS,
+  SUBSCRIPTION_ADDONS,
   formatInr,
   PRICING_TAGLINE,
   TRIAL_NOTE,
@@ -38,7 +39,7 @@ const PLAN_UI = {
   starter_pack: {
     title: SUBSCRIPTION_PLANS.starter_pack.name,
     icon: <Rocket size={24} className="text-[#756FCC]" />,
-    bestFor: "Growing businesses & SMEs",
+    bestFor: "Small teams and early-stage HR operations",
     priceNote: `per month · up to ${SUBSCRIPTION_PLANS.starter_pack.maxEmployees} employees`,
     highlight: true,
     categories: [
@@ -49,7 +50,7 @@ const PLAN_UI = {
           "Leave & attendance",
           `Up to ${SUBSCRIPTION_PLANS.starter_pack.maxEmployees} employees`,
           "Payroll basics",
-          `~${formatInr(SUBSCRIPTION_PLANS.starter_pack.pricePerEmployeeInr)}/employee at full capacity`,
+          `Extra employees at ${formatInr(SUBSCRIPTION_ADDONS.extra_employee.priceInr)}/seat`,
         ],
       },
       {
@@ -57,14 +58,14 @@ const PLAN_UI = {
         features: ["Email support", "30-day subscription"],
       },
     ],
-    limitations: ["Standard workflows only"],
+    limitations: ["Custom features are billed separately"],
     cta: "Subscribe Now",
     actionable: true,
   },
   premium: {
     title: SUBSCRIPTION_PLANS.premium.name,
     icon: <Building size={24} className="text-[#756FCC]" />,
-    bestFor: "Teams needing full ORGA HRMS",
+    bestFor: "Growing companies with broader HR workflows",
     priceNote: `per month · up to ${SUBSCRIPTION_PLANS.premium.maxEmployees} employees`,
     highlight: true,
     categories: [
@@ -74,12 +75,53 @@ const PLAN_UI = {
           "Everything in Growth",
           "Advanced HR workflows",
           `Up to ${SUBSCRIPTION_PLANS.premium.maxEmployees} employees`,
-          "Priority support",
+          `Extra employees at ${formatInr(SUBSCRIPTION_ADDONS.extra_employee.priceInr)}/seat`,
         ],
       },
     ],
     limitations: [],
     cta: "Subscribe Now",
+    actionable: true,
+  },
+  enterprise: {
+    title: SUBSCRIPTION_PLANS.enterprise.name,
+    icon: <Building size={24} className="text-[#50AA18]" />,
+    bestFor: "Larger teams that need higher employee capacity",
+    priceNote: `per month · up to ${SUBSCRIPTION_PLANS.enterprise.maxEmployees} employees`,
+    highlight: true,
+    categories: [
+      {
+        name: "ALL MODULES",
+        features: [
+          "Everything in Growth",
+          `Up to ${SUBSCRIPTION_PLANS.enterprise.maxEmployees} employees`,
+          "Operational headroom for larger teams",
+          `Extra employees at ${formatInr(SUBSCRIPTION_ADDONS.extra_employee.priceInr)}/seat`,
+        ],
+      },
+    ],
+    limitations: [],
+    cta: "Subscribe Now",
+    actionable: true,
+  },
+  custom_feature: {
+    title: SUBSCRIPTION_ADDONS.custom_feature.name,
+    icon: <Wrench size={24} className="text-[#1B223C]" />,
+    bestFor: "Teams that need a specific workflow, instance, or feature",
+    priceNote: "one-time starting price",
+    highlight: false,
+    categories: [
+      {
+        name: "ADD-ON",
+        features: [
+          "Specific instance or feature request",
+          "Best for custom workflow enhancements",
+          `Starts at ${formatInr(SUBSCRIPTION_ADDONS.custom_feature.priceInr)}`,
+        ],
+      },
+    ],
+    limitations: ["Requires an active HRMS subscription"],
+    cta: "Buy Custom Feature",
     actionable: true,
   },
 };
@@ -89,7 +131,7 @@ const buildPlans = (apiPlans = []) => {
     (apiPlans || []).map((p) => [p.planType, p]),
   );
 
-  return Object.keys(SUBSCRIPTION_PLANS).map((planType) => {
+  const subscriptionPlans = Object.keys(SUBSCRIPTION_PLANS).map((planType) => {
     const config = SUBSCRIPTION_PLANS[planType];
     const api = apiByType[planType];
     const ui = PLAN_UI[planType];
@@ -105,6 +147,18 @@ const buildPlans = (apiPlans = []) => {
         api?.pricePerEmployeeInr ?? config.pricePerEmployeeInr,
     };
   });
+
+  return [
+    ...subscriptionPlans,
+    {
+      planType: "custom_feature",
+      ...PLAN_UI.custom_feature,
+      price: formatInr(SUBSCRIPTION_ADDONS.custom_feature.priceInr),
+      priceInr: SUBSCRIPTION_ADDONS.custom_feature.priceInr,
+      maxEmployees: null,
+      pricePerEmployeeInr: null,
+    },
+  ];
 };
 
 export default function PricingSection() {
@@ -248,6 +302,48 @@ export default function PricingSection() {
     setLoadingPlan(null);
   };
 
+  const handleCustomFeature = async (plan) => {
+    if (!requireAuth()) return;
+
+    setLoadingPlan(plan.planType);
+    setMessage(null);
+
+    const profile = await authService.getProfile();
+    const user = profile.data?.user || getUser();
+    const orderResult = await subscriptionService.createAddonOrder("custom_feature", 1);
+
+    if (!orderResult.success) {
+      trackEvent("subscription_failed", {
+        plan_name: plan.title,
+        reason: orderResult.message,
+      });
+      setMessage({ type: "error", text: orderResult.message });
+      setLoadingPlan(null);
+      return;
+    }
+
+    const paymentResult = await subscriptionService.openAddonCheckout(
+      orderResult.data,
+      user,
+      {
+        planName: plan.title,
+        organizationType: getOrganizationType(user),
+        amount: plan.priceInr,
+      },
+    );
+
+    if (paymentResult.success) {
+      setMessage({
+        type: "success",
+        text: "Custom feature payment recorded. Our team can now scope the requested feature.",
+      });
+    } else if (paymentResult.message !== "Payment cancelled") {
+      setMessage({ type: "error", text: paymentResult.message });
+    }
+
+    setLoadingPlan(null);
+  };
+
   const handlePlanAction = (plan) => {
     if (!plan.actionable) return;
 
@@ -256,8 +352,17 @@ export default function PricingSection() {
       return;
     }
 
-    if (plan.planType === "starter_pack" || plan.planType === "premium") {
+    if (
+      plan.planType === "starter_pack" ||
+      plan.planType === "premium" ||
+      plan.planType === "enterprise"
+    ) {
       handlePaidPlan(plan);
+      return;
+    }
+
+    if (plan.planType === "custom_feature") {
+      handleCustomFeature(plan);
     }
   };
 
@@ -294,7 +399,7 @@ export default function PricingSection() {
         )}
       </div>
 
-      <div className="relative z-10 px-4 md:px-10 lg:px-20 grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6 w-full max-w-7xl mx-auto items-stretch">
+      <div className="relative z-10 px-4 md:px-10 lg:px-20 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-8 mt-6 w-full max-w-7xl mx-auto items-stretch">
         {plans.map((plan) => {
           const isSelected = selectedPlan === plan.planType;
           const isLoading = loadingPlan === plan.planType;

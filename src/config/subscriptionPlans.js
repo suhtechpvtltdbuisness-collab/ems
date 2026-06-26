@@ -6,24 +6,45 @@ export const SUBSCRIPTION_PLANS = {
     pricePerEmployeeInr: 0,
     durationDays: 7,
     maxEmployees: 4,
-    autoRenewPriceInr: 2999,
-    autoRenewPlanName: "Growth",
+    autoRenewPriceInr: 299,
+    autoRenewPlanName: "Starter",
   },
   starter_pack: {
     planType: "starter_pack",
-    name: "Growth",
-    priceInr: 2999,
-    pricePerEmployeeInr: 150,
+    name: "Starter",
+    priceInr: 299,
+    pricePerEmployeeInr: 51,
     durationDays: 30,
-    maxEmployees: 20,
+    maxEmployees: 6,
   },
   premium: {
     planType: "premium",
-    name: "Business",
-    priceInr: 4999,
-    pricePerEmployeeInr: 250,
+    name: "Growth",
+    priceInr: 499,
+    pricePerEmployeeInr: 51,
     durationDays: 30,
-    maxEmployees: 20,
+    maxEmployees: 16,
+  },
+  enterprise: {
+    planType: "enterprise",
+    name: "Enterprise",
+    priceInr: 799,
+    pricePerEmployeeInr: 51,
+    durationDays: 30,
+    maxEmployees: 26,
+  },
+};
+
+export const SUBSCRIPTION_ADDONS = {
+  extra_employee: {
+    itemType: "extra_employee",
+    name: "Extra Employee Seat",
+    priceInr: 51,
+  },
+  custom_feature: {
+    itemType: "custom_feature",
+    name: "Custom Feature",
+    priceInr: 2500,
   },
 };
 
@@ -31,10 +52,10 @@ export const formatInr = (amount) =>
   `₹${Number(amount).toLocaleString("en-IN")}`;
 
 export const PRICING_TAGLINE =
-  "SUHTech ORGA — from ₹2,999/month for up to 20 employees (~₹150/employee)";
+  "ORGA — from ₹299/month for up to 6 employees, scaling to ₹799/month for up to 26 employees";
 
 export const TRIAL_NOTE =
-  "7-day free trial · up to 4 employees · then auto-renews at ₹2,999/month";
+  "7-day free trial · up to 4 employees · extra employee seats at ₹51 each · custom features from ₹2,500";
 
 export const getPaidPlans = () =>
-  [SUBSCRIPTION_PLANS.starter_pack, SUBSCRIPTION_PLANS.premium];
+  [SUBSCRIPTION_PLANS.starter_pack, SUBSCRIPTION_PLANS.premium, SUBSCRIPTION_PLANS.enterprise];

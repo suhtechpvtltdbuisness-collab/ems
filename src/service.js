@@ -554,6 +554,22 @@ export const subscriptionService = {
     }
   },
 
+  createAddonOrder: async (itemType, quantity = 1) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/subscriptions/create-addon-order`, {
+        method: "POST",
+        body: JSON.stringify({ itemType, quantity }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return { success: false, message: data.message || "Failed to create add-on order" };
+      }
+      return { success: true, data: data.data };
+    } catch {
+      return { success: false, message: "Something went wrong" };
+    }
+  },
+
   verifyPayment: async (payload) => {
     try {
       const response = await apiFetch(`${BASE_URL}/subscriptions/verify-payment`, {
@@ -568,6 +584,33 @@ export const subscriptionService = {
         localStorage.setItem(
           "subscription",
           JSON.stringify(data.data.subscription),
+        );
+      }
+      return { success: true, message: data.message, data: data.data };
+    } catch {
+      return { success: false, message: "Something went wrong" };
+    }
+  },
+
+  verifyAddonPayment: async (payload) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/subscriptions/verify-addon-payment`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        return { success: false, message: data.message || "Add-on payment verification failed" };
+      }
+      if (data.data?.plan) {
+        const existing = JSON.parse(localStorage.getItem("subscription") || "{}");
+        localStorage.setItem(
+          "subscription",
+          JSON.stringify({
+            ...existing,
+            isSubscribed: true,
+            plan: data.data.plan,
+          }),
         );
       }
       return { success: true, message: data.message, data: data.data };
@@ -733,6 +776,90 @@ export const subscriptionService = {
           plan_name: planName,
           amount,
           currency: "INR",
+        });
+        rzp.open();
+      });
+    } catch (error) {
+      const reason = error?.message || "Failed to open Razorpay checkout";
+      trackEvent("subscription_failed", { plan_name: planName, reason });
+      return { success: false, message: reason };
+    }
+  },
+
+  openAddonCheckout: async (orderData, user, analyticsData = {}) => {
+    const planName =
+      analyticsData.planName || orderData.planName || orderData.itemType;
+    const amount = Number(analyticsData.amount ?? 0);
+
+    try {
+      await loadRazorpayScript();
+
+      return await new Promise((resolve) => {
+        let settled = false;
+        const finish = (result) => {
+          if (settled) return;
+          settled = true;
+          resolve(result);
+        };
+        const fail = (reason) => {
+          if (settled) return;
+          trackEvent("subscription_failed", { plan_name: planName, reason });
+          finish({ success: false, message: reason });
+        };
+
+        const options = {
+          key: orderData.keyId,
+          amount: orderData.amount,
+          currency: orderData.currency,
+          name: "Suhtech ORGA",
+          description: orderData.planName,
+          order_id: orderData.orderId,
+          handler: async (response) => {
+            const result = await subscriptionService.verifyAddonPayment({
+              itemType: orderData.itemType,
+              quantity: orderData.quantity,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+
+            if (result.success) {
+              trackEvent("purchase", {
+                transaction_id: response.razorpay_payment_id,
+                value: amount,
+                currency: "INR",
+                plan_name: planName,
+              });
+              finish(result);
+              return;
+            }
+
+            fail(result.message || "Add-on payment verification failed");
+          },
+          prefill: {
+            name: user?.name || "",
+            email: user?.email || "",
+          },
+          theme: { color: "#756FCC" },
+          modal: {
+            ondismiss: () =>
+              finish({ success: false, message: "Payment cancelled" }),
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on?.("payment.failed", (response) => {
+          fail(
+            response?.error?.description ||
+              response?.error?.reason ||
+              "Razorpay payment failed",
+          );
+        });
+
+        trackEvent("plan_selected", {
+          plan_name: planName,
+          organization_type: analyticsData.organizationType || "unknown",
+          amount,
         });
         rzp.open();
       });
