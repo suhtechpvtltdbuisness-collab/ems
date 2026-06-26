@@ -35,18 +35,18 @@ const integrations = [
 
 function IntegrationCard({ integration }) {
   return (
-    <div className="relative z-10 flex w-[128px] shrink-0 flex-col items-center text-center">
-      <div className="flex h-[96px] w-[96px] items-center justify-center rounded-[18px] bg-white shadow-[0_12px_28px_rgba(15,23,42,0.16)]">
+    <div className="relative z-10 flex w-[90px] sm:w-[128px] shrink-0 flex-col items-center text-center">
+      <div className="flex h-[72px] w-[72px] sm:h-[96px] sm:w-[96px] items-center justify-center rounded-[16px] sm:rounded-[18px] bg-white shadow-[0_12px_28px_rgba(15,23,42,0.16)]">
         <img
           src={integration.icon}
           alt={`${integration.name} logo`}
-          className="h-[58px] w-[66px] object-contain"
+          className="h-[42px] w-[48px] sm:h-[58px] sm:w-[66px] object-contain"
         />
       </div>
-      <h3 className="mt-4 text-[13px] font-bold leading-tight text-black">
+      <h3 className="mt-3 sm:mt-4 text-[11px] sm:text-[13px] font-bold leading-tight text-black">
         {integration.name}
       </h3>
-      <p className="mt-1.5 text-[11px] font-semibold leading-tight text-[#858585]">
+      <p className="mt-1 sm:mt-1.5 text-[9px] sm:text-[11px] font-semibold leading-tight text-[#858585]">
         {integration.description}
       </p>
     </div>
@@ -55,8 +55,8 @@ function IntegrationCard({ integration }) {
 
 function OrgaHub() {
   return (
-    <div className="relative z-20 flex h-[128px] w-[128px] shrink-0 items-center justify-center rounded-full bg-white shadow-[0_15px_32px_rgba(15,23,42,0.18)]">
-      <img src="/Orga Logo (1).svg" alt="ORGA" className="w-[92px]" />
+    <div className="relative z-20 flex h-[100px] w-[100px] sm:h-[128px] sm:w-[128px] shrink-0 items-center justify-center rounded-full bg-white shadow-[0_15px_32px_rgba(15,23,42,0.18)]">
+      <img src="/Orga Logo (1).svg" alt="ORGA" className="w-[72px] sm:w-[92px]" />
     </div>
   );
 }
@@ -110,11 +110,11 @@ export default function IntegrationSection() {
             <IntegrationCard integration={integrations[5]} />
           </div>
 
-          <div className="grid grid-cols-2 justify-items-center gap-x-3 gap-y-8 sm:grid-cols-3 lg:hidden">
+          <div className="grid grid-cols-3 justify-items-center gap-x-2 gap-y-6 sm:gap-x-3 sm:gap-y-8 lg:hidden">
             {integrations.slice(0, 3).map((integration) => (
               <IntegrationCard key={integration.name} integration={integration} />
             ))}
-            <div className="col-span-2 my-1 sm:col-span-3">
+            <div className="col-span-3 my-1 flex justify-center">
               <OrgaHub />
             </div>
             {integrations.slice(3).map((integration) => (
