@@ -187,7 +187,7 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
         title: "Account Created Successfully",
         message: authService.isSubscribed(result.data?.subscription)
           ? "Redirecting to dashboard..."
-          : "Choose a plan from $4/month to get started...",
+          : "Choose a plan from ₹499/month to get started...",
       });
 
       onRegister?.(result.data);
@@ -295,7 +295,7 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
             Create Account
           </h1>
           <p className="text-gray-500 text-center text-sm mb-6">
-            7-day free trial · paid plans from $4/month · extra seats at $1 each
+            7-day free trial · paid plans from ₹499/month ($9) · extra seats at ₹51 each ($1)
           </p>
 
           <InputField
