@@ -1,10 +1,13 @@
-import { Check, Lock, Rocket, Sparkles, Building, Wrench } from "lucide-react";
+import { Check, Lock, Rocket, Sparkles, Building, Wrench, Zap } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   SUBSCRIPTION_PLANS,
   SUBSCRIPTION_ADDONS,
-  formatInr,
+  formatUsd,
+  formatDiscountedUsd,
+  getDiscountedPrice,
+  LAUNCH_DISCOUNT_PERCENT,
   PRICING_TAGLINE,
   TRIAL_NOTE,
 } from "../../../config/subscriptionPlans";
@@ -30,7 +33,7 @@ const PLAN_UI = {
     ],
     limitations: [
       "Card required (no charge during trial)",
-      `Auto-renews at ${formatInr(SUBSCRIPTION_PLANS.free_trial.autoRenewPriceInr)}/month after 7 days`,
+      `Auto-renews at ${formatUsd(SUBSCRIPTION_PLANS.free_trial.autoRenewPriceUsd)}/month after 7 days`,
       `${SUBSCRIPTION_PLANS.free_trial.maxEmployees} employee limit during trial`,
     ],
     cta: "Start Free Trial",
@@ -50,7 +53,7 @@ const PLAN_UI = {
           "Leave & attendance",
           `Up to ${SUBSCRIPTION_PLANS.starter_pack.maxEmployees} employees`,
           "Payroll basics",
-          `Extra employees at ${formatInr(SUBSCRIPTION_ADDONS.extra_employee.priceInr)}/seat`,
+          `Extra employees at ${formatUsd(SUBSCRIPTION_ADDONS.extra_employee.priceUsd)}/seat`,
         ],
       },
       {
@@ -75,7 +78,7 @@ const PLAN_UI = {
           "Everything in Growth",
           "Advanced HR workflows",
           `Up to ${SUBSCRIPTION_PLANS.premium.maxEmployees} employees`,
-          `Extra employees at ${formatInr(SUBSCRIPTION_ADDONS.extra_employee.priceInr)}/seat`,
+          `Extra employees at ${formatUsd(SUBSCRIPTION_ADDONS.extra_employee.priceUsd)}/seat`,
         ],
       },
     ],
@@ -96,7 +99,7 @@ const PLAN_UI = {
           "Everything in Growth",
           `Up to ${SUBSCRIPTION_PLANS.enterprise.maxEmployees} employees`,
           "Operational headroom for larger teams",
-          `Extra employees at ${formatInr(SUBSCRIPTION_ADDONS.extra_employee.priceInr)}/seat`,
+          `Extra employees at ${formatUsd(SUBSCRIPTION_ADDONS.extra_employee.priceUsd)}/seat`,
         ],
       },
     ],
@@ -116,7 +119,7 @@ const PLAN_UI = {
         features: [
           "Specific instance or feature request",
           "Best for custom workflow enhancements",
-          `Starts at ${formatInr(SUBSCRIPTION_ADDONS.custom_feature.priceInr)}`,
+          `Starts at ${formatUsd(SUBSCRIPTION_ADDONS.custom_feature.priceUsd)}`,
         ],
       },
     ],
@@ -135,16 +138,18 @@ const buildPlans = (apiPlans = []) => {
     const config = SUBSCRIPTION_PLANS[planType];
     const api = apiByType[planType];
     const ui = PLAN_UI[planType];
-    const priceInr = api?.priceInr ?? config.priceInr;
+    const priceUsd = api?.priceUsd ?? config.priceUsd;
 
     return {
       planType,
       ...ui,
-      price: formatInr(priceInr),
-      priceInr,
+      price: formatUsd(priceUsd),
+      priceUsd,
+      discountedPrice: formatDiscountedUsd(priceUsd),
+      discountedPriceRaw: getDiscountedPrice(priceUsd),
       maxEmployees: api?.maxEmployees ?? config.maxEmployees,
-      pricePerEmployeeInr:
-        api?.pricePerEmployeeInr ?? config.pricePerEmployeeInr,
+      pricePerEmployeeUsd:
+        api?.pricePerEmployeeUsd ?? config.pricePerEmployeeUsd,
     };
   });
 
@@ -153,10 +158,12 @@ const buildPlans = (apiPlans = []) => {
     {
       planType: "custom_feature",
       ...PLAN_UI.custom_feature,
-      price: formatInr(SUBSCRIPTION_ADDONS.custom_feature.priceInr),
-      priceInr: SUBSCRIPTION_ADDONS.custom_feature.priceInr,
+      price: formatUsd(SUBSCRIPTION_ADDONS.custom_feature.priceUsd),
+      priceUsd: SUBSCRIPTION_ADDONS.custom_feature.priceUsd,
+      discountedPrice: formatDiscountedUsd(SUBSCRIPTION_ADDONS.custom_feature.priceUsd),
+      discountedPriceRaw: getDiscountedPrice(SUBSCRIPTION_ADDONS.custom_feature.priceUsd),
       maxEmployees: null,
-      pricePerEmployeeInr: null,
+      pricePerEmployeeUsd: null,
     },
   ];
 };
@@ -241,7 +248,7 @@ export default function PricingSection() {
     const paymentResult = await subscriptionService.openSubscriptionCheckout({
       ...trialResult.data,
       planName: PLAN_UI.free_trial.title,
-      amountInr: SUBSCRIPTION_PLANS.free_trial.priceInr,
+      amountUsd: SUBSCRIPTION_PLANS.free_trial.priceUsd,
       organizationType: getOrganizationType(user),
     }, user);
 
@@ -285,7 +292,7 @@ export default function PricingSection() {
       {
         planName: plan.title,
         organizationType: getOrganizationType(user),
-        amount: plan.priceInr,
+        amount: plan.priceUsd,
       },
     );
 
@@ -328,7 +335,7 @@ export default function PricingSection() {
       {
         planName: plan.title,
         organizationType: getOrganizationType(user),
-        amount: plan.priceInr,
+        amount: plan.priceUsd,
       },
     );
 
@@ -366,6 +373,9 @@ export default function PricingSection() {
     }
   };
 
+  const isPaidPlan = (planType) =>
+    ["starter_pack", "premium", "enterprise"].includes(planType);
+
   return (
     <div className="relative w-full flex flex-col items-center gap-10 py-16 bg-white overflow-hidden">
       <div
@@ -377,6 +387,17 @@ export default function PricingSection() {
       />
 
       <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4 mb-4">
+        {/* Launch Offer Banner */}
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-[#7CF38D]/20 to-[#50AA18]/20 border border-[#50AA18]/30 text-sm font-semibold text-[#1B223C] mb-2">
+          <Zap size={16} className="text-[#50AA18]" />
+          <span>
+            🚀 <span className="font-bold">{LAUNCH_DISCOUNT_PERCENT}% Launch Offer</span> —{" "}
+            <span className="text-[#64748B] font-normal">
+              locked-in for life on all paid plans
+            </span>
+          </span>
+        </div>
+
         <h1 className="text-[#292D34] font-poppins font-bold text-2xl xs:text-3xl sm:text-4xl md:text-[42px] leading-tight tracking-[-1px]">
           Choose the Right Plan for{" "}
           <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent block">
@@ -399,21 +420,22 @@ export default function PricingSection() {
         )}
       </div>
 
-      <div className="relative z-10 px-4 md:px-10 lg:px-20 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-8 mt-6 w-full max-w-7xl mx-auto items-stretch">
+      <div className="relative z-10 px-4 sm:px-6 md:px-10 lg:px-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8 mt-6 w-full max-w-7xl mx-auto items-stretch">
         {plans.map((plan) => {
           const isSelected = selectedPlan === plan.planType;
           const isLoading = loadingPlan === plan.planType;
+          const paid = isPaidPlan(plan.planType);
 
           return (
             <div
               key={plan.planType}
               onClick={() => setSelectedPlan(plan.planType)}
               className={`
-                relative w-full h-full p-10 flex flex-col gap-8
+                relative w-full h-full p-6 sm:p-8 md:p-10 flex flex-col gap-6 md:gap-8
                 rounded-[32px] bg-white border cursor-pointer
                 shadow-[0_10px_40px_rgba(0,0,0,0.04)]
                 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(117,111,204,0.12)]
-                hover:-translate-y-1 overflow-hidden
+                hover:-translate-y-1
                 ${isSelected
                   ? "border-[#756FCC] ring-2 ring-[#756FCC]/30"
                   : plan.highlight
@@ -422,10 +444,19 @@ export default function PricingSection() {
                 }
               `}
             >
+              {/* Launch Offer Badge */}
+              {paid && (
+                <div className="absolute top-3 right-3 z-20" style={{ pointerEvents: "none" }}>
+                  <div className="bg-gradient-to-r from-[#50AA18] to-[#7CF38D] text-white text-[10px] font-bold uppercase tracking-wider py-1 px-3 rounded-md shadow-md whitespace-nowrap">
+                    {LAUNCH_DISCOUNT_PERCENT}% OFF
+                  </div>
+                </div>
+              )}
+
               <div className="flex flex-col gap-3 relative z-10">
                 <div className="flex items-center gap-2">
                   {plan.icon}
-                  <h2 className="text-[#1B223C] font-poppins text-3xl font-bold tracking-tight">
+                  <h2 className="text-[#1B223C] font-poppins text-2xl sm:text-3xl font-bold tracking-tight">
                     {plan.title}
                   </h2>
                 </div>
@@ -435,14 +466,32 @@ export default function PricingSection() {
                 </p>
               </div>
 
-              <div className="flex items-baseline gap-1 relative z-10">
-                <span className="text-5xl font-poppins font-bold text-[#1B223C] tracking-tighter">
-                  {plan.price}
-                </span>
-                <span className="text-[#64748B] text-sm font-medium ml-1">
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 relative z-10">
+                {paid ? (
+                  <>
+                    <span className="text-xl sm:text-2xl md:text-3xl font-poppins font-bold text-[#94A3B8] line-through tracking-tighter">
+                      {plan.price}
+                    </span>
+                    <span className="text-3xl sm:text-4xl md:text-5xl font-poppins font-bold text-[#1B223C] tracking-tighter">
+                      {plan.discountedPrice}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-3xl sm:text-4xl md:text-5xl font-poppins font-bold text-[#1B223C] tracking-tighter">
+                    {plan.price}
+                  </span>
+                )}
+                <span className="text-[#64748B] text-xs sm:text-sm font-medium w-full sm:w-auto">
                   {plan.priceNote}
                 </span>
               </div>
+
+              {/* Savings note for paid plans */}
+              {paid && (
+                <p className="text-[#50AA18] text-xs font-semibold relative z-10">
+                  Save {LAUNCH_DISCOUNT_PERCENT}% — launch pricing locked in forever
+                </p>
+              )}
 
               <div className="h-px bg-[#F1F5F9] relative z-10" />
 
@@ -457,10 +506,10 @@ export default function PricingSection() {
                       {cat.features.map((feat, featIdx) => (
                         <li
                           key={featIdx}
-                          className="text-[#64748B] text-sm flex items-center gap-3"
+                          className="text-[#64748B] text-sm flex items-start gap-3"
                         >
-                          <Check size={16} className="text-[#50AA18]" strokeWidth={2.5} />
-                          {feat}
+                          <Check size={16} className="text-[#50AA18] shrink-0 mt-0.5" strokeWidth={2.5} />
+                          <span className="break-words">{feat}</span>
                         </li>
                       ))}
                     </ul>
@@ -476,7 +525,7 @@ export default function PricingSection() {
                   </div>
                   <ul className="flex flex-col gap-1.5 pl-4">
                     {plan.limitations.map((limit, limitIdx) => (
-                      <li key={limitIdx} className="text-[#94A3B8] text-[13px] italic">
+                      <li key={limitIdx} className="text-[#94A3B8] text-[13px] italic break-words">
                         {limit}
                       </li>
                     ))}

@@ -92,7 +92,7 @@ export default function Onboarding() {
       organizationEmail: "",
       organizationPhone: "",
       website: "",
-      currency: "INR",
+      currency: "USD",
       workingDays: ["monday", "tuesday", "wednesday", "thursday", "friday"],
       officeStartTime: "09:00",
       officeEndTime: "18:00"
@@ -437,8 +437,8 @@ export default function Onboarding() {
                       {...register("currency")}
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
-                      <option value="INR">INR (₹)</option>
                       <option value="USD">USD ($)</option>
+                      <option value="INR">INR (₹)</option>
                       <option value="EUR">EUR (€)</option>
                       <option value="GBP">GBP (£)</option>
                       <option value="AED">AED (dhs)</option>

@@ -1,4 +1,4 @@
-import { formatInr } from "./config/subscriptionPlans.js";
+import { formatUsd } from "./config/subscriptionPlans.js";
 import { trackEvent } from "./utils/analytics.js";
 
 const BASE_URL =
@@ -642,7 +642,7 @@ export const subscriptionService = {
           key: checkoutData.keyId,
           subscription_id: checkoutData.subscriptionId,
           name: "Suhtech ORGA",
-          description: `${checkoutData.trialDays}-day free trial, then ${formatInr(checkoutData.autoPayAmount)}/month`,
+          description: `${checkoutData.trialDays}-day free trial, then ${formatUsd(checkoutData.autoPayAmount)}/month`,
           handler: async (response) => {
             const result = await subscriptionService.verifyTrial({
               razorpayPaymentId: response.razorpay_payment_id,
@@ -688,7 +688,7 @@ export const subscriptionService = {
         trackEvent("subscription_started", {
           plan_name: planName,
           amount,
-          currency: "INR",
+          currency: "USD",
         });
         rzp.open();
       });
@@ -738,7 +738,7 @@ export const subscriptionService = {
               trackEvent("purchase", {
                 transaction_id: response.razorpay_payment_id,
                 value: amount,
-                currency: "INR",
+                currency: "USD",
                 plan_name: planName,
               });
               finish(result);
@@ -775,7 +775,7 @@ export const subscriptionService = {
         trackEvent("subscription_started", {
           plan_name: planName,
           amount,
-          currency: "INR",
+          currency: "USD",
         });
         rzp.open();
       });
@@ -827,7 +827,7 @@ export const subscriptionService = {
               trackEvent("purchase", {
                 transaction_id: response.razorpay_payment_id,
                 value: amount,
-                currency: "INR",
+                currency: "USD",
                 plan_name: planName,
               });
               finish(result);
