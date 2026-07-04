@@ -1,10 +1,14 @@
 import { formatPrice } from "./config/subscriptionPlans.js";
 import { trackEvent } from "./utils/analytics.js";
 
-const BASE_URL =
+let BASE_URL =
   import.meta.env.VITE_BACKEND_BASE_URL ||
   import.meta.env.VITE_BASE_URL ||
   "https://hrms-orga-backend.vercel.app";
+
+if (BASE_URL && !BASE_URL.startsWith("http://") && !BASE_URL.startsWith("https://")) {
+  BASE_URL = `https://${BASE_URL}`;
+}
 
 const ADMIN_SITE_URL =
   import.meta.env.VITE_ADMIN_SITE_URL || "https://admin.suhtech.store";
