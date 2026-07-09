@@ -8,6 +8,7 @@ import Footer from "./components/layout/Footer";
 
 // Common Components
 import ScrollToTop from "./components/common/ScrollToTop";
+import PageMeta from "./components/common/PageMeta";
 
 // Home Page Sections
 import HeroSection from "./components/sections/home/HeroSection";
@@ -165,6 +166,7 @@ const OnboardingRoute = ({ children }) => {
 function App() {
   return (
     <>
+      <PageMeta />
       <ScrollToTop />
 
       <Routes>

@@ -4,6 +4,11 @@ import { BrowserRouter } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import App from "./App.jsx";
 import "./index.css";
+import { initializeGoogleAds } from "./utils/googleAds.js";
+import { initializeSiteVerification } from "./utils/siteVerification.js";
+
+initializeSiteVerification();
+initializeGoogleAds();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /auth
+Disallow: /onboarding
+Disallow: /verify-email
+Disallow: /employee-details
+
+Sitemap: https://orga.cc/sitemap.xml
