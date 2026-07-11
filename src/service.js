@@ -4,7 +4,7 @@ import { trackEvent } from "./utils/analytics.js";
 let BASE_URL =
   import.meta.env.VITE_BACKEND_BASE_URL ||
   import.meta.env.VITE_BASE_URL ||
-  "https://hrms-orga-backend.vercel.app";
+  "https://api.orga.cc";
 
 if (BASE_URL && !BASE_URL.startsWith("http://") && !BASE_URL.startsWith("https://")) {
   BASE_URL = `https://${BASE_URL}`;
@@ -73,8 +73,32 @@ const refreshAccessToken = async () => {
   }
 };
 
+const RETRYABLE_STATUS = new Set([502, 503, 504]);
+const MAX_RETRIES = 3;
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const fetchWithRetry = async (url, init) => {
+  let lastError;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await fetch(url, init);
+      if (RETRYABLE_STATUS.has(response.status) && attempt < MAX_RETRIES) {
+        await sleep(300 * 2 ** attempt);
+        continue;
+      }
+      return response;
+    } catch (error) {
+      lastError = error;
+      if (attempt === MAX_RETRIES) break;
+      await sleep(300 * 2 ** attempt);
+    }
+  }
+  throw lastError;
+};
+
 const apiFetch = async (url, options = {}, retryOn401 = true) => {
-  const response = await fetch(url, {
+  const response = await fetchWithRetry(url, {
     credentials: "include",
     ...options,
     headers: {
