@@ -1,14 +1,11 @@
 import { formatPrice } from "./config/subscriptionPlans.js";
 import { trackEvent } from "./utils/analytics.js";
 
-let BASE_URL =
-  import.meta.env.VITE_BACKEND_BASE_URL ||
-  import.meta.env.VITE_BASE_URL ||
-  "https://api.orga.cc";
-
-if (BASE_URL && !BASE_URL.startsWith("http://") && !BASE_URL.startsWith("https://")) {
-  BASE_URL = `https://${BASE_URL}`;
-}
+const API_BASE_PATH = "/api";
+const BASE_URL =
+  typeof window !== "undefined"
+    ? `${window.location.origin}${API_BASE_PATH}`
+    : API_BASE_PATH;
 
 const ADMIN_SITE_URL =
   import.meta.env.VITE_ADMIN_SITE_URL || "https://admin.suhtech.store";

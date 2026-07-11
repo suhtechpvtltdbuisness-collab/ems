@@ -25,5 +25,14 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss(), adsTxtPlugin(env)],
+    server: {
+      proxy: {
+        "/api": {
+          target: env.VITE_BACKEND_PROXY_TARGET || "http://localhost:4000",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+      },
+    },
   };
 });
