@@ -1,5 +1,5 @@
 import { formatPrice } from "./config/subscriptionPlans.js";
-import { trackEvent } from "./utils/analytics.js";
+import { trackEvent, trackSubscribeConversion } from "./utils/analytics.js";
 
 const API_BASE_PATH = "/api";
 const BASE_URL =
@@ -679,6 +679,10 @@ export const subscriptionService = {
               trackEvent("free_trial_started", {
                 trial_days: Number(checkoutData.trialDays || 7),
               });
+              trackSubscribeConversion(
+                checkoutData.autoPayAmount,
+                checkoutData.currency || "INR",
+              );
               finish(result);
               return;
             }
@@ -766,6 +770,10 @@ export const subscriptionService = {
                 currency: analyticsData.currency || "INR",
                 plan_name: planName,
               });
+              trackSubscribeConversion(
+                amount,
+                analyticsData.currency || "INR",
+              );
               finish(result);
               return;
             }

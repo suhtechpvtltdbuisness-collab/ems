@@ -17,10 +17,17 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Google Ads
 
-To enable the Google Ads tag, set this Vite environment variable before running or building the app:
+The global Google tag (`AW-18162068249`) is installed in `index.html` on every page.
+
+Subscribe conversion tracking fires after a successful free trial signup or paid subscription. Configure these environment variables:
+
+```bash
+VITE_GA_ID=AW-18162068249
+VITE_GOOGLE_ADS_CONVERSION_LABEL=A4QtCJzTs9AcEJnWrNRD
+```
+
+To enable AdSense separately, set:
 
 ```bash
 VITE_GOOGLE_ADSENSE_CLIENT=ca-pub-XXXXXXXXXXXXXXXX
 ```
-
-The app will load the AdSense script only when that variable is present.
