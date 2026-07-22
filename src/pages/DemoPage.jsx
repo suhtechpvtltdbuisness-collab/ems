@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { demoService } from "../service";
 
 export default function Demo() {
     const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
@@ -7,32 +8,22 @@ export default function Demo() {
     const handleDemoSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const fullName = `${formData.get("firstName")} ${formData.get("lastName")}`.trim();
         const form = event.currentTarget;
 
         setSubmitState({ status: "submitting", message: "" });
 
         try {
-            const response = await fetch("https://formsubmit.co/ajax/info@suhtech.top", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-                body: JSON.stringify({
-                    _subject: `Demo request from ${fullName}`,
-                    _captcha: "false",
-                    name: fullName,
-                    email: formData.get("email"),
-                    contact: formData.get("contact"),
-                    preferredLanguage: formData.get("language"),
-                    teamSize: formData.get("teamSize"),
-                    useCase: formData.get("useCase"),
-                }),
+            const result = await demoService.submitDemoRequest({
+                firstName: formData.get("firstName"),
+                lastName: formData.get("lastName"),
+                email: formData.get("email"),
+                contact: formData.get("contact"),
+                preferredLanguage: formData.get("language"),
+                teamSize: formData.get("teamSize"),
+                useCase: formData.get("useCase"),
             });
 
-            const result = await response.json();
-            if (!response.ok || result.success === "false" || result.success === false) {
+            if (!result.success) {
                 throw new Error(result.message || "Unable to send your demo request.");
             }
 

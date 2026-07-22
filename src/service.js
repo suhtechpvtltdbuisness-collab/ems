@@ -904,6 +904,24 @@ export const subscriptionService = {
   },
 };
 
+export const demoService = {
+  submitDemoRequest: async (payload) => {
+    try {
+      const response = await apiFetch(`${BASE_URL}/contact/demo-request`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }, false);
+      const data = await response.json();
+      if (!response.ok) {
+        return { success: false, message: data.message || "Failed to submit demo request" };
+      }
+      return { success: true, message: data.message || "Demo request sent successfully" };
+    } catch {
+      return { success: false, message: "Something went wrong. Please try again." };
+    }
+  },
+};
+
 export const onboardingService = {
   getStatus: async () => {
     try {
