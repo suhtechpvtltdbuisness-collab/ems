@@ -1,27 +1,7 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import SolutionCard from "../components/solutions/SolutionCard";
+import { SOLUTIONS } from "../config/solutions";
 
 export default function SolutionsPage() {
-    const navigate = useNavigate();
-
-    const cards = [
-        "Project organizer",
-        "Online project board",
-        "Task board",
-        "Work organizer",
-        "Day organizer",
-        "Online task manager",
-        "Work board",
-        "Digital Daily Planner",
-        "Time Manager",
-    ];
-
-    const handleClick = (title) => {
-        if (title === "Project organizer") {
-            navigate("/solutiondedipages");
-        }
-    };
-
     return (
         <div className="w-full min-h-screen bg-white relative overflow-hidden">
             <img
@@ -30,8 +10,8 @@ export default function SolutionsPage() {
                 className="absolute left-0 top-[-60px] w-80 md:w-130 z-0"
             />
 
-            <div className="max-w-7xl mx-auto mt-24 px-6">
-                <div className="relative bg-[#756FCC] text-white rounded-3xl p-16 md:p-20 overflow-hidden">
+            <div className="max-w-7xl mx-auto pt-32 px-6">
+                <div className="relative bg-[#756FCC] text-white rounded-[32px] p-10 sm:p-14 md:p-20 overflow-hidden shadow-[0_24px_60px_rgba(117,111,204,0.22)]">
                     <div className="relative z-10 max-w-xl">
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Solutions –</h1>
                         <p className="text-lg md:text-xl leading-relaxed">
@@ -50,15 +30,9 @@ export default function SolutionsPage() {
             </div>
 
             {/* GRID SECTION */}
-            <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 py-16 relative z-10">
-                {cards.map((title, index) => (
-                    <div
-                        key={index}
-                        onClick={() => handleClick(title)}
-                        className="border rounded-xl p-6 text-lg font-medium shadow-sm hover:shadow-md transition cursor-pointer bg-white relative z-20"
-                    >
-                        {title}
-                    </div>
+            <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 py-16 relative z-10">
+                {SOLUTIONS.map((solution, index) => (
+                    <SolutionCard key={solution.slug} solution={solution} index={index} />
                 ))}
             </div>
         </div>

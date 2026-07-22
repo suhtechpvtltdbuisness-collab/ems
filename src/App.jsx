@@ -44,17 +44,10 @@ import HRMSHero from "./components/sections/hrms/HrmsHero";
 // Support Sections
 import SupportHero from "./components/sections/support/SupportHero";
 
-// Project Organizer Sections
-import ProjectOrganizerHero from "./components/sections/project-organizer/ProjectOrganizerHero";
-import ProjectOrganizerWorks from "./components/sections/project-organizer/ProjectOrganizerWorks";
-import ProjectOrganizerTeam from "./components/sections/project-organizer/ProjectOrganizerTeam";
-import ProjectOrganizerTeamEvent from "./components/sections/project-organizer/ProjectOrganizerTeamEvent";
-import ProjectOrganizerBacklog from "./components/sections/project-organizer/ProjectOrganizerBacklog";
-import ProjectOrganizerTrial from "./components/sections/project-organizer/ProjectOrganizerTrial";
-
 // Pages
 import AuthPage from "./pages/AuthPage";
 import SolutionsPage from "./pages/SolutionsPage";
+import SolutionDetailPage from "./pages/SolutionDetailPage";
 import Demo from "./pages/DemoPage";
 import EmpPersonalInfo from "./pages/employee/EmpPersonalInfo";
 import PrivacyPage from "./pages/PrivacyPage";
@@ -68,7 +61,6 @@ import ContactPage from "./pages/ContactPage";
 // ======================
 const ProtectedRoute = ({ children }) => {
   const [authState, setAuthState] = useState("loading");
-  const [isOnboarded, setIsOnboarded] = useState(false);
 
   useEffect(() => {
     const verifySession = async () => {
@@ -82,12 +74,10 @@ const ProtectedRoute = ({ children }) => {
         // Now call the onboarding status endpoint
         const onboarding = await onboardingService.getStatus();
         if (onboarding.success) {
-          setIsOnboarded(onboarding.data.onboardingCompleted);
           setAuthState(onboarding.data.onboardingCompleted ? "authenticated" : "needs_onboarding");
         } else {
           // If status call fails, fallback to profile data if available
           const completed = profile.data?.user?.onboardingCompleted || false;
-          setIsOnboarded(completed);
           setAuthState(completed ? "authenticated" : "needs_onboarding");
         }
       } else {
@@ -207,21 +197,21 @@ function App() {
 
         {/* SOLUTION DEDICATED PAGES */}
         <Route
-          path="/solutiondedipages"
+          path="/solutions/:slug"
           element={
             <div className="relative min-h-screen w-full overflow-x-hidden">
               <div className="pt-20">
                 <Navbar />
-                <ProjectOrganizerHero />
-                <ProjectOrganizerWorks />
-                <ProjectOrganizerTeam />
-                <ProjectOrganizerTeamEvent />
-                <ProjectOrganizerBacklog />
-                <ProjectOrganizerTrial />
+                <SolutionDetailPage />
                 <Footer />
               </div>
             </div>
           }
+        />
+
+        <Route
+          path="/solutiondedipages"
+          element={<Navigate to="/solutions/project-organizer" replace />}
         />
 
         {/* HOME PAGE */}
