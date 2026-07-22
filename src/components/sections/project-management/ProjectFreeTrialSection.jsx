@@ -73,7 +73,12 @@ export default function ProjectFreeTrialSection() {
                             <ArrowRight size={18} />
                         </button>
                         <button
-                            onClick={() => trackBookDemo("hero")}
+                            type="button"
+                            onClick={() => {
+                                trackBookDemo("project_management");
+                                navigate("/demo");
+                                window.scrollTo(0, 0);
+                            }}
                             className="w-fit px-6 py-3 rounded-lg border border-[#756FCC] text-[#756FCC] shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 bg-transparent cursor-pointer"
                         >
                             <span>Book a Demo</span>

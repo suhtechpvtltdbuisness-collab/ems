@@ -1,6 +1,9 @@
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Attendance() {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white p-6 sm:p-8 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
 
@@ -52,7 +55,11 @@ export default function Attendance() {
         </div>
 
         {/* Button */}
-        <button className="w-fit px-5 sm:px-6 py-2 sm:py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 sm:mt-3 cursor-pointer">
+        <button
+          type="button"
+          onClick={() => navigate("/auth?mode=register")}
+          className="w-fit px-5 sm:px-6 py-2 sm:py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 sm:mt-3 cursor-pointer"
+        >
           <span>Get Started Today</span>
           <ArrowRight size={18} />
         </button>

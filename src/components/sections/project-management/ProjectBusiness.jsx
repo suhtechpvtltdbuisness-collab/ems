@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 export default function ProjectBusiness() {
   const features = [
     {
@@ -73,6 +75,8 @@ export default function ProjectBusiness() {
 
 
 function Card({ feature, isLarge }) {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`
@@ -101,7 +105,11 @@ function Card({ feature, isLarge }) {
 
 
       {isLarge && (
-        <button className="mt-6 w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 cursor-pointer">
+        <button
+          type="button"
+          onClick={() => navigate("/pricing")}
+          className="mt-6 w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 cursor-pointer"
+        >
           Try for free →
         </button>
       )}

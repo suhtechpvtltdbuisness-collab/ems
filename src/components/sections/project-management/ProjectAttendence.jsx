@@ -1,6 +1,9 @@
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function ProjectAttendence() {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white p-6 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
 
@@ -48,7 +51,11 @@ export default function ProjectAttendence() {
         </div>
 
         {/* Button */}
-        <button className="w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 cursor-pointer">
+        <button
+          type="button"
+          onClick={() => navigate("/pricing")}
+          className="w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 cursor-pointer"
+        >
           <span>Try for free</span>
           <ArrowRight size={18} />
         </button>
