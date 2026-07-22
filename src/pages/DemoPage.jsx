@@ -1,7 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 
 export default function Demo() {
+    const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
+
+    const handleDemoSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const fullName = `${formData.get("firstName")} ${formData.get("lastName")}`.trim();
+        const form = event.currentTarget;
+
+        setSubmitState({ status: "submitting", message: "" });
+
+        try {
+            const response = await fetch("https://formsubmit.co/ajax/info@suhtech.top", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({
+                    _subject: `Demo request from ${fullName}`,
+                    _captcha: "false",
+                    name: fullName,
+                    email: formData.get("email"),
+                    contact: formData.get("contact"),
+                    preferredLanguage: formData.get("language"),
+                    teamSize: formData.get("teamSize"),
+                    useCase: formData.get("useCase"),
+                }),
+            });
+
+            const result = await response.json();
+            if (!response.ok || result.success === "false" || result.success === false) {
+                throw new Error(result.message || "Unable to send your demo request.");
+            }
+
+            form.reset();
+            setSubmitState({
+                status: "success",
+                message: "Your demo request has been sent successfully.",
+            });
+        } catch {
+            setSubmitState({
+                status: "error",
+                message: "We couldn't send your request. Please try again.",
+            });
+        }
+    };
+
     return (
         <div className="relative bg-white p-6 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
 
@@ -53,7 +100,7 @@ export default function Demo() {
             <div className="flex justify-center items-center relative z-10">
                 <div className="w-full max-w-[600px] bg-white shadow-lg rounded-[24px] p-10 border border-gray-100 shadow-purple-200">
 
-                    <form className="space-y-5">
+                    <form className="space-y-5" onSubmit={handleDemoSubmit}>
 
                         {/* Input Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -63,6 +110,9 @@ export default function Demo() {
                                 </label>
                                 <input
                                     type="text"
+                                    name="firstName"
+                                    autoComplete="given-name"
+                                    required
                                     placeholder="Enter your first name"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] placeholder:text-gray-400 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition"
                                 />
@@ -74,6 +124,9 @@ export default function Demo() {
                                 </label>
                                 <input
                                     type="text"
+                                    name="lastName"
+                                    autoComplete="family-name"
+                                    required
                                     placeholder="Enter your last name"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] placeholder:text-gray-400 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition"
                                 />
@@ -85,6 +138,9 @@ export default function Demo() {
                                 </label>
                                 <input
                                     type="email"
+                                    name="email"
+                                    autoComplete="email"
+                                    required
                                     placeholder="Enter your work mail"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] placeholder:text-gray-400 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition"
                                 />
@@ -95,7 +151,11 @@ export default function Demo() {
                                     Contact
                                 </label>
                                 <input
-                                    type="text"
+                                    type="tel"
+                                    name="contact"
+                                    autoComplete="tel"
+                                    inputMode="tel"
+                                    required
                                     placeholder="Enter your contact number"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] placeholder:text-gray-400 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition"
                                 />
@@ -108,11 +168,11 @@ export default function Demo() {
                                 <label className="block text-[18px]  font-[Poppins] text-[#1E1E1E] mb-2">
                                     Preferred Demo Language
                                 </label>
-                                <select className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] text-gray-700 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition appearance-none cursor-pointer pr-10">
-                                    <option>Select language</option>
-                                    <option>English</option>
-                                    <option>Hindi</option>
-                                    <option>Spanish</option>
+                                <select name="language" required defaultValue="" className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] text-gray-700 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition appearance-none cursor-pointer pr-10">
+                                    <option value="" disabled>Select language</option>
+                                    <option value="English">English</option>
+                                    <option value="Hindi">Hindi</option>
+                                    <option value="Spanish">Spanish</option>
                                 </select>
                                 <svg className="absolute right-4 top-[46px] pointer-events-none text-gray-500" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -123,11 +183,11 @@ export default function Demo() {
                                 <label className="block text-[18px] font-[Poppins] text-[#1E1E1E] mb-2">
                                     Team size
                                 </label>
-                                <select className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] text-gray-700 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition appearance-none cursor-pointer pr-10">
-                                    <option>Select Team size</option>
-                                    <option>1-10</option>
-                                    <option>10-50</option>
-                                    <option>50+</option>
+                                <select name="teamSize" required defaultValue="" className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] text-gray-700 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition appearance-none cursor-pointer pr-10">
+                                    <option value="" disabled>Select Team size</option>
+                                    <option value="1-10">1-10</option>
+                                    <option value="10-50">10-50</option>
+                                    <option value="50+">50+</option>
                                 </select>
                                 <svg className="absolute right-4 top-[46px] pointer-events-none text-gray-500" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -141,6 +201,8 @@ export default function Demo() {
                                 Tell us more about your use case & business needs
                             </label>
                             <textarea
+                                name="useCase"
+                                required
                                 placeholder="Explain about your idea..."
                                 rows="4"
                                 className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-[15px] placeholder:text-gray-400 focus:outline-none focus:border-[#756FCC] focus:ring-1 focus:ring-[#756FCC] transition resize-none"
@@ -150,10 +212,23 @@ export default function Demo() {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-[#756FCC] hover:bg-[#5f58c3] text-white py-3.5 rounded-xl font-semibold text-[16px] transition-all duration-200 shadow-sm hover:shadow-md"
+                            disabled={submitState.status === "submitting"}
+                            className="w-full bg-[#756FCC] hover:bg-[#5f58c3] disabled:cursor-not-allowed disabled:opacity-60 text-white py-3.5 rounded-xl font-semibold text-[16px] transition-all duration-200 shadow-sm hover:shadow-md"
                         >
-                            Submit
+                            {submitState.status === "submitting" ? "Sending..." : "Submit"}
                         </button>
+
+                        {submitState.message && (
+                            <p
+                                role="status"
+                                aria-live="polite"
+                                className={`text-center text-sm font-medium ${
+                                    submitState.status === "success" ? "text-green-600" : "text-red-600"
+                                }`}
+                            >
+                                {submitState.message}
+                            </p>
+                        )}
 
                         <p className="text-[13px] text-gray-500 text-center leading-relaxed px-2">
                             By submitting this form, I agree to SUH Tech's Privacy Policy as I have read & understood it.
