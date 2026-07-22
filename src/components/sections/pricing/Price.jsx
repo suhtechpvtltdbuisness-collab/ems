@@ -8,25 +8,13 @@ import {
   formatDiscountedPrice,
   getDiscountedPrice,
   LAUNCH_DISCOUNT_PERCENT,
-  PRICING_TAGLINE_INR,
   PRICING_TAGLINE_USD,
-  TRIAL_NOTE_INR,
   TRIAL_NOTE_USD,
   getPriceKey,
   getPerEmployeePriceKey,
 } from "../../../config/subscriptionPlans";
 import { authService, subscriptionService } from "../../../service";
 import { trackEvent, trackPageView } from "../../../utils/analytics";
-
-const CURRENCY_STORAGE_KEY = "orga_currency_pref";
-
-const getInitialCurrency = () => {
-  try {
-    return localStorage.getItem(CURRENCY_STORAGE_KEY) || "INR";
-  } catch {
-    return "INR";
-  }
-};
 
 const PLAN_UI = {
   free_trial: {
@@ -220,7 +208,7 @@ export default function PricingSection() {
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [message, setMessage] = useState(null);
   const [apiPlans, setApiPlans] = useState([]);
-  const [currency, setCurrency] = useState(getInitialCurrency);
+  const currency = "USD";
 
   useEffect(() => {
     if (location.pathname === "/pricing" && !pricingViewTracked.current) {
@@ -237,16 +225,9 @@ export default function PricingSection() {
     });
   }, []);
 
-  const handleCurrencyChange = (newCurrency) => {
-    setCurrency(newCurrency);
-    try {
-      localStorage.setItem(CURRENCY_STORAGE_KEY, newCurrency);
-    } catch {}
-  };
-
-  const plans = useMemo(() => buildPlans(apiPlans, currency), [apiPlans, currency]);
-  const tagline = currency === "USD" ? PRICING_TAGLINE_USD : PRICING_TAGLINE_INR;
-  const trialNote = currency === "USD" ? TRIAL_NOTE_USD : TRIAL_NOTE_INR;
+  const plans = useMemo(() => buildPlans(apiPlans, currency), [apiPlans]);
+  const tagline = PRICING_TAGLINE_USD;
+  const trialNote = TRIAL_NOTE_USD;
 
   const requireAuth = () => {
     if (!authService.hasSessionHint()) {
@@ -339,42 +320,15 @@ export default function PricingSection() {
     setLoadingPlan(null);
   };
 
-  const handleCustomFeature = async (plan) => {
-    if (!requireAuth()) return;
-    setLoadingPlan(plan.planType);
-    setMessage(null);
-
-    const profile = await authService.getProfile();
-    const user = profile.data?.user || getUser();
-    const orderResult = await subscriptionService.createAddonOrder("custom_feature", 1);
-
-    if (!orderResult.success) {
-      trackEvent("subscription_failed", { plan_name: plan.title, reason: orderResult.message });
-      setMessage({ type: "error", text: orderResult.message });
-      setLoadingPlan(null);
-      return;
-    }
-
-    const paymentResult = await subscriptionService.openAddonCheckout(orderResult.data, user, {
-      planName: plan.title,
-      organizationType: getOrganizationType(user),
-      amount: plan.rawPrice,
-      currency,
-    });
-
-    if (paymentResult.success) {
-      setMessage({ type: "success", text: "Custom feature payment recorded. Our team can now scope the requested feature." });
-    } else if (paymentResult.message !== "Payment cancelled") {
-      setMessage({ type: "error", text: paymentResult.message });
-    }
-    setLoadingPlan(null);
-  };
-
   const handlePlanAction = (plan) => {
     if (!plan.actionable) return;
     if (plan.planType === "free_trial") { handleFreeTrial(); return; }
     if (["starter_pack", "premium", "enterprise"].includes(plan.planType)) { handlePaidPlan(plan); return; }
-    if (plan.planType === "custom_feature") { handleCustomFeature(plan); }
+    if (plan.planType === "custom_feature") {
+      trackEvent("click_book_demo", { location: "pricing_custom_feature" });
+      navigate("/demo");
+      window.scrollTo(0, 0);
+    }
   };
 
   const isPaidPlan = (planType) => ["starter_pack", "premium", "enterprise"].includes(planType);
@@ -397,24 +351,11 @@ export default function PricingSection() {
           <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent block">Your Business Growth</span>
         </h1>
 
-        {/* Currency Toggle */}
-        <div className="inline-flex items-center gap-1 bg-gray-100 rounded-full p-1">
-          <button
-            onClick={() => handleCurrencyChange("INR")}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              currency === "INR" ? "bg-white text-[#1B223C] shadow-sm" : "text-[#64748B] hover:text-[#1B223C]"
-            }`}
-          >
-            ₹ INR
-          </button>
-          <button
-            onClick={() => handleCurrencyChange("USD")}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              currency === "USD" ? "bg-white text-[#1B223C] shadow-sm" : "text-[#64748B] hover:text-[#1B223C]"
-            }`}
-          >
+        {/* Prices are displayed in USD only */}
+        <div className="inline-flex items-center rounded-full bg-gray-100 p-1">
+          <span className="rounded-full bg-white px-5 py-1.5 text-sm font-medium text-[#1B223C] shadow-sm">
             $ USD
-          </button>
+          </span>
         </div>
 
         <p className="text-[#64748B] font-nunito text-[18px] max-w-2xl leading-relaxed">
@@ -434,6 +375,7 @@ export default function PricingSection() {
           const isSelected = selectedPlan === plan.planType;
           const isLoading = loadingPlan === plan.planType;
           const paid = isPaidPlan(plan.planType);
+          const isCustomFeature = plan.planType === "custom_feature";
 
           return (
             <div
@@ -472,7 +414,7 @@ export default function PricingSection() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 relative z-10">
+              {!isCustomFeature && <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 relative z-10">
                 {paid ? (
                   <>
                     <span className="text-xl sm:text-2xl md:text-3xl font-poppins font-bold text-[#94A3B8] line-through tracking-tighter">
@@ -488,7 +430,7 @@ export default function PricingSection() {
                   </span>
                 )}
                 <span className="text-[#64748B] text-xs sm:text-sm font-medium w-full sm:w-auto">{plan.priceNote}</span>
-              </div>
+              </div>}
 
               {paid && (
                 <p className="text-[#50AA18] text-xs font-semibold relative z-10">

@@ -94,10 +94,10 @@ export const TRIAL_NOTE_INR =
   "7-day free trial · up to 4 employees · extra employee seats at ₹51 each · custom features from ₹2,500";
 
 export const TRIAL_NOTE_USD =
-  "7-day free trial · up to 4 employees · extra employee seats at $1 each · custom features from $30";
+  "7-day free trial · up to 4 employees · extra employee seats at $1 each · custom features available on request";
 
-export const PRICING_TAGLINE = PRICING_TAGLINE_INR;
-export const TRIAL_NOTE = TRIAL_NOTE_INR;
+export const PRICING_TAGLINE = PRICING_TAGLINE_USD;
+export const TRIAL_NOTE = TRIAL_NOTE_USD;
 
 export const getPaidPlans = () =>
   [SUBSCRIPTION_PLANS.starter_pack, SUBSCRIPTION_PLANS.premium, SUBSCRIPTION_PLANS.enterprise];
