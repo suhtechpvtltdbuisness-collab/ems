@@ -9,7 +9,7 @@ export default function ProjectHero() {
   };
 
   return (
-    <section className="flex flex-col items-center text-center pt-20 relative px-4">
+    <section className="flex flex-col items-center text-center pt-12 sm:pt-16 md:pt-20 relative px-4 sm:px-6 overflow-hidden">
 
        <div className="absolute -top-20 left-1/2 -translate-x-1/2 -z-10 w-full max-w-4xl">
         <img
@@ -20,9 +20,9 @@ export default function ProjectHero() {
       </div>
 
       {/* Headline */}
-      <h1 className="text-5xl md:text-5xl font-poppins font-semibold text-gray-900 leading-14">
+      <h1 className="max-w-4xl text-[34px] sm:text-4xl md:text-5xl font-poppins font-semibold text-gray-900 leading-[1.15]">
         Deliver Projects Faster With
-        <br />
+        <br className="hidden sm:block" />
         Powerful Project{" "}
          <span className="bg-linear-to-r from-[#C65CF4] to-[#96FFB2] text-transparent bg-clip-text inline">
            Management
@@ -33,7 +33,7 @@ export default function ProjectHero() {
       </h1>
 
       {/* Subtext */}
-      <p className="text-gray-500 mt-4 max-w-xl">
+      <p className="text-sm sm:text-base text-gray-500 mt-4 max-w-xl leading-7">
         Manage tasks, teams, timelines, and profitability—all in one place.
       </p>
 
@@ -47,11 +47,11 @@ export default function ProjectHero() {
       </button>
 
       {/* Dashboard Image */}
-      <div className="mt-2 max-w-6xl w-full px-4 pt-0">
+      <div className="mt-5 sm:mt-2 max-w-6xl w-full px-0 sm:px-4 pt-0">
         <img
           src="/Dash.png"
           alt="Dashboard preview"
-          className="w-full rounded-3xl"
+          className="w-full rounded-xl sm:rounded-3xl"
         />
       </div>
 

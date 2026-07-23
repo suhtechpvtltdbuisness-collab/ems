@@ -9,7 +9,7 @@ export default function SupportHero() {
     navigate("/auth?mode=login"); // redirects to login page
   };
   return (
-    <section className="flex flex-col items-center text-center pt-20">
+    <section className="relative flex flex-col items-center overflow-hidden px-4 sm:px-6 text-center pt-12 sm:pt-16 md:pt-20">
       <div className="absolute -top-20 left-1/2 -translate-x-1/2 -z-10 w-full max-w-4xl">
         <img
           src="/Ellipse_btn _492.svg"
@@ -19,16 +19,16 @@ export default function SupportHero() {
       </div>
 
       {/* Headline */}
-      <h1 className="text-5xl md:text-5xl font-poppins font-semibold text-gray-900 leading-14">
+      <h1 className="max-w-4xl text-[34px] sm:text-4xl md:text-5xl font-poppins font-semibold text-gray-900 leading-[1.15]">
         Keep Your Customers Happy & Heard
-        <br />
+        <br className="hidden sm:block" />
         With <span className="bg-linear-to-r from-[#C65CF4] to-[#96FFB2] text-transparent bg-clip-text">
           Smart Support Tools
         </span>
       </h1>
 
       {/* Subtext */}
-      <p className="text-gray-500 mt-4 max-w-xl">
+      <p className="text-sm sm:text-base text-gray-500 mt-4 max-w-xl leading-7">
         A clean, powerful helpdesk to manage tickets, track issues, and deliver fast resolutions.
       </p>
 
@@ -40,11 +40,11 @@ export default function SupportHero() {
       </button>
 
       {/* Dashboard Image Below */}
-      <div className="mt-2 max-w-6xl w-full px-4 pt-0">
+      <div className="mt-5 sm:mt-2 max-w-6xl w-full px-0 sm:px-4 pt-0">
         <img
           src="/Dash.png"
           alt="Dashboard preview"
-          className="w-full rounded-3xl"
+          className="w-full rounded-xl sm:rounded-3xl"
         />
       </div>
 

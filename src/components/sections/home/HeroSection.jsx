@@ -10,7 +10,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section id="HeroSection" className="flex flex-col items-center text-center pt-20 relative px-4">
+    <section id="HeroSection" className="flex flex-col items-center text-center pt-12 sm:pt-16 md:pt-20 relative px-4 sm:px-6 overflow-hidden">
 
       {/* Background Shape */}
       <div className="absolute -top-20 left-1/2 -translate-x-1/2 -z-10 w-full max-w-4xl">
@@ -22,7 +22,7 @@ export default function HeroSection() {
       </div>
 
       {/* Headline */}
-      <h1 className="text-5xl md:text-5xl font-poppins font-semibold text-gray-900 leading-14">
+      <h1 className="max-w-4xl text-[34px] sm:text-4xl md:text-5xl font-poppins font-semibold text-gray-900 leading-[1.15]">
         <span className="block">
           Manage your Team, Tasks &amp;
         </span>
@@ -32,7 +32,7 @@ export default function HeroSection() {
       </h1>
 
       {/* Subtext */}
-      <p className="text-gray-500 mt-4 max-w-xl">
+      <p className="text-sm sm:text-base text-gray-500 mt-4 max-w-xl leading-6 sm:leading-7">
         All-in-One Powerful EMS Platform.
         From employee management to attendance tracking, task assignment, time monitoring, project planning, performance analysis, payroll, and more—ORGA helps your team work smarter, faster, and more efficiently.
         <span className="block mt-2 text-sm text-[#756FCC] font-medium">{PRICING_TAGLINE}</span>
@@ -41,18 +41,18 @@ export default function HeroSection() {
       {/* CTA Button */}
       <button
         onClick={handleCTA}
-        className="relative mt-8 flex items-center gap-2 px-6 py-3 rounded-xl bg-[#756FCC] text-white shadow-md hover:opacity-90 transition font-poppins font-medium cursor-pointer"
+        className="relative mt-7 flex min-h-12 items-center gap-2 px-6 py-3 rounded-xl bg-[#756FCC] text-white shadow-md hover:opacity-90 transition font-poppins font-medium cursor-pointer"
       >
         Try for free
         <ArrowRight size={18} />
       </button>
 
       {/* Dashboard Image */}
-      <div className="mt-2 max-w-6xl w-full px-4 pt-0">
+      <div className="mt-5 sm:mt-2 max-w-6xl w-full px-0 sm:px-4 pt-0">
         <img
           src="/Dash.png"
           alt="Dashboard preview"
-          className="w-full rounded-3xl"
+          className="w-full rounded-xl sm:rounded-3xl"
         />
       </div>
 

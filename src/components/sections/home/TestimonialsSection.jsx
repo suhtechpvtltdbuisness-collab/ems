@@ -51,7 +51,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section className="w-full py-20 px-6 md:px-16 bg-white">
+    <section className="w-full py-12 sm:py-20 px-4 sm:px-6 md:px-16 bg-white">
       <div className="max-w-7xl mx-auto">
 
         {/* ------------ HEADER ------------ */}
@@ -59,9 +59,9 @@ export default function TestimonialsSection() {
 
           {/* LEFT TITLE */}
           <div className="md:pr-6">
-            <h2 className="text-[#2E2E2E] text-4xl md:text-[44px] font-poppins font-semibold leading-tight md:leading-[56px]">
-              See how businesses <br />
-              streamline their <br />
+            <h2 className="text-[#2E2E2E] text-3xl sm:text-4xl md:text-[44px] font-poppins font-semibold leading-tight md:leading-[56px]">
+              See how businesses <br className="hidden sm:block" />
+              streamline their <br className="hidden sm:block" />
               <span className="bg-gradient-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent font-poppins font-semibold">
                 operations with us.
               </span>
@@ -70,7 +70,7 @@ export default function TestimonialsSection() {
 
           {/* RIGHT PARAGRAPH */}
           <div className="md:pl-6">
-            <p className="text-[#7C7C7C] text-[15px] leading-[22px] font-nunito mt-15">
+            <p className="text-[#7C7C7C] text-[15px] leading-[22px] font-nunito mt-0 md:mt-15">
               Discover how organizations automate HR processes, improve employee engagement, and boost productivity with our all-in-one HRMS platform.
             </p>
           </div>

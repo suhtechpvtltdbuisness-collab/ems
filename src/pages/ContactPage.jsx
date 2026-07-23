@@ -26,7 +26,7 @@ export default function ContactPage() {
     };
 
     return (
-        <div className="relative bg-white p-6 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
+        <div className="relative bg-white px-4 py-10 sm:p-8 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 overflow-hidden">
 
             <img
                 src="/Ellipse 492 (1).svg"
@@ -46,7 +46,7 @@ export default function ContactPage() {
                         </span>
                     </h1>
 
-                    <p className="text-[#7C7C7C] font-[Nunito] text-[18px] md:text-[24px] leading-relaxed max-w-[90%] md:max-w-full">
+                    <p className="text-[#7C7C7C] font-[Nunito] text-base sm:text-[18px] md:text-[24px] leading-relaxed max-w-full">
                         Have questions about ORGA? Our team is here to help you find the right solutions for your business.
                     </p>
                 </div>
@@ -87,7 +87,7 @@ export default function ContactPage() {
 
             {/* Right Form Section */}
             <div className="flex justify-center items-center relative z-10">
-                <div className="w-full max-w-[600px] bg-white shadow-lg rounded-[24px] p-10 border border-gray-100 shadow-purple-200">
+                <div className="w-full max-w-[600px] bg-white shadow-lg rounded-[24px] p-5 sm:p-8 lg:p-10 border border-gray-100 shadow-purple-200">
 
                     <form className="space-y-5" onSubmit={handleContactSubmit}>
                         <h3 className="text-[24px] font-[Poppins] font-semibold text-[#1E1E1E] mb-2">Send us a message</h3>

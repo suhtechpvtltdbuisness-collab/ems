@@ -44,7 +44,7 @@ export default function FeaturesSection() {
 
         {/* Section Header */}
         <div className="text-center mb-12 px-4">
-          <h1 className="text-5xl md:text-5xl font-semibold font- poppins text-gray-900 mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold font-poppins text-gray-900 mb-4 leading-tight">
             <span className="block">Everything your team</span>
             <span className="block">needs in <span className="text-green-500">one place</span></span>
           </h1>

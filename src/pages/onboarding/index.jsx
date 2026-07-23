@@ -136,7 +136,9 @@ export default function Onboarding() {
         if (profile) {
           try {
             sub = JSON.parse(profile);
-          } catch(e) {}
+          } catch {
+            sub = null;
+          }
         }
         authService.handlePostAuthRedirect(sub, navigate);
       }, 2000);
@@ -171,7 +173,7 @@ export default function Onboarding() {
       
       const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       const phoneValid = /^\d{8,15}$/.test(phone);
-      const websiteValid = !website || /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/.test(website);
+      const websiteValid = !website || /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(website);
       
       return countryVal && tz && emailValid && phoneValid && websiteValid && !errors.country && !errors.timezone && !errors.organizationEmail && !errors.organizationPhone && !errors.website;
     }
@@ -477,7 +479,7 @@ export default function Onboarding() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-1">
                       Office Start Time *

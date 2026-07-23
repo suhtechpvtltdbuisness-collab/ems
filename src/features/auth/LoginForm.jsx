@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
 import { InputField } from "../../components/common/InputField";
 import { Button } from "../../components/common/Button";
 import { Toast } from "../../components/common/Toast";
+import ResponsiveGoogleButton from "../../components/auth/ResponsiveGoogleButton";
 import { authService } from "../../service";
 
 export const LoginForm = ({ onRegister }) => {
@@ -102,7 +102,7 @@ export const LoginForm = ({ onRegister }) => {
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {!toast && (
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-5 sm:p-8">
           <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
 
           <InputField
@@ -138,15 +138,10 @@ export const LoginForm = ({ onRegister }) => {
             <div className="flex-grow border-t border-gray-200"></div>
           </div>
 
-          <div className="flex justify-center w-full">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              theme="outline"
-              size="large"
-              width="384px"
-            />
-          </div>
+          <ResponsiveGoogleButton
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+          />
 
           <p className="text-sm text-gray-400 text-center mt-6">
             Don't have an account?{" "}

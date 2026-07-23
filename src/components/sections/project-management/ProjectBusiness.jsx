@@ -29,12 +29,12 @@ export default function ProjectBusiness() {
   ];
 
   return (
-    <div className="min-h-screen bg-white py-16 px-4">
+    <div className="bg-white py-12 sm:py-16 px-4">
       <div className="max-w-7xl mx-auto">
 
         {/* Heading Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-5xl font-semibold font-poppins text-gray-900 mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold font-poppins text-gray-900 mb-4 leading-tight">
             Why Businesses <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent">Choose ORGA
             </span>
           </h1>
@@ -80,7 +80,7 @@ function Card({ feature, isLarge }) {
   return (
     <div
       className={`
-        bg-white rounded-3xl p-8 border border-[#756FCC]
+        bg-white rounded-3xl p-6 sm:p-8 border border-[#756FCC]
         hover:shadow-lg transition-shadow duration-300
         relative overflow-hidden shadow-[0_6px_10px_4px_rgba(112,79,230,0.10)] cursor-pointer
         ${isLarge ? "h-full flex flex-col justify-between" : ""}
@@ -108,7 +108,7 @@ function Card({ feature, isLarge }) {
         <button
           type="button"
           onClick={() => navigate("/pricing")}
-          className="mt-6 w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 cursor-pointer"
+          className="mt-6 w-full sm:w-fit justify-center px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 cursor-pointer"
         >
           Try for free →
         </button>

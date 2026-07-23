@@ -75,11 +75,11 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-6 overflow-hidden bg-gradient-to-br from-[#a8c0ff] via-[#e0c3fc] to-[#f9f9ff]">
+    <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-6 overflow-hidden bg-gradient-to-br from-[#a8c0ff] via-[#e0c3fc] to-[#f9f9ff]">
       <img src="/bg.svg" className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" />
-      <img src="/Arrow_Graphic elements.svg" className="absolute bottom-1 left-8 w-60 opacity-80" alt="" />
-      <img src="/Graphic elements.svg" className="absolute top-[10px] right-[450px] w-[240px] opacity-80" alt="" />
-      <img src="/Graphic elements (1).svg" className="absolute bottom-[-100px] right-[-100px] w-[400px] opacity-80" alt="" />
+      <img src="/Arrow_Graphic elements.svg" className="absolute bottom-1 left-8 hidden w-60 opacity-80 sm:block" alt="" />
+      <img src="/Graphic elements.svg" className="absolute top-[10px] right-[20%] hidden w-[240px] opacity-80 md:block" alt="" />
+      <img src="/Graphic elements (1).svg" className="absolute bottom-[-100px] right-[-100px] hidden w-[400px] opacity-80 sm:block" alt="" />
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-4xl">
         {renderContent()}

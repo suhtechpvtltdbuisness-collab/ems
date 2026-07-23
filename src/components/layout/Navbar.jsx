@@ -42,6 +42,13 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
   const goLogin = () => navigate("/auth?mode=login");
   const goRegister = () => navigate("/auth?mode=register");
 
@@ -59,14 +66,14 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-20 flex items-center justify-between px-8 z-50 bg-white/20 backdrop-blur-lg border-b border-white/10">
+    <nav className="fixed top-0 left-0 w-full h-20 flex items-center justify-between px-4 sm:px-6 lg:px-8 z-50 bg-white/90 backdrop-blur-xl border-b border-[#756FCC]/10">
 
       {/* Logo */}
       <div
         className="flex items-center gap-2 z-20 cursor-pointer"
         onClick={() => navigate("/")}
       >
-        <img src="/Orga Logo (1).svg" alt="Logo" className="h-8" />
+        <img src="/Orga Logo (1).svg" alt="ORGA home" className="h-8 sm:h-9 w-auto" />
       </div>
 
       {/* Desktop Menu */}
@@ -196,25 +203,29 @@ export default function Navbar() {
       {/* Mobile Toggle */}
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden"
+        className="md:hidden flex h-11 w-11 items-center justify-center rounded-xl border border-[#756FCC]/20 bg-white text-[#292D34]"
+        aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={isMenuOpen}
       >
         {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="fixed top-20 left-0 w-full bg-white shadow-lg md:hidden px-8 py-6 space-y-4">
+        <div className="fixed top-20 left-0 flex max-h-[calc(100dvh-5rem)] w-full flex-col gap-2 overflow-y-auto bg-white px-4 py-5 shadow-xl md:hidden">
 
-          <Link to="/solutions" onClick={() => setIsMenuOpen(false)}>
+          <p className="px-3 pt-1 text-xs font-bold uppercase tracking-wider text-[#64748B]">Explore</p>
+          <Link className="rounded-xl px-3 py-3 font-medium hover:bg-[#F5F4FF]" to="/solutions" onClick={() => setIsMenuOpen(false)}>
             Solutions
           </Link>
 
-          <Link to="/pricing" onClick={() => setIsMenuOpen(false)}>
+          <Link className="rounded-xl px-3 py-3 font-medium hover:bg-[#F5F4FF]" to="/pricing" onClick={() => setIsMenuOpen(false)}>
             Pricing
           </Link>
 
           <Link
             to="/demo"
+            className="rounded-xl px-3 py-3 font-medium hover:bg-[#F5F4FF]"
             onClick={() => {
               trackBookDemo("navbar");
               setIsMenuOpen(false);
@@ -223,7 +234,25 @@ export default function Navbar() {
             Book a Demo
           </Link>
 
-          <hr />
+          <div className="my-2 h-px bg-gray-100" />
+          <p className="px-3 text-xs font-bold uppercase tracking-wider text-[#64748B]">Use cases</p>
+          {[
+            ["/project-management", "Project Management"],
+            ["/hrms", "HRMS"],
+            ["/finance-mgmt", "Finance Management"],
+            ["/support", "Support"],
+          ].map(([to, label]) => (
+            <Link
+              key={to}
+              to={to}
+              onClick={() => setIsMenuOpen(false)}
+              className="rounded-xl px-3 py-3 font-medium hover:bg-[#F5F4FF]"
+            >
+              {label}
+            </Link>
+          ))}
+
+          <div className="my-2 h-px bg-gray-100" />
 
           {!isRegistered ? (
             <>
@@ -232,7 +261,7 @@ export default function Navbar() {
                   goLogin();
                   setIsMenuOpen(false);
                 }}
-                className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
+                className="w-full min-h-12 py-3 bg-[#756FCC] text-white rounded-xl font-semibold"
               >
                 Login
               </button>
@@ -242,7 +271,7 @@ export default function Navbar() {
                   goRegister();
                   setIsMenuOpen(false);
                 }}
-                className="w-full py-2 border border-[#756FCC] text-[#756FCC] rounded-lg"
+                className="w-full min-h-12 py-3 border border-[#756FCC] text-[#756FCC] rounded-xl font-semibold"
               >
                 Get Started
               </button>

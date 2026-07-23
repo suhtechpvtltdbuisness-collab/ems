@@ -5,27 +5,27 @@ export default function Footer() {
   return (
     <footer
       className="
-        w-full px-[60px] pt-[60px] pb-[30px]
+        w-full px-5 sm:px-8 lg:px-[60px] pt-12 sm:pt-[60px] pb-[30px]
         flex flex-col
         bg-[linear-gradient(90deg,#FFFFFF_0%,#B1F6BB_100%)]
       "
     >
-      <div className="w-full flex flex-wrap justify-between items-start gap-y-4">
+      <div className="grid w-full grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
         {/* Left Logo Column */}
-        <div className="flex flex-col gap-4 min-w-[220px] max-w-[350px]">
+        <div className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1 lg:max-w-[350px]">
           <img
             src="/Orga Logo (1).svg"
             alt="logo"
             className="w-[120px] h-auto"
           />
 
-          <p className="text-[#1B223C] font-nunito text-[18px]">
+          <p className="text-[#1B223C] font-nunito text-base sm:text-[18px] leading-relaxed">
             Empowering teams with efficiency and innovation. Delivering smart solutions that simplify work and accelerate growth.
           </p>
         </div>
 
         {/* Orga Links */}
-        <div className="flex flex-col gap-3 min-w-[200px] mt-6 md:mt-0">
+        <div className="flex flex-col gap-3">
           <h3 className="text-[#1B223C] font-poppins font-semibold text-[20px]">
             Orga
           </h3>
@@ -69,7 +69,7 @@ export default function Footer() {
         </div>
 
         {/* Use Cases */}
-        <div className="flex flex-col gap-3 min-w-[200px] mt-6 md:mt-0">
+        <div className="flex flex-col gap-3">
           <h3 className="text-[#1B223C] font-poppins font-semibold text-[20px]">
             Use Cases
           </h3>
@@ -120,7 +120,7 @@ export default function Footer() {
         </div>
 
         {/* Solutions */}
-        <div className="flex flex-col gap-3 min-w-[200px] mt-6 md:mt-0">
+        <div className="flex flex-col gap-3">
           <h3 className="text-[#1B223C] font-poppins font-semibold text-[20px]">
             Solutions
           </h3>
@@ -162,9 +162,9 @@ export default function Footer() {
       </div>
 
       {/* Bottom Row with Privacy Policy and Terms of Service */}
-      <div className="w-full border-t border-[#1B223C]/10 pt-6 mt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[#1B223C]/75 font-nunito text-[14px]">
-        <p>© 2026 Suhtech ORGA. All rights reserved.</p>
-        <div className="flex gap-6">
+      <div className="w-full border-t border-[#1B223C]/10 pt-6 mt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left text-[#1B223C]/75 font-nunito text-[14px]">
+        <p className="break-words">© 2026 Suhtech ORGA. All rights reserved.</p>
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
           <Link
             to="/privacy"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

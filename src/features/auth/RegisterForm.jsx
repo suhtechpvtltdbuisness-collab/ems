@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Mail, Lock, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
 import { InputField } from "../../components/common/InputField";
 import { Button } from "../../components/common/Button";
 import { Toast } from "../../components/common/Toast";
+import ResponsiveGoogleButton from "../../components/auth/ResponsiveGoogleButton";
 import { authService } from "../../service";
 
 export const RegisterForm = ({ onRegister, onLogin }) => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [toast, setToast] = useState(null);
   
   // OTP-specific states
@@ -176,7 +175,6 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
       return;
     }
 
-    setGoogleLoading(true);
 
     const result = await authService.googleLogin(credentialResponse.credential);
 
@@ -203,7 +201,6 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
       });
     }
 
-    setGoogleLoading(false);
   };
 
   const handleGoogleError = () => {
@@ -218,7 +215,7 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
     return (
       <>
         <Toast toast={toast} onClose={() => setToast(null)} />
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-5 sm:p-8 flex flex-col items-center">
           <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
             <Mail className="w-8 h-8 text-purple-600 animate-pulse" />
           </div>
@@ -290,12 +287,12 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
       <Toast toast={toast} onClose={() => setToast(null)} />
 
       {!toast && (
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-5 sm:p-8">
           <h1 className="text-2xl font-bold text-center mb-1">
             Create Account
           </h1>
           <p className="text-gray-500 text-center text-sm mb-6">
-            7-day free trial · paid plans from ₹499/month ($9) · extra seats at ₹51 each ($1)
+            7-day free trial · paid plans from $9/month · extra seats at $1 each
           </p>
 
           <InputField
@@ -374,15 +371,10 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
                 <div className="flex-1 h-px bg-gray-200" />
               </div>
 
-              <div className="flex justify-center w-full">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleError}
-                  theme="outline"
-                  size="large"
-                  width="384px"
-                />
-              </div>
+              <ResponsiveGoogleButton
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+              />
             </>
           )}
 

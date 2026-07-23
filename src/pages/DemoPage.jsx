@@ -41,7 +41,7 @@ export default function Demo() {
     };
 
     return (
-        <div className="relative bg-white p-6 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
+        <div className="relative bg-white px-4 py-10 sm:p-8 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 overflow-hidden">
 
 
             <img
@@ -63,7 +63,7 @@ export default function Demo() {
                         </span>
                     </h1>
 
-                    <p className="text-[#7C7C7C] font-[Nunito] text-[18px] md:text-[24px] leading-relaxed max-w-[90%] md:max-w-full">
+                    <p className="text-[#7C7C7C] font-[Nunito] text-base sm:text-[18px] md:text-[24px] leading-relaxed max-w-full">
                         See how ORGA can streamline your workflows and empower your team to achieve more.
 
                     </p>
@@ -79,7 +79,7 @@ export default function Demo() {
                     ].map((item, i) => (
                         <div key={i} className="flex items-start gap-3 w-full">
                             <CheckCircle2 size={28} className="text-white fill-[#756FCC]" />
-                            <p className="text-[#090909] font-dmsans text-[18px] md:text-[24px] font-semibold leading-snug">
+                            <p className="min-w-0 text-[#090909] font-dmsans text-base sm:text-[18px] md:text-[24px] font-semibold leading-snug">
                                 {item}
                             </p>
                         </div>
@@ -89,7 +89,7 @@ export default function Demo() {
 
             {/* Right Form Section */}
             <div className="flex justify-center items-center relative z-10">
-                <div className="w-full max-w-[600px] bg-white shadow-lg rounded-[24px] p-10 border border-gray-100 shadow-purple-200">
+                <div className="w-full max-w-[600px] bg-white shadow-lg rounded-[24px] p-5 sm:p-8 lg:p-10 border border-gray-100 shadow-purple-200">
 
                     <form className="space-y-5" onSubmit={handleDemoSubmit}>
 

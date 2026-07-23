@@ -2,8 +2,8 @@ import React from "react";
 
 export default function TermsPage() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 text-gray-800">
-      <div className="bg-white/80 backdrop-blur-md rounded-3xl border border-gray-100 shadow-xl p-8 md:p-12">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 text-gray-800">
+      <div className="bg-white/80 backdrop-blur-md rounded-3xl border border-gray-100 shadow-xl p-5 sm:p-8 md:p-12">
         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
           Terms of Service
         </h1>

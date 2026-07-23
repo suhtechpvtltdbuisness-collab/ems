@@ -8,8 +8,8 @@ export default function ProjectFreeTrialSection() {
     const navigate = useNavigate();
 
     return (
-        <div className="w-full flex flex-col items-center py-16 bg-white">
-            <div className="w-full max-w-6xl bg-gradient-to-b from-[#AFF6B9] to-[#FFFFFF] rounded-[40px] py-14 relative overflow-hidden">
+        <div className="w-full flex flex-col items-center px-4 py-12 sm:py-16 bg-white">
+            <div className="w-full max-w-6xl bg-gradient-to-b from-[#AFF6B9] to-[#FFFFFF] rounded-[28px] sm:rounded-[40px] px-4 py-10 sm:py-14 relative overflow-hidden">
 
 
 
@@ -56,7 +56,7 @@ export default function ProjectFreeTrialSection() {
                     </div>
 
                     {/* Heading */}
-                    <h1 className="font-[Poppins] text-[42px] md:text-[48px] font-semibold text-center leading-snug mt-4">
+                    <h1 className="font-[Poppins] text-3xl sm:text-[42px] md:text-[48px] font-semibold text-center leading-tight sm:leading-snug mt-4">
                         Start your free trial today!
                     </h1>
                     <p className="text-[#64748B] text-base max-w-xl text-center px-4">
@@ -64,10 +64,10 @@ export default function ProjectFreeTrialSection() {
                     </p>
 
                     {/* Buttons */}
-                    <div className="flex gap-4 mt-6 flex-wrap justify-center">
+                    <div className="flex w-full flex-col gap-3 mt-6 sm:w-auto sm:flex-row sm:flex-wrap justify-center">
                         <button
                             onClick={() => navigate("/pricing")}
-                            className="w-fit px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 cursor-pointer"
+                            className="w-full sm:w-fit justify-center px-6 py-3 rounded-lg bg-[#756FCC] text-white shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 cursor-pointer"
                         >
                             <span>View plans</span>
                             <ArrowRight size={18} />
@@ -79,7 +79,7 @@ export default function ProjectFreeTrialSection() {
                                 navigate("/demo");
                                 window.scrollTo(0, 0);
                             }}
-                            className="w-fit px-6 py-3 rounded-lg border border-[#756FCC] text-[#756FCC] shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 bg-transparent cursor-pointer"
+                            className="w-full sm:w-fit justify-center px-6 py-3 rounded-lg border border-[#756FCC] text-[#756FCC] shadow-sm hover:opacity-90 transition flex items-center gap-2 mt-2 md:mt-3 bg-transparent cursor-pointer"
                         >
                             <span>Book a Demo</span>
                             <ArrowRight size={18} className="text-[#756FCC]" />
