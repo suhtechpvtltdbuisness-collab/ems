@@ -16,7 +16,9 @@ export const Toast = ({ toast, onClose }) => {
       style={{
         position: "fixed",
         top: "20px",
-        left: "38%",
+        left: "50%",
+        width: "calc(100% - 32px)",
+        maxWidth: "420px",
         transform: "translateX(-50%)",
         zIndex: 9999,
         animation: "toastSlideIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both",
@@ -24,15 +26,16 @@ export const Toast = ({ toast, onClose }) => {
     >
       <style>{`
         @keyframes toastSlideIn {
-          from { opacity: 0; transform: translateY(-16px) scale(0.95); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
+          from { opacity: 0; transform: translateX(-50%) translateY(-16px) scale(0.95); }
+          to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
         }
       `}</style>
 
       {/* Card */}
       <div
         style={{
-          width: "420px",
+          width: "100%",
+          boxSizing: "border-box",
           background: "#ffffff",
           borderRadius: "14px",
           border: "1px solid rgba(0,0,0,0.07)",
@@ -82,11 +85,11 @@ export const Toast = ({ toast, onClose }) => {
         )}
 
         {/* Text */}
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: 0, paddingRight: "18px" }}>
           <p style={{ margin: 0, fontWeight: 700, fontSize: "14px", color: "#111827", letterSpacing: "-0.01em" }}>
             {toast.title}
           </p>
-          <p style={{ margin: "3px 0 0 0", fontSize: "12px", color: "#9CA3AF", lineHeight: 1.4 }}>
+          <p style={{ margin: "3px 0 0 0", fontSize: "12px", color: "#9CA3AF", lineHeight: 1.4, overflowWrap: "anywhere" }}>
             {toast.message}
           </p>
         </div>
