@@ -130,6 +130,7 @@ const PLAN_UI = {
 };
 
 const EMPLOYEE_LIMITS = {
+  free_trial: SUBSCRIPTION_PLANS.free_trial.maxEmployees,
   starter_pack: SUBSCRIPTION_PLANS.starter_pack.maxEmployees,
   premium: SUBSCRIPTION_PLANS.premium.maxEmployees,
   enterprise: SUBSCRIPTION_PLANS.enterprise.maxEmployees,
@@ -334,14 +335,14 @@ export default function PricingSection() {
   const isPaidPlan = (planType) => ["starter_pack", "premium", "enterprise"].includes(planType);
 
   return (
-    <div className="relative w-full flex flex-col items-center gap-10 py-16 bg-white overflow-hidden">
+    <section className="relative flex w-full flex-col items-center gap-8 overflow-hidden bg-white px-5 py-16 sm:px-8 lg:py-20">
       <div className="absolute top-[-10%] right-[-15%] w-[800px] h-[800px] blur-[80px] rounded-full pointer-events-none z-0"
         style={{ background: "radial-gradient(50% 50% at 50% 50%, #AFF6B9 0%, #DFFFDF 32.41%, #FAFFF9 60.16%, #FDFFFC 81.57%)" }}
       />
 
-      <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4 mb-4">
+      <div className="relative z-10 flex max-w-3xl flex-col items-center gap-4 px-4 text-center">
         {/* Launch Offer Banner */}
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-[#7CF38D]/20 to-[#50AA18]/20 border border-[#50AA18]/30 text-sm font-semibold text-[#1B223C] mb-2">
+        <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-2xl border border-[#50AA18]/30 bg-gradient-to-r from-[#7CF38D]/20 to-[#50AA18]/20 px-4 py-2.5 text-sm font-semibold text-[#1B223C] sm:rounded-full sm:px-5">
           <Zap size={16} className="text-[#50AA18]" />
           <span>🚀 <span className="font-bold">{LAUNCH_DISCOUNT_PERCENT}% Launch Offer</span> — <span className="text-[#64748B] font-normal">locked-in for life on all paid plans</span></span>
         </div>
@@ -358,7 +359,7 @@ export default function PricingSection() {
           </span>
         </div>
 
-        <p className="text-[#64748B] font-nunito text-[18px] max-w-2xl leading-relaxed">
+        <p className="max-w-2xl font-nunito text-base leading-7 text-[#64748B] sm:text-[17px]">
           {tagline}. {trialNote}
         </p>
         {message && (
@@ -370,7 +371,7 @@ export default function PricingSection() {
         )}
       </div>
 
-      <div className="relative z-10 px-4 sm:px-6 md:px-10 lg:px-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8 mt-6 w-full max-w-7xl mx-auto items-stretch">
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {plans.map((plan) => {
           const isSelected = selectedPlan === plan.planType;
           const isLoading = loadingPlan === plan.planType;
@@ -382,8 +383,8 @@ export default function PricingSection() {
               key={plan.planType}
               onClick={() => setSelectedPlan(plan.planType)}
               className={`
-                relative w-full h-full p-6 sm:p-8 md:p-10 flex flex-col gap-6 md:gap-8
-                rounded-[32px] bg-white border cursor-pointer
+                relative min-w-0 w-full h-full p-6 flex flex-col gap-5
+                rounded-3xl bg-white border cursor-pointer
                 shadow-[0_10px_40px_rgba(0,0,0,0.04)]
                 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(117,111,204,0.12)]
                 hover:-translate-y-1
@@ -407,7 +408,7 @@ export default function PricingSection() {
               <div className="flex flex-col gap-3 relative z-10">
                 <div className="flex items-center gap-2">
                   {plan.icon}
-                  <h2 className="text-[#1B223C] font-poppins text-2xl sm:text-3xl font-bold tracking-tight">{plan.title}</h2>
+                  <h2 className="min-w-0 break-words font-poppins text-2xl font-bold tracking-tight text-[#1B223C]">{plan.title}</h2>
                 </div>
                 <p className="text-[#64748B] text-sm leading-relaxed">
                   <span className="text-[#1B223C] font-semibold">Best for:</span> {plan.bestFor}
@@ -417,15 +418,15 @@ export default function PricingSection() {
               {!isCustomFeature && <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 relative z-10">
                 {paid ? (
                   <>
-                    <span className="text-xl sm:text-2xl md:text-3xl font-poppins font-bold text-[#94A3B8] line-through tracking-tighter">
+                    <span className="font-poppins text-xl font-bold tracking-tighter text-[#94A3B8] line-through">
                       {plan.price}
                     </span>
-                    <span className="text-3xl sm:text-4xl md:text-5xl font-poppins font-bold text-[#1B223C] tracking-tighter">
+                    <span className="font-poppins text-4xl font-bold tracking-tighter text-[#1B223C]">
                       {plan.discountedPrice}
                     </span>
                   </>
                 ) : (
-                  <span className="text-3xl sm:text-4xl md:text-5xl font-poppins font-bold text-[#1B223C] tracking-tighter">
+                  <span className="font-poppins text-4xl font-bold tracking-tighter text-[#1B223C]">
                     {plan.price}
                   </span>
                 )}
@@ -476,7 +477,7 @@ export default function PricingSection() {
                 onClick={(e) => { e.stopPropagation(); setSelectedPlan(plan.planType); handlePlanAction(plan); }}
                 disabled={!plan.actionable || isLoading}
                 className={`
-                  mt-auto w-full py-4 rounded-xl font-bold transition-all duration-300 text-[15px]
+                  mt-auto w-full rounded-xl py-3.5 text-sm font-bold transition-all duration-300
                   ${!plan.actionable
                     ? "border-2 border-gray-200 text-gray-400 cursor-not-allowed"
                     : isSelected
@@ -492,6 +493,6 @@ export default function PricingSection() {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

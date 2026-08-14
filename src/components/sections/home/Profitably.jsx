@@ -5,28 +5,28 @@ export default function Profitablity() {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white p-6 sm:p-8 md:p-[60px] grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
+    <section className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 bg-white px-5 py-14 sm:px-8 sm:py-16 md:grid-cols-2 md:gap-14 lg:px-12 lg:py-20">
 
       {/* Left Section */}
-      <div className="flex flex-col items-center md:items-start gap-4 sm:gap-6 md:gap-4">
+      <div className="flex flex-col items-center gap-6 md:items-start">
 
         {/* Title + Description */}
-        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2 sm:gap-3">
-          <h1 className="text-[#292D34] font-poppins text-2xl xs:text-3xl sm:text-4xl md:text-[48px] font-semibold leading-snug sm:leading-snug md:leading-tight max-w-[636px]">
+        <div className="flex flex-col items-center gap-4 text-center md:items-start md:text-left">
+          <h2 className="max-w-xl font-poppins text-3xl font-semibold leading-[1.15] tracking-[-0.02em] text-[#292D34] sm:text-4xl lg:text-[40px]">
             Project Management Made
             <span className="block bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent">
               Smarter
             </span>
-          </h1>
+          </h2>
 
-          <p className="text-[#7C7C7C] font-nunito text-sm xs:text-base sm:text-lg md:text-[24px] leading-relaxed max-w-[90%] sm:max-w-[95%] md:max-w-full">
+          <p className="max-w-xl font-nunito text-base leading-7 text-[#70737A] sm:text-lg">
             Keep projects on track with powerful tools for planning, collaboration, budgeting, and performance monitoring, ensuring timely delivery and maximum profitability.
 
           </p>
         </div>
 
         {/* Features */}
-        <div className="flex flex-col gap-2 sm:gap-3 mt-2 w-full">
+        <div className="flex w-full flex-col gap-3.5">
           {[
             "Task & project lifecycle management",
             "Team collaboration & progress tracking",
@@ -34,8 +34,8 @@ export default function Profitablity() {
             "Performance dashboards & analytics"
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-2 sm:gap-3 w-full">
-              <CheckCircle2 size={24} className="text-white fill-[#756FCC]" />
-              <p className="text-[#090909] font-dmsans text-sm xs:text-base sm:text-lg md:text-[24px] font-semibold leading-snug">
+              <CheckCircle2 size={20} className="mt-0.5 shrink-0 fill-[#756FCC] text-white" />
+              <p className="font-dmsans text-base font-semibold leading-6 text-[#20232A] sm:text-[17px]">
                 {item}
               </p>
             </div>
@@ -55,14 +55,14 @@ export default function Profitablity() {
       </div>
 
       {/* Right Image */}
-      <div className="bg-gray-100 p-4 sm:p-6 md:p-6 rounded-xl flex justify-center mt-4 md:mt-0">
+      <div className="flex justify-center rounded-2xl bg-[#F4F4F7] p-4 sm:p-5">
         <img
           src="./finance.png"
-          alt="finance"
-          className="w-full max-w-xs sm:max-w-sm md:max-w-full bg-white rounded-lg"
+          alt="Project management dashboard"
+          className="w-full rounded-xl bg-white object-contain"
         />
       </div>
 
-    </div>
+    </section>
   );
 }

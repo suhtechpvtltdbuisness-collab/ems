@@ -5,14 +5,14 @@ export default function HowitWorks() {
       {/* Heading & Description */}
       <div className="flex flex-col items-center text-center gap-3 max-w-3xl">
         <h1 className="text-[#1E1E1E] font-poppins font-semibold 
-          text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[48px] 
-          leading-snug xs:leading-snug sm:leading-snug md:leading-[52px] lg:leading-[60px] 
+          text-2xl xs:text-3xl sm:text-4xl lg:text-[40px]
+          leading-snug lg:leading-[48px]
           tracking-[1.2px] sm:tracking-[1.44px]">
           How it works
         </h1>
 
-        <p className="text-[#7C7C7C] font-nunito text-sm xs:text-base sm:text-lg md:text-xl lg:text-[20px] 
-          font-normal leading-[24px] xs:leading-[26px] sm:leading-[28px] md:leading-[30px] lg:leading-[32px] 
+        <p className="text-[#7C7C7C] font-nunito text-sm xs:text-base sm:text-lg
+          font-normal leading-[24px] xs:leading-[26px] sm:leading-[28px]
           tracking-[-0.4px] sm:tracking-[-0.48px] max-w-[600px] mx-auto">
           ORGA brings all your business operations together into one seamless workflow. From onboarding your team to assigning tasks, tracking performance, and managing projects — everything works smoothly, intuitively, and in real time.
         </p>

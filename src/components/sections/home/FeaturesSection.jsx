@@ -39,15 +39,15 @@ export default function FeaturesSection() {
   ];
 
   return (
-    <div className="min-h-screen bg-white py-16 px-4">
+    <section className="bg-white px-4 py-16 lg:py-20">
       <div className="max-w-7xl mx-auto">
 
         {/* Section Header */}
         <div className="text-center mb-12 px-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold font-poppins text-gray-900 mb-4 leading-tight">
+          <h2 className="mb-4 font-poppins text-3xl font-semibold leading-tight text-gray-900 sm:text-4xl lg:text-[40px]">
             <span className="block">Everything your team</span>
             <span className="block">needs in <span className="text-green-500">one place</span></span>
-          </h1>
+          </h2>
           <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed">
             <span className="block">A complete, all-in-one Enterprise Management System designed to streamline workflows, boost productivity, and centralize business operations. From tasks and timelines to HR and finance, everything you need is available in one powerful platform.</span>
           </p>
@@ -60,7 +60,7 @@ export default function FeaturesSection() {
               key={index}
               className={`
                 ${feature.bgColor} 
-                rounded-3xl p-8 
+                rounded-2xl p-6 
                 border border-[#756FCC] 
                 hover:shadow-lg 
                 transition-shadow duration-300 
@@ -96,6 +96,6 @@ export default function FeaturesSection() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

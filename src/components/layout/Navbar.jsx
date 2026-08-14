@@ -99,7 +99,7 @@ export default function Navbar() {
       </div>
 
       {/* Desktop Menu */}
-      <div className="hidden md:flex items-center gap-8 text-[#292D34] font-medium">
+      <div className="hidden lg:flex items-center gap-7 text-[#292D34] font-medium">
 
         {/* Use Cases */}
         <div className="relative" ref={dropdownRef}>
@@ -150,7 +150,7 @@ export default function Navbar() {
       </div>
 
       {/* Desktop Right Section */}
-      <div className="hidden md:flex items-center gap-4">
+      <div className="hidden lg:flex items-center gap-3">
 
         {!isRegistered ? (
           <>
@@ -235,7 +235,7 @@ export default function Navbar() {
       {/* Mobile Toggle */}
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="md:hidden flex h-11 w-11 items-center justify-center rounded-xl border border-[#756FCC]/20 bg-white text-[#292D34]"
+        className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#756FCC]/20 bg-white text-[#292D34] lg:hidden"
         aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
         aria-expanded={isMenuOpen}
       >
@@ -244,7 +244,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="fixed top-20 left-0 flex max-h-[calc(100dvh-5rem)] w-full flex-col gap-2 overflow-y-auto bg-white px-4 py-5 shadow-xl md:hidden">
+        <div className="fixed left-0 top-20 flex max-h-[calc(100dvh-5rem)] w-full flex-col gap-2 overflow-y-auto bg-white px-4 py-5 shadow-xl lg:hidden">
 
           <p className="px-3 pt-1 text-xs font-bold uppercase tracking-wider text-[#64748B]">Explore</p>
           <Link className="rounded-xl px-3 py-3 font-medium hover:bg-[#F5F4FF]" to="/solutions" onClick={() => setIsMenuOpen(false)}>
