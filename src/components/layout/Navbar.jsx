@@ -1,4 +1,4 @@
-import { ChevronDown, Menu, X, User, LogOut } from "lucide-react";
+import { ChevronDown, Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../../service";
@@ -9,6 +9,7 @@ export default function Navbar() {
   const [isUseCasesOpen, setIsUseCasesOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [subscription, setSubscription] = useState(null);
 
   const dropdownRef = useRef(null);
   const profileRef = useRef(null);
@@ -39,6 +40,23 @@ export default function Navbar() {
       }
     }
 
+    const subscriptionStr = localStorage.getItem("subscription");
+    if (subscriptionStr) {
+      try {
+        setSubscription(JSON.parse(subscriptionStr));
+      } catch {
+        // Ignore malformed cached subscription data.
+      }
+    }
+
+    if (authService.hasSessionHint()) {
+      authService.getProfile().then((profile) => {
+        if (!profile.success) return;
+        if (profile.data?.user) setUserProfile(profile.data.user);
+        setSubscription(profile.data?.subscription || null);
+      });
+    }
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
@@ -62,8 +80,12 @@ export default function Navbar() {
   };
 
   const goToAdmin = () => {
+    setIsProfileOpen(false);
+    setIsMenuOpen(false);
     authService.redirectToAdmin();
   };
+
+  const hasActivePlan = authService.hasActiveSubscription(subscription);
 
   return (
     <nav className="fixed top-0 left-0 w-full h-20 flex items-center justify-between px-4 sm:px-6 lg:px-8 z-50 bg-white/90 backdrop-blur-xl border-b border-[#756FCC]/10">
@@ -158,14 +180,14 @@ export default function Navbar() {
             </button>
 
             {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border-[#756FCC] py-2">
+              <div className="absolute right-0 mt-2 w-64 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl">
 
 
 
 
 
                 {userProfile && (
-                  <div className="px-4 py-3 border-b border-gray-100 mb-1">
+                  <div className="mb-1 border-b border-gray-100 px-5 py-3">
                     <p className="text-sm font-semibold text-gray-900 truncate">
                       {userProfile.name || `${userProfile.firstName || ''} ${userProfile.lastName || ''}`.trim() || 'User'}
                     </p>
@@ -175,20 +197,30 @@ export default function Navbar() {
                   </div>
                 )}
 
-                <button
-                  onClick={() => {
-                    navigate("/pricing");
-                    setIsProfileOpen(false);
-                  }}
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 font-medium cursor-pointer"
-                >
-                  Upgrade Plan
-                </button>
+                {hasActivePlan ? (
+                  <button
+                    onClick={goToAdmin}
+                    className="flex w-full items-center gap-3 whitespace-nowrap px-5 py-3 text-left text-sm font-semibold text-[#756FCC] transition-colors hover:bg-[#F5F4FF] cursor-pointer"
+                  >
+                    <LayoutDashboard size={16} />
+                    Login to Dashboard
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      navigate("/pricing");
+                      setIsProfileOpen(false);
+                    }}
+                    className="block w-full whitespace-nowrap px-5 py-3 text-left text-sm font-semibold transition-colors hover:bg-gray-100 cursor-pointer"
+                  >
+                    Upgrade Plan
+                  </button>
+                )}
 
                 {(isLoggedIn || isRegistered) && (
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-2 px-4 py-2 hover:bg-gray-100 text-red-500 font-medium cursor-pointer border-t border-gray-100 mt-1"
+                    className="mt-1 flex w-full items-center gap-3 border-t border-gray-100 px-5 py-3 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50 cursor-pointer"
                   >
                     <LogOut size={16} />
                     Logout
@@ -300,15 +332,12 @@ export default function Navbar() {
                 </button>
               )}
 
-              {isLoggedIn && (
+              {isLoggedIn && hasActivePlan && (
                 <button
-                  onClick={() => {
-                    goToAdmin();
-                    setIsMenuOpen(false);
-                  }}
+                  onClick={goToAdmin}
                   className="w-full py-2 bg-[#756FCC] text-white rounded-lg"
                 >
-                  Dashboard
+                  Login to Dashboard
                 </button>
               )}
 
@@ -322,15 +351,17 @@ export default function Navbar() {
                 </button>
               )}
 
-              <button
-                onClick={() => {
-                  navigate("/pricing");
-                  setIsMenuOpen(false);
-                }}
-                className="w-full py-2 border border-[#756FCC] text-[#756FCC] rounded-lg"
-              >
-                Upgrade Plan
-              </button>
+              {!hasActivePlan && (
+                <button
+                  onClick={() => {
+                    navigate("/pricing");
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full py-2 border border-[#756FCC] text-[#756FCC] rounded-lg"
+                >
+                  Upgrade Plan
+                </button>
+              )}
             </>
           )}
         </div>

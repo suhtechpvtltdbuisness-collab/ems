@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Mail, Lock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Mail, Lock } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { InputField } from "../../components/common/InputField";
 import { Button } from "../../components/common/Button";
 import { Toast } from "../../components/common/Toast";
@@ -152,6 +152,14 @@ export const LoginForm = ({ onRegister }) => {
               Register
             </button>
           </p>
+
+          <Link
+            to="/"
+            className="mt-3 flex items-center justify-center gap-1.5 text-sm font-medium text-gray-500 transition-colors hover:text-purple-600 hover:underline"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Back to home
+          </Link>
         </div>
       )}
     </>
