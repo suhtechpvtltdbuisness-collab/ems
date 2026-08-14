@@ -18,13 +18,25 @@ export default function HowitWorks() {
         </p>
       </div>
 
-      {/* Image Section */}
-      <div className="flex items-center justify-center w-full mt-0 sm:mt-2">
-        <img
-          src="./howitworks.png"
-          alt="How it works"
-          className="w-full max-w-[900px] sm:max-w-[750px] md:max-w-[900px] lg:max-w-[900px] h-auto object-contain mx-auto cursor-pointer"
-        />
+      {/* Product walkthrough video */}
+      <div className="w-full max-w-[1000px] mt-0 sm:mt-2">
+        <div className="overflow-hidden rounded-2xl sm:rounded-[28px] border border-[#E9E6F5] bg-[#F7F6FB] p-1.5 sm:p-2 shadow-[0_24px_70px_-30px_rgba(86,72,166,0.45)]">
+          <video
+            className="block w-full rounded-xl sm:rounded-[20px] object-contain"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label="See how ORGA works"
+          >
+            <source
+              src="/WhatsApp%20Video%202026-08-14%20at%2011.37.22.mp4"
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+        </div>
       </div>
     </div>
   );
