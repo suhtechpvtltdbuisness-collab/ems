@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { CheckCircle2, Mail, Phone, MapPin } from "lucide-react";
 import { trackPageView } from "../utils/analytics";
 
+const CONTACT_EMAIL = "Reply@orga.cc";
+
 export default function ContactPage() {
     const contactViewTracked = useRef(false);
 
@@ -22,7 +24,7 @@ export default function ContactPage() {
         const subject = encodeURIComponent(`Contact Us Query from ${firstName} ${lastName}`);
         const body = encodeURIComponent(`Name: ${firstName} ${lastName}\nEmail: ${email}\n\nMessage:\n${message}`);
         
-        window.location.href = `mailto:info@suhtech.top?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
     };
 
     return (
@@ -59,7 +61,7 @@ export default function ContactPage() {
                         </div>
                         <div>
                             <p className="text-[#7C7C7C] font-dmsans text-[14px]">Email us at</p>
-                            <p className="text-[#090909] font-dmsans text-[18px] font-semibold">info@suhtech.top</p>
+                            <p className="text-[#090909] font-dmsans text-[18px] font-semibold">{CONTACT_EMAIL}</p>
                         </div>
                     </div>
 
