@@ -1,199 +1,126 @@
-import { Check, Lock, Rocket, Sparkles, Building, Wrench, Zap } from "lucide-react";
+import { Check, Lock, Rocket, Sparkles, Building, Wrench } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  SUBSCRIPTION_PLANS,
-  SUBSCRIPTION_ADDONS,
-  formatPrice,
-  formatDiscountedPrice,
-  getDiscountedPrice,
-  LAUNCH_DISCOUNT_PERCENT,
-  PRICING_TAGLINE_USD,
-  TRIAL_NOTE_USD,
-  getPriceKey,
-  getPerEmployeePriceKey,
-} from "../../../config/subscriptionPlans";
+import { formatPrice, durationLabel } from "../../../config/subscriptionPlans";
 import { authService, subscriptionService } from "../../../service";
 import { trackEvent, trackPageView } from "../../../utils/analytics";
 
 const PLAN_UI = {
   free_trial: {
-    title: "Free Trial",
     icon: <Sparkles size={24} className="text-[#50AA18]" />,
     bestFor: "New teams exploring ORGA HRMS",
-    priceNote: "for 7 days",
     highlight: true,
-    categories: [
-      {
-        name: "HR MODULE",
-        features: [
-          "Employee management",
-          "Leave & attendance (basic)",
-          "Up to {limit} employees",
-        ],
-      },
-    ],
-    limitations: [
-      "Card required (no charge during trial)",
-      "Auto-renews after 7 days",
-      `${SUBSCRIPTION_PLANS.free_trial.maxEmployees} employee limit during trial`,
-    ],
     cta: "Start Free Trial",
     actionable: true,
   },
   starter_pack: {
-    title: "Starter",
     icon: <Rocket size={24} className="text-[#756FCC]" />,
     bestFor: "Small teams and early-stage HR operations",
-    priceNote: "per month",
     highlight: true,
-    categories: [
-      {
-        name: "HR MODULE",
-        features: [
-          "Full employee management",
-          "Leave & attendance",
-          "Up to {limit} employees",
-          "Payroll basics",
-          "Extra employees at {perEmpPrice}/seat",
-        ],
-      },
-      {
-        name: "SUPPORT",
-        features: ["Email support", "30-day subscription"],
-      },
-    ],
-    limitations: ["Custom features are billed separately"],
     cta: "Subscribe Now",
     actionable: true,
   },
   premium: {
-    title: "Growth",
     icon: <Building size={24} className="text-[#756FCC]" />,
     bestFor: "Growing companies with broader HR workflows",
-    priceNote: "per month",
     highlight: true,
-    categories: [
-      {
-        name: "ALL MODULES",
-        features: [
-          "Everything in Starter",
-          "Advanced HR workflows",
-          "Up to {limit} employees",
-          "Extra employees at {perEmpPrice}/seat",
-        ],
-      },
-    ],
-    limitations: [],
     cta: "Subscribe Now",
     actionable: true,
   },
   enterprise: {
-    title: "Enterprise",
     icon: <Building size={24} className="text-[#50AA18]" />,
     bestFor: "Larger teams that need higher employee capacity",
-    priceNote: "per month",
     highlight: true,
-    categories: [
-      {
-        name: "ALL MODULES",
-        features: [
-          "Everything in Growth",
-          "Up to {limit} employees",
-          "Extra employees at {perEmpPrice}/seat",
-        ],
-      },
-    ],
-    limitations: [],
     cta: "Subscribe Now",
     actionable: true,
   },
   custom_feature: {
-    title: "Custom Feature",
     icon: <Wrench size={24} className="text-[#1B223C]" />,
     bestFor: "Teams that need a specific workflow, instance, or feature",
-    priceNote: "one-time starting price",
     highlight: false,
-    categories: [
-      {
-        name: "ADD-ON",
-        features: [
-          "Specific instance or feature request",
-          "Best for custom workflow enhancements",
-        ],
-      },
-    ],
-    limitations: ["Requires an active HRMS subscription"],
     cta: "Buy Custom Feature",
     actionable: true,
   },
 };
 
-const EMPLOYEE_LIMITS = {
-  free_trial: SUBSCRIPTION_PLANS.free_trial.maxEmployees,
-  starter_pack: SUBSCRIPTION_PLANS.starter_pack.maxEmployees,
-  premium: SUBSCRIPTION_PLANS.premium.maxEmployees,
-  enterprise: SUBSCRIPTION_PLANS.enterprise.maxEmployees,
-};
-
-const enrichFeatures = (features, planType, limits, perEmpPrice) => {
-  return features.map((feat) => {
-    if (feat.includes("{limit}")) return feat.replace("{limit}", limits);
-    if (feat.includes("{perEmpPrice}")) return feat.replace("{perEmpPrice}", perEmpPrice);
-    return feat;
-  });
-};
+const defaultUi = (plan) => ({
+  icon: <Rocket size={24} className="text-[#756FCC]" />,
+  bestFor: plan.description || "ORGA subscription",
+  highlight: true,
+  cta: plan.priceUsd > 0 ? "Subscribe Now" : "Get Started",
+  actionable: true,
+});
 
 const buildPlans = (apiPlans = [], currency) => {
-  const apiByType = Object.fromEntries(
-    (apiPlans || []).map((p) => [p.planType, p]),
-  );
-  const priceKey = getPriceKey(currency);
-  const perEmpKey = getPerEmployeePriceKey(currency);
+  const starter = apiPlans.find((plan) => plan.planType === "starter_pack");
+  const addonSource = apiPlans[0];
 
-  const subscriptionPlans = Object.keys(SUBSCRIPTION_PLANS).map((planType) => {
-    const config = SUBSCRIPTION_PLANS[planType];
-    const api = apiByType[planType];
-    const ui = PLAN_UI[planType];
-    const rawPrice = api?.[priceKey] ?? config[priceKey];
-    const limits = EMPLOYEE_LIMITS[planType];
-    const perEmpPrice = formatPrice(config[perEmpKey], currency);
+  const subscriptionPlans = apiPlans.map((api) => {
+    const ui = PLAN_UI[api.planType] || defaultUi(api);
+    const perEmpPrice = formatPrice(api.pricePerEmployeeUsd ?? 0, currency);
+    const isPerEmployee = api.billingModel === "per_employee";
+    const isTrial = api.planType === "free_trial";
+    const rawPrice = isTrial
+      ? 0
+      : isPerEmployee
+        ? Number(api.pricePerEmployeeUsd ?? 0)
+        : Number(api.priceUsd ?? 0);
+    const period = durationLabel(api.durationDays);
+    const priceNote = isTrial
+      ? `for ${period} · up to ${api.maxEmployees} employees`
+      : isPerEmployee
+        ? `per employee / month · up to ${api.maxEmployees} employees`
+        : `per month · up to ${api.maxEmployees} employees`;
 
-    const priceNote = limits
-      ? `per month · up to ${limits} employees`
-      : ui.priceNote;
+    const features = (api.features || []).length
+      ? api.features
+      : [`Up to ${api.maxEmployees} employees`];
+
+    const limitations = isTrial
+      ? [
+          "Card required (no charge during trial)",
+          `Auto-renews to ${api.autoRenewPlanName || starter?.name || "Starter"} after ${period}`,
+          `${api.maxEmployees} employee limit during trial`,
+        ]
+      : [];
 
     return {
-      planType,
       ...ui,
+      planType: api.planType,
+      title: api.name,
       priceNote,
-      categories: ui.categories.map((cat) => ({
-        ...cat,
-        features: enrichFeatures(cat.features, planType, limits, perEmpPrice),
-      })),
+      categories: [{ name: isTrial ? "HR MODULE" : "PLAN", features }],
+      limitations,
       price: formatPrice(rawPrice, currency),
       rawPrice,
-      discountedPrice: formatDiscountedPrice(rawPrice, currency),
-      discountedPriceRaw: getDiscountedPrice(rawPrice),
-      maxEmployees: api?.maxEmployees ?? config.maxEmployees,
+      maxEmployees: api.maxEmployees,
+      durationDays: api.durationDays,
       perEmployeePrice: perEmpPrice,
       currency,
     };
   });
+
+  if (!addonSource) return subscriptionPlans;
 
   return [
     ...subscriptionPlans,
     {
       planType: "custom_feature",
       ...PLAN_UI.custom_feature,
-      categories: PLAN_UI.custom_feature.categories.map((cat) => ({
-        ...cat,
-        features: enrichFeatures(cat.features, "custom_feature", null, null),
-      })),
-      price: formatPrice(SUBSCRIPTION_ADDONS.custom_feature[priceKey], currency),
-      rawPrice: SUBSCRIPTION_ADDONS.custom_feature[priceKey],
-      discountedPrice: formatDiscountedPrice(SUBSCRIPTION_ADDONS.custom_feature[priceKey], currency),
-      discountedPriceRaw: getDiscountedPrice(SUBSCRIPTION_ADDONS.custom_feature[priceKey]),
+      title: "Custom Feature",
+      priceNote: "one-time starting price",
+      categories: [
+        {
+          name: "ADD-ON",
+          features: [
+            "Specific instance or feature request",
+            "Best for custom workflow enhancements",
+          ],
+        },
+      ],
+      limitations: ["Requires an active HRMS subscription"],
+      price: formatPrice(addonSource.customFeaturePriceUsd ?? 0, currency),
+      rawPrice: Number(addonSource.customFeaturePriceUsd ?? 0),
       maxEmployees: null,
       perEmployeePrice: null,
       currency,
@@ -209,6 +136,8 @@ export default function PricingSection() {
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [message, setMessage] = useState(null);
   const [apiPlans, setApiPlans] = useState([]);
+  const [plansError, setPlansError] = useState(null);
+  const [plansLoading, setPlansLoading] = useState(true);
   const currency = "USD";
 
   useEffect(() => {
@@ -222,13 +151,24 @@ export default function PricingSection() {
     subscriptionService.getPlans().then((result) => {
       if (result.success && Array.isArray(result.data)) {
         setApiPlans(result.data);
+        setPlansError(null);
+      } else {
+        setApiPlans([]);
+        setPlansError(result.message || "Unable to load plans.");
       }
+      setPlansLoading(false);
     });
   }, []);
 
   const plans = useMemo(() => buildPlans(apiPlans, currency), [apiPlans]);
-  const tagline = PRICING_TAGLINE_USD;
-  const trialNote = TRIAL_NOTE_USD;
+  const trial = apiPlans.find((plan) => plan.planType === "free_trial");
+  const starter = apiPlans.find((plan) => plan.planType === "starter_pack");
+  const tagline = starter
+    ? `Starter is ${formatPrice(starter.pricePerEmployeeUsd, currency)} per employee / month, up to ${starter.maxEmployees} employees`
+    : "";
+  const trialNote = trial && starter
+    ? `${durationLabel(trial.durationDays)} free trial with the same Starter limits, then ${starter.name} billing`
+    : "";
 
   const requireAuth = () => {
     if (!authService.hasSessionHint()) {
@@ -267,7 +207,7 @@ export default function PricingSection() {
         authService.redirectToAdmin();
         return;
       }
-      trackEvent("subscription_failed", { plan_name: PLAN_UI.free_trial.title, reason: trialResult.message });
+      trackEvent("subscription_failed", { plan_name: trial?.name || "Free Trial", reason: trialResult.message });
       setMessage({ type: "error", text: trialResult.message });
       setLoadingPlan(null);
       return;
@@ -275,13 +215,14 @@ export default function PricingSection() {
 
     const paymentResult = await subscriptionService.openSubscriptionCheckout({
       ...trialResult.data,
-      planName: PLAN_UI.free_trial.title,
+      planName: trial?.name || "Free Trial",
       currency,
       organizationType: getOrganizationType(user),
     }, user);
 
     if (paymentResult.success) {
-      setMessage({ type: "success", text: "Trial started! Card saved for auto-pay after 7 days. Redirecting..." });
+      const period = durationLabel(trialResult.data?.trialDays || trial?.durationDays);
+      setMessage({ type: "success", text: `Trial started! Card saved for auto-pay after ${period}. Redirecting...` });
       setTimeout(() => authService.redirectToAdmin(), 1500);
     } else if (paymentResult.message !== "Payment cancelled") {
       setMessage({ type: "error", text: paymentResult.message });
@@ -324,15 +265,11 @@ export default function PricingSection() {
   const handlePlanAction = (plan) => {
     if (!plan.actionable) return;
     if (plan.planType === "free_trial") { handleFreeTrial(); return; }
-    if (["starter_pack", "premium", "enterprise"].includes(plan.planType)) { handlePaidPlan(plan); return; }
-    if (plan.planType === "custom_feature") {
-      trackEvent("click_book_demo", { location: "pricing_custom_feature" });
-      navigate("/demo");
-      window.scrollTo(0, 0);
-    }
+    if (plan.planType !== "custom_feature") { handlePaidPlan(plan); return; }
+    trackEvent("click_book_demo", { location: "pricing_custom_feature" });
+    navigate("/demo");
+    window.scrollTo(0, 0);
   };
-
-  const isPaidPlan = (planType) => ["starter_pack", "premium", "enterprise"].includes(planType);
 
   return (
     <section className="relative flex w-full flex-col items-center gap-8 overflow-hidden bg-white px-5 py-16 sm:px-8 lg:py-20">
@@ -341,18 +278,11 @@ export default function PricingSection() {
       />
 
       <div className="relative z-10 flex max-w-3xl flex-col items-center gap-4 px-4 text-center">
-        {/* Launch Offer Banner */}
-        <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-2xl border border-[#50AA18]/30 bg-gradient-to-r from-[#7CF38D]/20 to-[#50AA18]/20 px-4 py-2.5 text-sm font-semibold text-[#1B223C] sm:rounded-full sm:px-5">
-          <Zap size={16} className="text-[#50AA18]" />
-          <span>🚀 <span className="font-bold">{LAUNCH_DISCOUNT_PERCENT}% Launch Offer</span> — <span className="text-[#64748B] font-normal">locked-in for life on all paid plans</span></span>
-        </div>
-
         <h1 className="text-[#292D34] font-poppins font-bold text-2xl xs:text-3xl sm:text-4xl md:text-[42px] leading-tight tracking-[-1px]">
           Choose the Right Plan for{" "}
           <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent block">Your Business Growth</span>
         </h1>
 
-        {/* Prices are displayed in USD only */}
         <div className="inline-flex items-center rounded-full bg-gray-100 p-1">
           <span className="rounded-full bg-white px-5 py-1.5 text-sm font-medium text-[#1B223C] shadow-sm">
             $ USD
@@ -360,7 +290,7 @@ export default function PricingSection() {
         </div>
 
         <p className="max-w-2xl font-nunito text-base leading-7 text-[#64748B] sm:text-[17px]">
-          {tagline}. {trialNote}
+          {tagline}{tagline && trialNote ? ". " : ""}{trialNote}
         </p>
         {message && (
           <p className={`text-sm font-medium px-4 py-2 rounded-lg ${
@@ -369,13 +299,18 @@ export default function PricingSection() {
             {message.text}
           </p>
         )}
+        {plansError && (
+          <p className="text-sm font-medium px-4 py-2 rounded-lg bg-red-50 text-red-700">{plansError}</p>
+        )}
       </div>
 
       <div className="relative z-10 mx-auto grid w-full max-w-6xl grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {plansLoading && (
+          <p className="col-span-full text-center text-sm text-[#64748B]">Loading plans...</p>
+        )}
         {plans.map((plan) => {
           const isSelected = selectedPlan === plan.planType;
           const isLoading = loadingPlan === plan.planType;
-          const paid = isPaidPlan(plan.planType);
           const isCustomFeature = plan.planType === "custom_feature";
 
           return (
@@ -396,15 +331,6 @@ export default function PricingSection() {
                 }
               `}
             >
-              {/* Launch Offer Badge */}
-              {paid && (
-                <div className="absolute top-3 right-3 z-20" style={{ pointerEvents: "none" }}>
-                  <div className="bg-gradient-to-r from-[#50AA18] to-[#7CF38D] text-white text-[10px] font-bold uppercase tracking-wider py-1 px-3 rounded-md shadow-md whitespace-nowrap">
-                    {LAUNCH_DISCOUNT_PERCENT}% OFF
-                  </div>
-                </div>
-              )}
-
               <div className="flex flex-col gap-3 relative z-10">
                 <div className="flex items-center gap-2">
                   {plan.icon}
@@ -416,28 +342,11 @@ export default function PricingSection() {
               </div>
 
               {!isCustomFeature && <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 relative z-10">
-                {paid ? (
-                  <>
-                    <span className="font-poppins text-xl font-bold tracking-tighter text-[#94A3B8] line-through">
-                      {plan.price}
-                    </span>
-                    <span className="font-poppins text-4xl font-bold tracking-tighter text-[#1B223C]">
-                      {plan.discountedPrice}
-                    </span>
-                  </>
-                ) : (
-                  <span className="font-poppins text-4xl font-bold tracking-tighter text-[#1B223C]">
-                    {plan.price}
-                  </span>
-                )}
+                <span className="font-poppins text-4xl font-bold tracking-tighter text-[#1B223C]">
+                  {plan.price}
+                </span>
                 <span className="text-[#64748B] text-xs sm:text-sm font-medium w-full sm:w-auto">{plan.priceNote}</span>
               </div>}
-
-              {paid && (
-                <p className="text-[#50AA18] text-xs font-semibold relative z-10">
-                  Save {LAUNCH_DISCOUNT_PERCENT}% — launch pricing locked in forever
-                </p>
-              )}
 
               <div className="h-px bg-[#F1F5F9] relative z-10" />
 

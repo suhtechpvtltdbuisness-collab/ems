@@ -1,4 +1,4 @@
-import { formatPrice } from "./config/subscriptionPlans.js";
+import { formatPrice, durationLabel } from "./config/subscriptionPlans.js";
 import { trackEvent, trackSubscribeConversion } from "./utils/analytics.js";
 
 const API_BASE_PATH = "/api";
@@ -667,7 +667,7 @@ export const subscriptionService = {
           key: checkoutData.keyId,
           subscription_id: checkoutData.subscriptionId,
           name: "Suhtech ORGA",
-          description: `${checkoutData.trialDays}-day free trial, then ${formatPrice(checkoutData.autoPayAmount, checkoutData.currency || "INR")}/month`,
+          description: `${durationLabel(checkoutData.trialDays)} free trial, then ${formatPrice(checkoutData.autoPayAmount, checkoutData.currency || "USD")}/month on ${checkoutData.autoRenewPlanName || "Starter"}`,
           handler: async (response) => {
             const result = await subscriptionService.verifyTrial({
               razorpayPaymentId: response.razorpay_payment_id,
@@ -677,7 +677,7 @@ export const subscriptionService = {
 
             if (result.success) {
               trackEvent("free_trial_started", {
-                trial_days: Number(checkoutData.trialDays || 7),
+                trial_days: Number(checkoutData.trialDays || 30),
               });
               trackSubscribeConversion(
                 checkoutData.autoPayAmount,
