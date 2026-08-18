@@ -4,37 +4,37 @@ const testimonials = [
   {
     id: 1,
     quote: "ORGA completely transformed how we manage our team and projects. Everything is now centralized and so much easier to track.",
-    name: "Arefin Shuvo",
-    role: "CEO, Urbancompany",
-    avatar: "/Avatar (1).png"
+    name: "Viraj jewellers",
+    role: "CEO, Viraj jewellers",
+    // avatar: "/Avatar (1).png"
   },
   {
     id: 2,
     quote: "We've seen a massive increase in productivity since moving to ORGA. The automated payroll and attendance tracking is a lifesaver.",
-    name: "Sarah Jenkins",
+    name: "Dhanganga",
     role: "HR Director, TechFlow",
-    avatar: "https://i.pravatar.cc/150?img=47"
+    // avatar: "https://i.pravatar.cc/150?img=47"
   },
   {
     id: 3,
     quote: "The best enterprise management tool we've used. Managing global teams, budgets, and timelines has never been so seamless.",
-    name: "Michael Chen",
-    role: "Operations Manager, Globex",
-    avatar: "https://i.pravatar.cc/150?img=11"
+    name: "minecheerish",
+    role: "Operations Manager, minecheerish",
+    // avatar: "https://i.pravatar.cc/150?img=11"
   },
   {
     id: 4,
     quote: "Incredible software that easily integrates with our daily operations. Our HR team loves the new onboarding flow.",
-    name: "Emily Watson",
-    role: "People Ops, Innovate Inc.",
-    avatar: "https://i.pravatar.cc/150?img=5"
+    name: "Autoroma",
+    role: "CEO, Autorama",
+    // avatar: "https://i.pravatar.cc/150?img=5"
   },
   {
     id: 5,
     quote: "The analytics and reporting feature gives us exactly the insights we need. Highly recommend ORGA for fast-growing companies.",
-    name: "David Lee",
-    role: "COO, NextGen",
-    avatar: "https://i.pravatar.cc/150?img=68"
+    name: "bkbs sewatruth",
+    role: "CEO, bkbs sewatruth",
+    // avatar: "https://i.pravatar.cc/150?img=68"
   }
 ];
 
@@ -114,11 +114,11 @@ export default function TestimonialsSection() {
                   {testimonial.quote}
                 </p>
                 <div className="flex items-center gap-3">
-                  <img
+                  {/* <img
                     src={testimonial.avatar}
                     alt="Avatar"
                     className="w-10 h-10 rounded-full object-cover cursor-pointer"
-                  />
+                  /> */}
                   <div>
                     <p className="font-semibold text-gray-900 cursor-pointer">{testimonial.name}</p>
                     <p className="text-sm text-gray-500 cursor-pointer">{testimonial.role}</p>
