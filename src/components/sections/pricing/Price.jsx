@@ -1,4 +1,4 @@
-import { Check, Lock, Rocket, Sparkles, Building, Wrench } from "lucide-react";
+import { Check, Rocket, Sparkles, Building, Wrench } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { formatPrice, durationLabel } from "../../../config/subscriptionPlans";
@@ -52,7 +52,6 @@ const defaultUi = (plan) => ({
 });
 
 const buildPlans = (apiPlans = [], currency) => {
-  const starter = apiPlans.find((plan) => plan.planType === "starter_pack");
   const addonSource = apiPlans[0];
 
   const subscriptionPlans = apiPlans.map((api) => {
@@ -76,21 +75,12 @@ const buildPlans = (apiPlans = [], currency) => {
       ? api.features
       : [`Up to ${api.maxEmployees} employees`];
 
-    const limitations = isTrial
-      ? [
-          "Card required (no charge during trial)",
-          `Auto-renews to ${api.autoRenewPlanName || starter?.name || "Starter"} after ${period}`,
-          `${api.maxEmployees} employee limit during trial`,
-        ]
-      : [];
-
     return {
       ...ui,
       planType: api.planType,
       title: api.name,
       priceNote,
       categories: [{ name: isTrial ? "HR MODULE" : "PLAN", features }],
-      limitations,
       price: formatPrice(rawPrice, currency),
       rawPrice,
       maxEmployees: api.maxEmployees,
@@ -118,7 +108,6 @@ const buildPlans = (apiPlans = [], currency) => {
           ],
         },
       ],
-      limitations: ["Requires an active HRMS subscription"],
       price: formatPrice(addonSource.customFeaturePriceUsd ?? 0, currency),
       rawPrice: Number(addonSource.customFeaturePriceUsd ?? 0),
       maxEmployees: null,
@@ -368,19 +357,6 @@ export default function PricingSection() {
                   </div>
                 ))}
               </div>
-
-              {plan.limitations?.length > 0 && (
-                <div className="flex flex-col gap-3 mt-2 relative z-10">
-                  <div className="flex items-center gap-2 text-gray-400 font-semibold text-[13px] uppercase tracking-wide">
-                    <Lock size={14} /> Limitations
-                  </div>
-                  <ul className="flex flex-col gap-1.5 pl-4">
-                    {plan.limitations.map((limit, limitIdx) => (
-                      <li key={limitIdx} className="text-[#94A3B8] text-[13px] italic break-words">{limit}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
 
               <button
                 onClick={(e) => { e.stopPropagation(); setSelectedPlan(plan.planType); handlePlanAction(plan); }}
