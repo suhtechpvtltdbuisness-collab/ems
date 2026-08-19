@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginForm } from "../features/auth/LoginForm";
 import { RegisterForm } from "../features/auth/RegisterForm";
 import { ForgotPasswordForm } from "../features/auth/ForgotPasswordForm";
@@ -7,6 +8,7 @@ import { ResetPasswordForm } from "../features/auth/ResetPasswordForm";
 import { authService } from "../service";
 
 export default function AuthPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const mode = searchParams.get("mode") || "login";
   const [verifiedEmail, setVerifiedEmail] = useState("");
@@ -33,6 +35,10 @@ export default function AuthPage() {
 
   const handleResetPassword = () => {
     window.location.href = "/auth?mode=login";
+  };
+
+  const handleBack = () => {
+    navigate("/");
   };
 
   const renderContent = () => {
@@ -83,6 +89,17 @@ export default function AuthPage() {
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-4xl">
         {renderContent()}
+        {mode === "register" && (
+          <button
+            type="button"
+            onClick={handleBack}
+            className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/80 bg-white/75 px-5 py-2.5 text-sm font-semibold text-[#4B4863] shadow-[0_8px_24px_rgba(75,72,99,0.14)] backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-[#756FCC] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/50"
+            aria-label="Back to home page"
+          >
+            <ArrowLeft size={18} />
+            Back to Home
+          </button>
+        )}
       </div>
     </div>
   );
