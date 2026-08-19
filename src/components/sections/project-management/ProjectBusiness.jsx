@@ -34,10 +34,10 @@ export default function ProjectBusiness() {
 
         {/* Heading Section */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold font-poppins text-gray-900 mb-4 leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-semibold font-poppins text-gray-900 mb-4 leading-tight">
             Why Businesses <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent">Choose ORGA
             </span>
-          </h1>
+          </h2>
           <p className="text-gray-500 max-w-2xl mx-auto">
             Simplify HR, payroll, attendance, tasks, and project management with one powerful platform designed to help your team work smarter and grow faster.
           </p>
@@ -80,7 +80,7 @@ function Card({ feature, isLarge }) {
   return (
     <div
       className={`
-        bg-white rounded-3xl p-6 sm:p-8 border border-[#756FCC]
+        bg-white rounded-2xl p-6 border border-[#756FCC]
         hover:shadow-lg transition-shadow duration-300
         relative overflow-hidden shadow-[0_6px_10px_4px_rgba(112,79,230,0.10)] cursor-pointer
         ${isLarge ? "h-full flex flex-col justify-between" : ""}

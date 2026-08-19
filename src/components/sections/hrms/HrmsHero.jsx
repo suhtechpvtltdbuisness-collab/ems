@@ -41,11 +41,7 @@ export default function HRMSHero() {
       </button>
 
       <div className="mt-5 sm:mt-2 max-w-6xl w-full px-0 sm:px-4 pt-0">
-        <img
-          src="/Dash.png"
-          alt="Dashboard preview"
-          className="w-full rounded-xl sm:rounded-3xl"
-        />
+        <img src="/Dash.png" alt="Dashboard preview" className="w-full rounded-xl sm:rounded-3xl" />
       </div>
     </section>
   );

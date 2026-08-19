@@ -31,15 +31,15 @@ export default function ProjectFeature() {
   ];
 
   return (
-    <div className="min-h-screen bg-white py-16 px-4">
+    <div className="bg-white px-4 py-16 lg:py-20">
       <div className="max-w-7xl mx-auto">
 
         {/* Heading Section */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold font-poppins text-gray-900 mb-4 leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-semibold font-poppins text-gray-900 mb-4 leading-tight">
             Everything your team <br />
             needs in <span className="bg-linear-to-r from-[#7CF38D] to-[#50AA18] bg-clip-text text-transparent ">one place</span>
-          </h1>
+          </h2>
           <p className="text-gray-500 max-w-2xl mx-auto">
             Manage tasks, teams, timelines, and profitability—all in one place. Streamline workflows and empower your team to achieve more with ORGA.
           </p>
@@ -54,7 +54,7 @@ export default function ProjectFeature() {
               <div
                 key={index}
                 className="
-                  bg-white rounded-3xl p-8
+                  bg-white rounded-2xl p-6
                   border border-[#756FCC]
                   hover:shadow-lg
                   transition-shadow duration-300
@@ -86,7 +86,7 @@ export default function ProjectFeature() {
           <div className="mt-6 w-full flex justify-center">
             <div
               className="
-                rounded-3xl p-8 border border-[#756FCC]
+                rounded-2xl p-6 border border-[#756FCC]
                 hover:shadow-lg transition-shadow duration-300
                 relative overflow-hidden cursor-pointer
                 shadow-[0_6px_10px_4px_rgba(112,79,230,0.10)]
