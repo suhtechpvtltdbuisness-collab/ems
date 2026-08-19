@@ -27,7 +27,7 @@ export default function SolutionDetailPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-gray-500 sm:text-lg sm:leading-8">{solution.description}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link to="/auth?mode=register" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#756FCC] px-6 py-3 font-poppins font-medium text-white shadow-md transition hover:bg-[#645db7]">
+            <Link to="/pricing" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#756FCC] px-6 py-3 font-poppins font-medium text-white shadow-md transition hover:bg-[#645db7]">
               Try for free <ArrowRight size={18} />
             </Link>
             <Link to="/demo" className="inline-flex min-h-12 items-center rounded-xl border border-[#756FCC] bg-white px-6 py-3 font-poppins font-medium text-[#756FCC] transition hover:bg-[#F5F4FF]">
