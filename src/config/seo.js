@@ -16,7 +16,7 @@ export const ROUTE_SEO = {
   "/solutions": {
     title: "Solutions — Orga",
     description:
-      "Explore Orga solutions for project management, HRMS, finance, and support — built for teams that need one unified workspace.",
+      "Explore Orga solutions for hiring, attendance, shifts, leave, payroll, performance, employees, finance, and business operations.",
   },
   "/solutiondedipages": {
     title: "Project Organizer — Orga",

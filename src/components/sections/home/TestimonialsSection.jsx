@@ -32,7 +32,7 @@ const testimonials = [
   {
     id: 5,
     quote: "The analytics and reporting feature gives us exactly the insights we need. Highly recommend ORGA for fast-growing companies.",
-    name: "bkbs sewatruth",
+    name: "bkbs sewatrust",
     role: "CEO, bkbs sewatruth",
     // avatar: "https://i.pravatar.cc/150?img=68"
   }

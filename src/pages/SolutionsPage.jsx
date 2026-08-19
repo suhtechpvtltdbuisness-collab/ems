@@ -13,9 +13,10 @@ export default function SolutionsPage() {
             <div className="max-w-7xl mx-auto pt-24 sm:pt-28 md:pt-32 px-4 sm:px-6">
                 <div className="relative bg-[#756FCC] text-white rounded-[24px] sm:rounded-[32px] p-7 sm:p-14 md:p-20 overflow-hidden shadow-[0_24px_60px_rgba(117,111,204,0.22)]">
                     <div className="relative z-10 max-w-xl">
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Our Solutions –</h1>
+                        <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-white/75">Everything your business needs</p>
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Our Solutions</h1>
                         <p className="text-base sm:text-lg md:text-xl leading-relaxed">
-                            Explore powerful solutions designed to simplify operations, enhance collaboration, and drive business growth.
+                            Manage your people, payroll, finance, and daily operations from one connected platform.
                         </p>
                     </div>
 

@@ -5,7 +5,7 @@ export default function SolutionCard({ solution, index }) {
   return (
     <Link
       to={`/solutions/${solution.slug}`}
-      className="group relative flex min-h-48 flex-col justify-between overflow-hidden rounded-3xl border border-[#756FCC]/15 bg-white p-6 shadow-[0_12px_36px_rgba(41,45,52,0.06)] transition duration-300 hover:-translate-y-1 hover:border-[#756FCC]/40 hover:shadow-[0_18px_45px_rgba(117,111,204,0.16)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#756FCC]/25"
+      className="group relative flex min-h-56 flex-col justify-between overflow-hidden rounded-3xl border border-[#756FCC]/15 bg-white p-6 shadow-[0_12px_36px_rgba(41,45,52,0.06)] transition duration-300 hover:-translate-y-1 hover:border-[#756FCC]/40 hover:shadow-[0_18px_45px_rgba(117,111,204,0.16)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#756FCC]/25"
     >
       <div className="absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gradient-to-br from-[#756FCC]/15 to-[#7CF38D]/20 transition-transform duration-500 group-hover:scale-125" />
       <div className="relative flex items-center justify-between">
@@ -17,6 +17,15 @@ export default function SolutionCard({ solution, index }) {
       <div className="relative mt-8">
         <h2 className="font-poppins text-xl font-semibold text-[#292D34]">{solution.title}</h2>
         <p className="mt-2 text-sm leading-6 text-[#64748B]">{solution.shortDescription}</p>
+        {solution.highlights && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {solution.highlights.map((highlight) => (
+              <span key={highlight} className="rounded-full bg-[#F1F0FF] px-3 py-1 text-xs font-semibold text-[#625CBC]">
+                {highlight}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </Link>
   );

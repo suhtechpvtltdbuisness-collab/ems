@@ -21,7 +21,7 @@ export const durationLabel = (days) => {
 };
 
 export const PRICING_TAGLINE =
-  "Start with a 1-month free trial, then continue on Starter";
+  "1-month free trial · Up to 10 employees · $1/extra employee · starter plan available on request";
 
 export const TRIAL_NOTE =
-  "1-month free trial with Starter limits, then Starter billing";
+  "1-month free trial · Up to 10 employees · $1/extra employee · starter plan available on request";

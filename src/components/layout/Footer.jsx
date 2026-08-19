@@ -133,7 +133,7 @@ export default function Footer() {
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 className="hover:text-[#756FCC]"
               >
-                Project Organizer
+                Hiring &amp; Recruitment
               </Link>
             </li>
 
@@ -143,7 +143,7 @@ export default function Footer() {
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 className="hover:text-[#756FCC]"
               >
-                Online Project Board
+                Attendance Management
               </Link>
             </li>
 
@@ -153,7 +153,7 @@ export default function Footer() {
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 className="hover:text-[#756FCC]"
               >
-                Task Board
+                Payroll Management
               </Link>
             </li>
 
