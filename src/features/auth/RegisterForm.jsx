@@ -6,6 +6,7 @@ import { Button } from "../../components/common/Button";
 import { Toast } from "../../components/common/Toast";
 import ResponsiveGoogleButton from "../../components/auth/ResponsiveGoogleButton";
 import { authService } from "../../service";
+import { trackEvent, linkUserToVisitor } from "../visitor/visitorTracking.js";
 
 export const RegisterForm = ({ onRegister, onLogin }) => {
   const navigate = useNavigate();
@@ -64,6 +65,7 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
     const result = await authService.register(userData);
 
     if (result.success) {
+      trackEvent("signup");
       setRegisteredEmail(form.email);
       setIsSuccess(true);
       setToast({
@@ -118,6 +120,8 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
     const result = await authService.verifyOtp({ email: registeredEmail, otp: otpCode });
 
     if (result.success) {
+      trackEvent("signup");
+      linkUserToVisitor();
       setToast({
         type: "success",
         title: "Verification Successful",
@@ -180,6 +184,8 @@ export const RegisterForm = ({ onRegister, onLogin }) => {
 
     if (result.success) {
       localStorage.setItem("isRegistered", "true");
+      trackEvent("signup");
+      linkUserToVisitor();
       setToast({
         type: "success",
         title: "Account Created Successfully",

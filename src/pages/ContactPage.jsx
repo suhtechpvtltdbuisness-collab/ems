@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { CheckCircle2, Mail, Phone, MapPin } from "lucide-react";
 import { trackPageView } from "../utils/analytics";
+import { trackEvent } from "../features/visitor/visitorTracking.js";
 
 const CONTACT_EMAIL = "Reply@orga.cc";
 
@@ -25,6 +26,7 @@ export default function ContactPage() {
         const body = encodeURIComponent(`Name: ${firstName} ${lastName}\nEmail: ${email}\n\nMessage:\n${message}`);
         
         window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+        trackEvent("form_submit", { form: "contact" });
     };
 
     return (

@@ -55,6 +55,7 @@ import TermsPage from "./pages/TermsPage";
 import Onboarding from "./pages/onboarding/index";
 import VerifyEmail from "./pages/VerifyEmail";
 import ContactPage from "./pages/ContactPage";
+import { VisitorTrackingProvider } from "./features/visitor/VisitorTrackingProvider";
 
 // ======================
 // PROTECTED ROUTE
@@ -155,7 +156,7 @@ const OnboardingRoute = ({ children }) => {
 // ======================
 function App() {
   return (
-    <>
+    <VisitorTrackingProvider>
       <PageMeta />
       <ScrollToTop />
 
@@ -458,7 +459,7 @@ function App() {
         />
 
       </Routes>
-    </>
+    </VisitorTrackingProvider>
   );
 }
 

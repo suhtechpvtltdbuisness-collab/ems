@@ -6,6 +6,7 @@ import { Button } from "../../components/common/Button";
 import { Toast } from "../../components/common/Toast";
 import ResponsiveGoogleButton from "../../components/auth/ResponsiveGoogleButton";
 import { authService } from "../../service";
+import { trackEvent, linkUserToVisitor } from "../visitor/visitorTracking.js";
 
 export const LoginForm = ({ onRegister }) => {
   const navigate = useNavigate();
@@ -30,6 +31,8 @@ export const LoginForm = ({ onRegister }) => {
     const result = await authService.login(form);
 
     if (result.success) {
+      trackEvent("login");
+      linkUserToVisitor();
       setToast({
         type: "success",
         title: "Login Successful",
@@ -67,6 +70,8 @@ export const LoginForm = ({ onRegister }) => {
     const result = await authService.googleLogin(credentialResponse.credential);
 
     if (result.success) {
+      trackEvent("login");
+      linkUserToVisitor();
       setToast({
         type: "success",
         title: "Login Successful",

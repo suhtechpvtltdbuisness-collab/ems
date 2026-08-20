@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { demoService } from "../service";
+import { trackEvent } from "../features/visitor/visitorTracking.js";
 
 export default function Demo() {
     const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
@@ -32,6 +33,7 @@ export default function Demo() {
                 status: "success",
                 message: "Your demo request has been sent successfully.",
             });
+            trackEvent("form_submit", { form: "demo" });
         } catch {
             setSubmitState({
                 status: "error",
